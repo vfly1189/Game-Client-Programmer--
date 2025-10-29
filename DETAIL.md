@@ -8,7 +8,7 @@
   <tbody>
     <tr>
       <td valign="top" width="25%" align="center">
-        <h3><a href="이터널-리턴-모작-1">⚔️ 이터널 리턴 모작</a></h3>
+        <h3><a href="이터널-리턴-모작-1">이터널 리턴 모작</a></h3>
         <br>
         <p align="left">
           📖 <a href="#게임-개요">게임 개요</a><br>
