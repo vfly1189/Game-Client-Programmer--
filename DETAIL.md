@@ -47,11 +47,11 @@
 
 # 🎮 Brotato 모작
 
-<p align="center">
+<p align="left">
   <img src="https://github.com/user-attachments/assets/0fa0932b-be02-4008-a29b-4711adab14db" width="800"/>
 </p>
 
-<div align="center">
+<div align="left">
 
 ### 📌 프로젝트 정보
 
