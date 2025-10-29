@@ -11,7 +11,7 @@
       <td valign="top">
        <a>
         
- 🍴 [Brotato](https://github.com/Mekdlsdl/Game-Client-Programmer-Portfolio/blob/main/DETAIL.md#-%EC%BF%A1%EC%95%A4%EB%AA%AC%EC%8A%A4%ED%84%B0-%ED%95%A0%EB%A8%B8%EB%8B%88%EC%9D%98-%EB%A0%88%EC%8B%9C%ED%94%BC) <br>
+ 🍴 [Brotato](https://github.com/vfly1189/Game-Client-Programmer--/blob/b2f42bcdf6cb7d0b539fbf1c473ce99d7e43d9e4/DETAIL.md?plain=1#L54) <br>
  > 🧩 [게임 개요](https://github.com/Mekdlsdl/Game-Client-Programmer-Portfolio/blob/main/DETAIL.md#-%EA%B2%8C%EC%9E%84-%EA%B0%9C%EC%9A%94) <br>
  ✏️ [아쉬웠던 점과 회고](https://github.com/Mekdlsdl/Game-Client-Programmer-Portfolio/blob/main/DETAIL.md#%EF%B8%8F-%EC%95%84%EC%89%AC%EC%9B%A0%EB%8D%98-%EC%A0%90%EA%B3%BC-%ED%9A%8C%EA%B3%A0) <br>
   ✅ [프로젝트에서 얻은 것](https://github.com/Mekdlsdl/Game-Client-Programmer-Portfolio/blob/main/DETAIL.md#-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%97%90%EC%84%9C-%EC%96%BB%EC%9D%80-%EA%B2%83) <br>
