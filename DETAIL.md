@@ -18,7 +18,7 @@
         </p>
       </td>
       <td valign="top" width="25%" align="center">
-        <h3><a href="#%EF%B8%8F-Brotato-모작">🎯 Brotato 모작</a></h3>
+        <h3><a href="#%EF%B8%8F-Brotato-모작">Brotato 모작</a></h3>
         <br>
         <p align="left">
           📖 <a href="#게임-개요-1">게임 개요</a><br>
@@ -28,7 +28,7 @@
         </p>
       </td>
       <td valign="top" width="25%" align="center">
-        <h3><a href="#%EF%B8%8F-프로젝트-아글라이아">✨ 프로젝트 아글라이아</a></h3>
+        <h3><a href="#%EF%B8%8F-프로젝트-아글라이아">프로젝트 아글라이아</a></h3>
         <br>
         <p align="left">
           📖 <a href="#게임-개요-2">게임 개요</a><br>
