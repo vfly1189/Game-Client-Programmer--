@@ -55,6 +55,8 @@
 - 개발 인원: 2인 (프로그래머로 참여)
 - 개발 환경: C++, DirectX11
 
+![screenshot](https://github.com/user-attachments/assets/0fa0932b-be02-4008-a29b-4711adab14db)
+
 ## 주요 개발
 여기에 주요 개발 내용...
 
@@ -79,7 +81,9 @@
 - 개발 인원: 1인 (개인 프로젝트)
 - 개발 환경: C++, DirectX11
 - 관련 자료: [블로그 링크]
-- 
+
+![screenshot](https://github.com/user-attachments/assets/68e566af-bb56-4afb-9842-1002208e6540)
+
 ## 주요 개발
 여기에 주요 개발 내용...
 
@@ -103,6 +107,8 @@
 - 개발 기간: 2개월
 - 개발 인원: 2인 (프로그래머로 참여)
 - 개발 환경: C++, DirectX11, FMOD, ImGui
+
+![screenshot](https://github.com/user-attachments/assets/1d959a57-f3e9-4a0a-86ab-3b0b7e336d19)
 
 ## 주요 개발
 여기에 주요 개발 내용...
