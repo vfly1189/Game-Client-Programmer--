@@ -8,7 +8,7 @@
   <tbody>
     <tr>
       <td valign="top" width="25%" align="center">
-        <h3><a href="#이터널-리턴-모작">이터널 리턴 모작</a></h3>
+        <h3><a href="#brotato-모작">Brotato 모작</a></h3>
         <br>
         <p align="left">
           📖 <a href="#게임-개요">게임 개요</a><br>
@@ -51,6 +51,7 @@
 ---
 
 # Brotato 모작
+
 
 ## 게임 개요
 여기에 게임 개요 내용...
