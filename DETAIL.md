@@ -510,13 +510,11 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - CRigidBody 컴포넌트에 힘(Force), 가속도, 속도 개념 도입
 - `AddForce()` 함수로 즉각적인 힘 적용 시스템 구현
 - 매 프레임 속도에 마찰력을 적용하여 자연스러운 감속
-- 중력 옵션을 통한 포물선 궤적 구현 (눈물 발사체)
 - 벽 충돌 시 속도 벡터 반사 처리
 
 **✅ 결과**
 - 피격 시 넉백 효과로 타격감 향상
 - 포물선을 그리는 눈물 발사로 원작 느낌 재현
-- 폭탄 폭발 시 주변 오브젝트 밀어내기 효과 구현
 
 <br>
 
@@ -563,8 +561,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 | 기능 | 링크 |
 |:---:|:---|
-| 💥 **RigidBody 물리** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CRigidBody.cpp) |
-| 🎯 **Collider 충돌** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CCollider.cpp) |
+| 💥 **RigidBody 물리** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82) |
+| 🎯 **Collider 충돌** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollisionMgr.cpp#L22-L129) |
 | 🎬 **Animator 애니메이션** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CAnimator.cpp) |
 
 ### 🗺️ 던전 생성
