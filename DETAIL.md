@@ -579,29 +579,313 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 ---
 
-# 이터널 리턴 모작
+# 🎮 이터널 리턴 모작
 
-## 게임 개요
-**이터널 리턴**은 배틀로얄과 MOBA 장르가 결합된 쿼터뷰 서바이벌 게임입니다.<br> 
-플레이어는 특정 캐릭터를 선택하여 맵을 탐색하며 재료를 수집하고, 제작 시스템을 통해 장비를 강화하여 최후의 1인(또는 1팀)이 되는 것을 목표로 합니다.<br>
-전략적인 동선 계획과 실시간 전투가 결합된 독특한 게임플레이가 특징입니다.<br> 
-본 프로젝트는 C++과 DirectX11을 사용하여 핵심 메커니즘을 구현한 2인 협업 프로젝트입니다.
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/1d959a57-f3e9-4a0a-86ab-3b0b7e336d19" width="800"/>
+</p>
 
-- 장르: 쿼터뷰, 배틀로얄, MOBA
-- 개발 기간: 2개월
-- 개발 인원: 2인 (프로그래머로 참여)
-- 개발 환경: C++, DirectX11, FMOD, ImGui
+<div align="left">
 
-![screenshot](https://github.com/user-attachments/assets/1d959a57-f3e9-4a0a-86ab-3b0b7e336d19)
+### 📌 프로젝트 정보
 
-## 주요 개발
-여기에 주요 개발 내용...
+| 항목 | 내용 |
+|:---:|:---|
+| 🎯 **장르** | 쿼터뷰, 배틀로얄, MOBA |
+| ⏱️ **개발 기간** | 2개월 |
+| 👥 **개발 인원** | 2인 (프로그래머로 참여) |
+| 🛠️ **개발 환경** | C++, DirectX11, FMOD, ImGui |
+| 🎬 **시연 영상** | [YouTube 바로가기](https://youtu.be/b6XVkd0xc-E?si=vMBVltpWKHP4UM11) |
+| 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/DirectX11/Eternal%20Return%20%EB%AA%A8%EC%9E%91) |
+| 💾 **GitHub** | [소스코드](https://github.com/HyangRim/DirectX11-Engine-Client) |
 
-## 문제 해결
-여기에 문제 해결 내용...
+</div>
 
-## 코드 샘플
-여기에 코드 샘플...
+<br>
+
+## 📖 게임 개요
+
+이터널 리턴은 배틀로얄과 MOBA 장르가 결합된 쿼터뷰 서바이벌 게임입니다. 플레이어는 특정 캐릭터를 선택하여 맵을 탐색하며 재료를 수집하고, 제작 시스템을 통해 장비를 강화하여 최후의 1인(또는 1팀)이 되는 것을 목표로 합니다. 전략적인 동선 계획과 실시간 전투가 결합된 독특한 게임플레이가 특징입니다. 본 프로젝트는 C++과 DirectX11을 사용하여 핵심 메커니즘을 구현한 2인 협업 프로젝트입니다.
+
+<br>
+
+---
+
+## 🔨 주요 개발
+
+<details open>
+<summary><b>🎨 Deferred Rendering 파이프라인</b></summary>
+
+<br>
+
+**디퍼드 렌더링 시스템 구축**
+- Forward Rendering에서 Deferred Rendering으로 전환하여 다중 광원 처리 최적화
+- G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
+- 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
+- 풀스크린 쿼드를 통한 라이팅 패스 구현
+
+**렌더링 파이프라인 구조**
+- Shadow Pass: 4096x4096 그림자맵 생성
+- Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장
+- Lighting Pass: G-Buffer 데이터 기반 조명 계산
+- Forward Pass: 투명 객체 처리 (알파 블렌딩)
+
+</details>
+
+<details open>
+<summary><b>🎭 인스턴싱 기반 렌더링</b></summary>
+
+<br>
+
+**GPU 인스턴싱 시스템**
+- 동일 메시의 다수 객체를 한 번의 DrawCall로 처리
+- 인스턴스 버퍼를 통한 Transform 데이터 전달
+- MeshRenderer, ModelRenderer, AnimRenderer별 인스턴싱 지원
+- DrawIndexedInstanced를 활용한 배치 렌더링
+
+**성능 최적화**
+- DrawCall 수 대폭 감소
+- CPU-GPU 병목 현상 해소
+- 대규모 오브젝트 렌더링 안정화
+
+</details>
+
+<details open>
+<summary><b>🌑 그림자 매핑 시스템</b></summary>
+
+<br>
+
+**Shadow Mapping 구현**
+- Depth Stencil View를 활용한 그림자맵 생성
+- 조명 시점에서의 깊이 정보 저장
+- Shader Resource View로 그림자맵 샘플링
+- PCF(Percentage Closer Filtering) 적용으로 부드러운 그림자
+
+**최적화 기법**
+- 4096x4096 고해상도 그림자맵
+- Cascade Shadow Maps 고려 설계
+- 깊이 버퍼 재사용 최소화
+
+</details>
+
+<details open>
+<summary><b>🌫️ Fog of War (전장의 안개) 시스템</b></summary>
+
+<br>
+
+**FOW 메커니즘**
+- 플레이어 시야 범위 기반 가시성 계산
+- 실시간 탐색 영역 업데이트
+- 셰이더에서 픽셀별 가시성 판정
+- 그라데이션 효과로 자연스러운 시야 전환
+
+**구현 세부사항**
+- 월드 좌표 기반 거리 계산
+- 동적 시야 범위 조절 가능
+- 팀 플레이 시 시야 공유 로직
+
+</details>
+
+<details>
+<summary><b>🎬 애니메이션 시스템</b></summary>
+
+<br>
+
+**스켈레탈 애니메이션**
+- FBX 기반 본 애니메이션 구현
+- Compute Shader를 활용한 스키닝 연산
+- 애니메이션 블렌딩 및 전환
+- 루트 모션(Root Motion) 지원
+
+**애니메이션 최적화**
+- GPU 스키닝으로 CPU 부하 감소
+- 애니메이션 인스턴싱 지원
+- LOD에 따른 애니메이션 품질 조절
+
+</details>
+
+<details>
+<summary><b>🏗️ 컴포넌트 기반 아키텍처</b></summary>
+
+<br>
+
+**유연한 게임 오브젝트 시스템**
+- GameObject 기반 계층 구조
+- Transform, MeshRenderer, Collider 등 다양한 컴포넌트
+- Component 추가/제거/검색 시스템
+- 부모-자식 관계를 통한 Transform 계층
+
+**매니저 시스템**
+- SceneManager: 씬 전환 및 오브젝트 관리
+- ResourceManager: 메시, 텍스처, 셰이더 리소스 관리
+- InputManager: 키보드/마우스 입력 처리
+- TimeManager: 델타타임 및 FPS 관리
+
+</details>
+
+<details>
+<summary><b>🎯 충돌 감지 시스템</b></summary>
+
+<br>
+
+**물리 기반 충돌 처리**
+- AABB(Axis-Aligned Bounding Box) 충돌 검사
+- OBB(Oriented Bounding Box) 지원
+- Sphere Collider 구현
+- 계층적 충돌 그룹 관리
+
+**충돌 이벤트 시스템**
+- OnCollisionEnter/Stay/Exit 콜백
+- 레이어 기반 충돌 필터링
+- 물리 재질별 반응 처리
+
+</details>
+
+<details>
+<summary><b>🎮 카메라 시스템</b></summary>
+
+<br>
+
+**쿼터뷰 카메라**
+- 플레이어 추적 카메라
+- 부드러운 카메라 이동 (Lerp)
+- 카메라 줌 인/아웃 기능
+- 맵 경계 제한
+
+**뷰/프로젝션 행렬 관리**
+- View Matrix: 카메라 위치 및 방향
+- Projection Matrix: 원근/직교 투영 전환
+- Frustum Culling 지원
+
+</details>
+
+<br>
+
+---
+
+## 🛠️ 문제 해결
+
+### 1️⃣ Forward에서 Deferred Rendering으로 전환
+
+> **🚨 문제 상황**
+> 
+> 다수의 동적 광원 사용 시 Forward Rendering 방식에서 성능 저하 발생 (광원 수 × 오브젝트 수의 연산)
+
+**💡 해결 과정**
+- Deferred Rendering 파이프라인 설계 및 구현
+- G-Buffer 4개 생성 (Albedo, Normal, Position, Material)
+- 지오메트리 패스와 라이팅 패스 분리
+- 멀티 렌더 타겟(MRT)을 통한 동시 렌더링
+- 풀스크린 쿼드로 화면 전체에 조명 계산
+- 투명 객체는 Forward Rendering으로 별도 처리
+
+**✅ 결과**
+- 다중 광원 사용 시 성능 대폭 향상
+- 광원 수에 비례하지 않는 안정적인 프레임
+- 복잡한 조명 효과 구현 가능
+
+<br>
+
+### 2️⃣ 인스턴싱을 통한 DrawCall 최적화
+
+> **🚨 문제 상황**
+> 
+> 동일한 메시를 가진 다수의 오브젝트 렌더링 시 DrawCall이 과도하게 증가하여 CPU 병목 발생
+
+**💡 해결 과정**
+- GPU 인스턴싱 시스템 도입
+- 인스턴스 버퍼 생성 및 Transform 데이터 전송
+- `DrawIndexedInstanced()` API 활용
+- 같은 메시/머티리얼을 가진 객체들을 배치로 묶어 처리
+- Structured Buffer를 통한 인스턴스별 데이터 전달
+
+**✅ 결과**
+- DrawCall 수 **수천 회 → 수십 회**로 대폭 감소
+- CPU 사용률 감소 및 프레임 안정화
+- 대규모 오브젝트 배치 가능
+
+<br>
+
+### 3️⃣ 그림자 품질 개선 및 최적화
+
+> **🚨 문제 상황**
+> 
+> 저해상도 그림자맵으로 인한 계단 현상(Aliasing) 발생, 그림자 품질 저하
+
+**💡 해결 과정**
+- 그림자맵 해상도를 4096x4096으로 상향
+- Shadow Pass를 별도로 분리하여 깊이 정보만 저장
+- PCF(Percentage Closer Filtering) 구현으로 그림자 경계 부드럽게 처리
+- Depth Stencil View와 Shader Resource View 동시 활용
+- 그림자 바이어스 조정으로 Self-Shadowing 아티팩트 제거
+
+**✅ 결과**
+- 그림자 품질 대폭 향상
+- 계단 현상 완화
+- 자연스러운 그림자 표현
+
+<br>
+
+### 4️⃣ Fog of War 시스템 구현
+
+> **🚨 문제 상황**
+> 
+> 전략 요소가 중요한 게임에서 플레이어 시야 제한 및 탐색 영역 표시 필요
+
+**💡 해결 과정**
+- 플레이어 위치 기반 시야 범위 계산
+- 픽셀 셰이더에서 월드 좌표와 플레이어 위치 간 거리 계산
+- 거리에 따른 가시성 계수 적용
+- 그라데이션 효과로 시야 경계 자연스럽게 처리
+- 라이팅 패스에서 FOW 효과 적용
+
+**✅ 결과**
+- 전략적 게임플레이 요소 강화
+- 탐색의 재미 추가
+- 시야 공유를 통한 팀 플레이 지원
+
+<br>
+
+---
+
+## 💻 코드 샘플
+
+### 📌 Deferred Rendering 파이프라인
+
+| 시스템 | 링크 |
+|:---:|:---|
+| 🎨 **G-Buffer 생성** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/Graphics.cpp#L100-L200) |
+| 💡 **Lighting Pass 셰이더** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/DeferredLighting.fx) |
+
+### 🎭 인스턴싱 시스템
+
+| 기능 | 링크 |
+|:---:|:---|
+| 🔄 **인스턴스 버퍼 관리** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/InstancingBuffer.cpp) |
+| 🎮 **MeshRenderer 인스턴싱** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/MeshRenderer.cpp) |
+
+### 🌑 그림자 시스템
+
+| 기능 | 링크 |
+|:---:|:---|
+| 🌓 **Shadow Pass** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/Graphics.cpp) |
+| ✨ **그림자 셰이더** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/Shadow.fx) |
+
+### 🌫️ Fog of War
+
+| 기능 | 링크 |
+|:---:|:---|
+| 👁️ **FOW 계산 로직** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/FogOfWar.fx) |
+
+### 🎬 애니메이션 시스템
+
+| 기능 | 링크 |
+|:---:|:---|
+| 🦴 **스켈레탈 애니메이션** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/AnimRenderer.cpp) |
+| ⚡ **Compute Shader 스키닝** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/Skinning.fx) |
+
+---
+
 
 ---
 
