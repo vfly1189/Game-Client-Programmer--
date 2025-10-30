@@ -5,7 +5,7 @@
 
 # 💻 프로젝트
 
-##  Brotato ([상세내용](DETAIL.md#-brotato-모작))
+## 🎮 Brotato ([상세내용](DETAIL.md#-brotato-모작))
 
 > ( 2025.02 ~ 2025.03 )
 
@@ -29,7 +29,7 @@
 
 <br>
 
-## 🏭 TBI : The Binding Of Isaac ([상세내용]())
+## 🎮 TBI : The Binding Of Isaac ([상세내용](DETAIL.md#-tbi-모작))
 
 > 
 ( 2025.03 ~ 2025.05 )
@@ -50,7 +50,7 @@
 ### [시연 영상](https://tobrother.tistory.com/144)
 <br>
 
-## 🎮 Eternal Return ( 이터널리턴 )  ([상세내용]())
+## 🎮 Eternal Return ( 이터널리턴 )  ([상세내용](DETAIL.md#-이터널-리턴-모작))
 
 
 
