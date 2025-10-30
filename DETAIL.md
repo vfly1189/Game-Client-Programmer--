@@ -651,20 +651,20 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 </details>
 
 <details open>
-<summary><b>🌑 그림자 매핑 시스템</b></summary>
+<summary><b>🌑 쿼드 트리</b></summary>
 
 <br>
 
-**Shadow Mapping 구현**
-- Depth Stencil View를 활용한 그림자맵 생성
-- 조명 시점에서의 깊이 정보 저장
-- Shader Resource View로 그림자맵 샘플링
-- PCF(Percentage Closer Filtering) 적용으로 부드러운 그림자
+**쿼드 트리(Quad Tree) 구현**
+- 2D 공간을 4분할하는 트리 자료구조 설계 및 적용
+- 각 노드에 해당 영역 내 오브젝트 정보 저장
+- 탐색/삽입/삭제 연산에 따라 노드 분할과 병합 자동 관리
+- 카메라 시야(Frustum)와 노드 영역의 교차 검사로 렌더링 대상을 신속하게 필터링
 
 **최적화 기법**
-- 4096x4096 고해상도 그림자맵
-- Cascade Shadow Maps 고려 설계
-- 깊이 버퍼 재사용 최소화
+- 오브젝트 수가 많아질수록 전체 탐색(O(n)) 대신 부분 공간 탐색(O(log n))으로 성능 대폭 향상
+- 충돌 검사/렌더링 등 많은 반복 연산이 필요한 곳에서 연산량 감소
+- 넓은 맵, 많은 오브젝트가 배치되는 상황에서도 프레임 드랍 없이 효율적 처리
 
 </details>
 
@@ -749,7 +749,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **쿼터뷰 카메라**
 - 플레이어 추적 카메라
 - 부드러운 카메라 이동 (Lerp)
-- 카메라 줌 인/아웃 기능
 - 맵 경계 제한
 
 **뷰/프로젝션 행렬 관리**
@@ -806,23 +805,23 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
-### 3️⃣ 그림자 품질 개선 및 최적화
+### 3️⃣ 쿼드 트리 기반 공간 분할 최적화
 
 > **🚨 문제 상황**
 > 
-> 저해상도 그림자맵으로 인한 계단 현상(Aliasing) 발생, 그림자 품질 저하
+> 넓은 맵에서 모든 오브젝트에 대해 충돌/렌더링 검사를 수행하여 불필요한 연산 발생
 
 **💡 해결 과정**
-- 그림자맵 해상도를 4096x4096으로 상향
-- Shadow Pass를 별도로 분리하여 깊이 정보만 저장
-- PCF(Percentage Closer Filtering) 구현으로 그림자 경계 부드럽게 처리
-- Depth Stencil View와 Shader Resource View 동시 활용
-- 그림자 바이어스 조정으로 Self-Shadowing 아티팩트 제거
+- 쿼드 트리(Quad Tree) 자료구조 도입으로 공간 분할
+- 맵을 4개의 사분면으로 재귀적으로 분할하는 트리 구조 구현
+- 각 노드에 해당 영역 내 오브젝트 정보 저장
+- 카메라 절두체(Frustum) 내 노드만 탐색하여 렌더링 대상 선별
+- 충돌 검사 시 인접 영역의 오브젝트만 체크
 
 **✅ 결과**
-- 그림자 품질 대폭 향상
-- 계단 현상 완화
-- 자연스러운 그림자 표현
+- 렌더링/충돌 검사 대상 오브젝트 수 대폭 감소
+- 넓은 맵에서도 안정적인 프레임 유지
+- 공간 쿼리 성능 향상 (O(n) → O(log n))
 
 <br>
 
@@ -854,28 +853,28 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 | 시스템 | 링크 |
 |:---:|:---|
-| 🎨 **G-Buffer 생성** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/Graphics.cpp#L100-L200) |
-| 💡 **Lighting Pass 셰이더** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/DeferredLighting.fx) |
+| 🎨 **G-Buffer 생성** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/Graphics.cpp#L333-L390) |
+| 💡 **Lighting Pass 셰이더** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20DeferredLighting.fx) |
 
 ### 🎭 인스턴싱 시스템
 
 | 기능 | 링크 |
 |:---:|:---|
-| 🔄 **인스턴스 버퍼 관리** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/InstancingBuffer.cpp) |
-| 🎮 **MeshRenderer 인스턴싱** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/MeshRenderer.cpp) |
+| 🔄 **인스턴스 버퍼 관리** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/InstancingBuffer.cpp) |
+| 🎮 **MeshRenderer 인스턴싱** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/MeshRenderer.cpp#L91-L116) |
 
-### 🌑 그림자 시스템
+### 🌑 쿼드 트리
 
 | 기능 | 링크 |
 |:---:|:---|
-| 🌓 **Shadow Pass** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/Graphics.cpp) |
-| ✨ **그림자 셰이더** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/Shadow.fx) |
+| 🌓 **쿼드 트리 노드 삽입** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257) |
+| ✨ **쿼드 트리 쿼리** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L75-L93) |
 
 ### 🌫️ Fog of War
 
 | 기능 | 링크 |
 |:---:|:---|
-| 👁️ **FOW 계산 로직** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/FogOfWar.fx) |
+| 👁️ **FOW 계산 로직** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/FOW.fx) |
 
 ### 🎬 애니메이션 시스템
 
