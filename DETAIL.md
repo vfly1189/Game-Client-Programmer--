@@ -312,7 +312,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 | 👥 **개발 인원** | 1인 (개인 프로젝트) |
 | 🛠️ **개발 환경** | C++, Win32 API, Direct2D, FMOD |
 | 🎬 **시연 영상** | [바로가기](https://tobrother.tistory.com/144) |
-| 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/WinApi/TBI) |
+| 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/WinApi/TBI%28%EB%8D%94%20%EB%B0%94%EC%9D%B8%EB%94%A9%20%EC%98%A4%EB%B8%8C%20%EC%95%84%EC%9D%B4%EC%9E%91%29%20%EB%AA%A8%EC%9E%91) |
 | 💾 **GitHub** | [소스코드](https://github.com/vfly1189/TBI) |
 
 </div>
