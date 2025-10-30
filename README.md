@@ -31,8 +31,7 @@
 
 ## 🎮 TBI : The Binding Of Isaac ([상세내용](DETAIL.md#-tbi-모작))
 
-> 
-( 2025.03 ~ 2025.05 )
+> ( 2025.03 ~ 2025.05 )
 
 ### 사용 기술 및 언어
 - Visual Studio 2022, Win32API, DirectWrite, Direct2D, GDI+, FMOD
@@ -52,9 +51,7 @@
 
 ## 🎮 Eternal Return ( 이터널리턴 )  ([상세내용](DETAIL.md#-이터널-리턴-모작))
 
-
-
-( 2025.07 ~ 2025.09 )
+> ( 2025.07 ~ 2025.09 )
 
 ### 사용 기술 및 언어
 - Visual Studio 2022, C++ , DirectX11 , HLSL , Win32API
