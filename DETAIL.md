@@ -558,8 +558,16 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 | 기능 | 링크 |
 |:---:|:---|
-| 💥 **Rigid정 시스템** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455) |
+| 💥 **RigidBody 물리** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CRigidBody.cpp) |
+| 🎯 **Collider 충돌** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CCollider.cpp) |
+| 🎬 **Animator 애니메이션** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CAnimator.cpp) |
 
+### 🗺️ 던전 생성
+
+| 기능 | 링크 |
+|:---:|:---|
+| 🏰 **던전 생성 알고리즘** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135) |
+| 🚪 **방 관리 시스템** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455) |
 ---
 
 
