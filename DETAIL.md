@@ -880,8 +880,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 | 기능 | 링크 |
 |:---:|:---|
-| 🦴 **스켈레탈 애니메이션** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/AnimRenderer.cpp) |
-| ⚡ **Compute Shader 스키닝** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Resources/Shader/Skinning.fx) |
+| 🦴 **스켈레탈 애니메이션** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L575-L611) |
+| ⚡ **키프레임 보간** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L749-L785) |
 
 ---
 
