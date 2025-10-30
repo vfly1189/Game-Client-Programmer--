@@ -544,7 +544,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 | 기능 | 링크 |
 |:---:|:---|
 | 🤖 **State 기본 구조** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CState.h) |
-| 🏃 **TraceState 구현** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CTraceState.cpp) |
+| 🏃 **TraceState 구현** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63) |
 
 ### 🎁 아이템 시스템
 
@@ -552,22 +552,13 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 |:---:|:---|
 | 🎨 **아이템 기본 클래스** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CItem.h) |
 | 💎 **PickUpItem 구현** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CPickUpItem.cpp) |
-| 💣 **폭탄 시스템** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CBomb.cpp) |
+| 💣 **폭탄 시스템** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66) |
 
 ### ⚙️ 컴포넌트 시스템
 
 | 기능 | 링크 |
 |:---:|:---|
-| 💥 **RigidBody 물리** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CRigidBody.cpp) |
-| 🎯 **Collider 충돌** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CCollider.cpp) |
-| 🎬 **Animator 애니메이션** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CAnimator.cpp) |
-
-### 🗺️ 던전 생성
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🏰 **던전 생성 알고리즘** | [코드 보기](링크 추가 필요) |
-| 🚪 **방 관리 시스템** | [코드 보기](링크 추가 필요) |
+| 💥 **Rigid정 시스템** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455) |
 
 ---
 
