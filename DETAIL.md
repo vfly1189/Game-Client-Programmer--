@@ -129,7 +129,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 </details>
 
-<details>
+<details open>
 <summary><b>✍️ 폰트 시스템</b></summary>
 
 <br>
@@ -141,7 +141,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 </details>
 
-<details>
+<details open>
 <summary><b>📦 리소스 관리</b></summary>
 
 <br>
@@ -153,7 +153,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 </details>
 
-<details>
+<details open>
 <summary><b>🖼️ UI 시스템</b></summary>
 
 <br>
@@ -165,7 +165,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 </details>
 
-<details>
+<details open>
 <summary><b>🔊 사운드 시스템</b></summary>
 
 <br>
@@ -395,7 +395,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🎨 애니메이션 시스템</b></summary>
 
 <br>
@@ -411,7 +411,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🎁 아이템 시스템</b></summary>
 
 <br>
@@ -433,7 +433,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🎬 씬 관리 시스템</b></summary>
 
 <br>
@@ -686,7 +686,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🎬 애니메이션 시스템</b></summary>
 
 <br>
@@ -704,7 +704,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🏗️ 컴포넌트 기반 아키텍처</b></summary>
 
 <br>
@@ -723,7 +723,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🎯 충돌 감지 시스템</b></summary>
 
 <br>
@@ -741,7 +741,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🎮 카메라 시스템</b></summary>
 
 <br>
