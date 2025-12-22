@@ -302,15 +302,31 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - CObject 최상위 클래스를 기반으로 Player, Monster, Item, Projectile 등 구현
 - 각 객체 타입별 특화된 기능을 가진 추상 클래스 설계
 - Clone() 패턴을 통한 효율적인 객체 복제 시스템
+  
+</details>
 
-**아이템 계층 구조** [[📄CItem.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CItem.h)
-- CItem 추상 기본 클래스에서 CPickUpItem, CCollectiblesItem, CBomb으로 분화
-- 타입별 독립적인 동작 방식과 상호작용 로직 구현
-  - [[📄폭탄 아이템 동작]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
-  - [[📄특수 아이템 초기화 및 동작]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollectiblesItem.cpp#L29-L57)
-- enum 기반 타입 관리로 확장성 확보
+<details open>
+<summary><b>🎁 객체 지향적 아이템 설계 (계층 구조 및 시스템)</b></summary>
+
+<br>
+**추상화 및 확장성 설계** [[📄CItem.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CItem.h)
+- `CItem` 추상 클래스를 정의하고 `enum`으로 타입을 관리하여 확장성 확보
+- 기능과 역할에 따라 3가지 핵심 파생 클래스로 분화하여 구현
+
+**1. 수집형 아이템 (PickUpItem)**
+- 동전, 하트, 열쇠, 폭탄 등 소모성 아이템 관리
+- 충돌 시(`OnCollisionEnter`) 자동 수집 및 플레이어 스탯/인벤토리 반영
+
+**2. 장식형 아이템 (CollectiblesItem)**
+- 영구 능력치 상승 아이템 (패시브 효과) [[📄특수 아이템 초기화]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollectiblesItem.cpp#L29-L57)
+- 받침대, 그림자, 아이템 본체를 포함하는 복합 렌더링 구조 및 동적 이미지 로딩
+
+**3. 폭탄 아이템 (Bomb)** [[📄폭탄 동작 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
+- 점화(Ignite) → 폭발(Explode) → 소멸(Dead)
+- 폭발 시 충돌체(Collider) 크기를 동적으로 확장하여 광역 데미지 처리
 
 </details>
+
 
 <details open>
 <summary><b>🎮 State 패턴 기반 몬스터 AI</b></summary>
