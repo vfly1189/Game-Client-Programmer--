@@ -24,7 +24,6 @@
  > 📖 [게임 개요](#-게임-개요-1) <br>
    🔨 [주요 개발](#-주요-개발-1) <br>
    🛠️ [문제 해결](#%EF%B8%8F-문제-해결-1) <br>
-   💻 [코드 샘플](#-코드-샘플-1)
       </a>
       </td>
       <td valign="top">
@@ -34,7 +33,6 @@
  > 📖 [게임 개요](#-게임-개요-2) <br>
    🔨 [주요 개발](#-주요-개발-2) <br>
    🛠️ [문제 해결](#%EF%B8%8F-문제-해결-2) <br>
-   💻 [코드 샘플](#-코드-샘플-2)
       </a>
       </td>
     </tr>
@@ -81,8 +79,11 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**싱글톤 패턴 기반 매니저 시스템 구현** [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
+**싱글톤 패턴 기반 매니저 시스템 구현** [[📄매니저 시스템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
 - CCore, CTimeMgr, CKeyMgr, CCamera, CSceneMgr 등 핵심 시스템을 싱글톤으로 설계
+  - [[📄SceneMgr 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
+  - [[📄Camera 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCamera.cpp#L42-L70)
+  - [[📄KeyMgr 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CkeyMgr.cpp#L77-L133)
 - 게임 전반에 걸쳐 일관된 접근 방식 제공 및 메모리 관리 효율화
 
 </details>
@@ -92,13 +93,13 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**Direct2D 기반 렌더링 파이프라인 구축**
+**Direct2D 기반 렌더링 파이프라인 구축** [[📄Direct2D.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/Direct2DMgr.h)
 - GDI/GDI+에서 Direct2D로 전환하여 FPS 20~40에서 60+ FPS로 성능 대폭 개선
 - 자동 더블 버퍼링을 통한 깜박임 없는 부드러운 화면 전환
 
 **비트맵 관리 시스템**
 - `unordered_map`을 활용한 비트맵 캐싱 시스템 구현
-- 타일 분할 기능: 큰 이미지를 32x32 픽셀 단위로 자동 분할하여 타일맵 생성
+- 타일 분할 기능: 큰 이미지를 32x32 픽셀 단위로 분할하여 타일맵 생성
 - 초기 로딩 시 모든 리소스를 메모리에 적재하여 런타임 성능 최적화
 
 </details>
@@ -112,6 +113,9 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - CScene 추상 클래스 기반 상속 구조 (Main, Select_Character, Select_Weapon, Start, Shop, Run_End)
 - Enter()/Exit() 가상 함수를 통한 씬 진입/탈출 시 리소스 관리
 - 이벤트 지연 처리 시스템으로 안전한 씬 전환
+  - [[📄씬 전환 이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L26-L33)
+  - [[📄이벤트 매니저 update]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+  - [[📄이벤트 실행]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L71-L80)
 
 </details>
 
@@ -120,7 +124,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**컴포넌트 기반 오브젝트 설계**
+**컴포넌트 기반 오브젝트 설계** [[📄CObject.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CObject.h)
 - CObject 추상 클래스를 기반으로 Player, Monster, Weapon, UI 등 다양한 객체 구현
 - Collider, Animator, Rigidbody, Gravity 등 필요에 따라 동적으로 추가 가능한 컴포넌트
 - Clone() 가상 함수를 통한 프로토타입 패턴 구현
@@ -132,7 +136,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**자동 리소스 로더**
+**자동 리소스 로더** [[📄파일 로딩]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CFileMgr.cpp#L64-L100)
 - 게임 시작 시 content 폴더를 재귀적으로 탐색하여 모든 png, mp3, wav 파일 자동 로딩
 - 파일명을 태그로 사용하여 간편한 리소스 접근
 - 경로 관리자(CPathMgr)를 통한 상대 경로 처리
@@ -146,7 +150,10 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **계층적 UI 구조**
 - PanelUI, BtnUI, SliderUI 등 다양한 UI 컴포넌트
-- 콜백 함수 시스템을 통한 이벤트 처리 (전역 함수 및 멤버 함수 모두 지원)
+  - [[📄CUI.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CUI.h)
+  - [[📄CPanelUI.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CPanelUI.h)
+  - [[📄CBtn.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CBtnUI.h)
+- 콜백 함수 시스템을 통한 이벤트 처리 [[📄버튼UI 콜백 함수 시스템템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CBtnUI.h#L90-L109)
 - TextUI 컴포넌트로 텍스트 렌더링 및 외곽선 효과 지원
 
 </details>
@@ -232,8 +239,8 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **💡 해결 과정**
 - 이벤트 지연 처리 시스템(CEventMgr) 구현
-  - 📝 **이벤트 등록** [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
-  - 🔄 **이벤트 처리** [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+  - 📝  [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
+  - 🔄  [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
 - 프레임 단위 작업이 모두 완료된 후 이벤트 처리
 - Scene의 Enter()/Exit() 가상 함수로 명확한 초기화/정리 시점 제공
 - unordered_set을 이용한 중복 이벤트 처리 방지
@@ -309,8 +316,9 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 <br>
 
 **AI 상태 관리**
-- State 패턴을 활용한 몬스터 행동 시스템 구현
+- State 패턴을 활용한 몬스터 행동 시스템 구현 [[📄코드 보기]](https://github.com/vfly1189/TBI/blob/main/Client/CState.h)
 - IDLE, TRACE, ATTACK, DEAD 등 상태별 독립적인 로직
+  - 🏃 **TraceState 구현** [[📄코드 보기]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
 - 상태 전환 조건을 정의하여 예측 가능한 AI 동작
 
 **다양한 몬스터 타입**
@@ -325,8 +333,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 <br>
 
 **랜덤 던전 생성 알고리즘**
-- 방 배치 알고리즘을 통한 무작위 던전 구조 생성
-- 시작방, 보물방, 보스방 등 특수 방 배치 로직
+- 방 배치 알고리즘을 통한 무작위 던전 구조 생성 [[📄코드 보기]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135)
+- 시작방, 보물방, 보스방 등 특수 방 배치 로직 [[📄코드 보기]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455)
 - 방 간 연결 통로 자동 생성
 
 **타일 기반 맵 시스템**
@@ -465,6 +473,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **💡 해결 과정**
 - CRigidBody 컴포넌트에 힘(Force), 가속도, 속도 개념 도입
+  - 💥 **RigidBody 물리** | [[📄코드 보기]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82)
 - `AddForce()` 함수로 즉각적인 힘 적용 시스템 구현
 - 매 프레임 속도에 마찰력을 적용하여 자연스러운 감속
 - 벽 충돌 시 속도 벡터 반사 처리
