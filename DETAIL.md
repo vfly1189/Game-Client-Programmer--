@@ -82,7 +82,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**싱글톤 패턴 기반 매니저 시스템 구현** [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
+**싱글톤 패턴 기반 매니저 시스템 구현** [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
 - CCore, CTimeMgr, CKeyMgr, CCamera, CSceneMgr 등 핵심 시스템을 싱글톤으로 설계
 - 게임 전반에 걸쳐 일관된 접근 방식 제공 및 메모리 관리 효율화
 
@@ -193,9 +193,9 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 > 36x36 그리드의 타일맵을 렌더링할 때 매 프레임마다 1,296개의 개별 타일 객체를 각각 그리는 방식으로 인한 성능 저하
 
 **💡 해결 과정**
-- `CreateCompositeMapBitmap()` 함수를 구현하여 타일 합성 시스템 개발 [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265)
+- `CreateCompositeMapBitmap()` 함수를 구현하여 타일 합성 시스템 개발 [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265)
 - 오프스크린 렌더 타겟(`ID2D1BitmapRenderTarget`)을 생성하여 거대한 캔버스(1,152x1,152 픽셀) 준비
-- 게임 시작 시 모든 32x32 픽셀 타일들을 하나의 거대한 비트맵으로 미리 합성 [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
+- 게임 시작 시 모든 32x32 픽셀 타일들을 하나의 거대한 비트맵으로 미리 합성 [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
 - 테두리 타일은 규칙적으로, 내부 타일은 랜덤하게 배치하여 자연스러운 맵 생성
 - 런타임에는 합성된 단일 비트맵만 렌더링하도록 변경
 
@@ -233,8 +233,8 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **💡 해결 과정**
 - 이벤트 지연 처리 시스템(CEventMgr) 구현
-  - 📝 **이벤트 등록** [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
-  - 🔄 **이벤트 처리** [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+  - 📝 **이벤트 등록** [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
+  - 🔄 **이벤트 처리** [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
 - 프레임 단위 작업이 모두 완료된 후 이벤트 처리
 - Scene의 Enter()/Exit() 가상 함수로 명확한 초기화/정리 시점 제공
 - unordered_set을 이용한 중복 이벤트 처리 방지
