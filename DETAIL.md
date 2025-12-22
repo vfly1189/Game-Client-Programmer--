@@ -319,7 +319,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **AI 상태 관리**
 - State 패턴을 활용한 몬스터 행동 시스템 구현 [[📄CState.h]](https://github.com/vfly1189/TBI/blob/main/Client/CState.h)
 - IDLE, TRACE, ATTACK, DEAD 등 상태별 독립적인 로직
-  - [[📄TraceState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
+  - [[📄파리 몬스터 TraceState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
+  - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
 - 상태 전환 조건을 정의하여 예측 가능한 AI 동작
 
 **다양한 몬스터 타입**
@@ -403,7 +404,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **씬 전환 구조**
 - 메인 메뉴, 캐릭터 선택, 던전, 보스방 씬 구현
-- 페이드 인/아웃 효과를 통한 부드러운 전환 [[📄화면 전환 페이트 인/아웃 효과]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CScene_Main.cpp#L166-L186)
+- 페이드 인/아웃 효과를 통한 부드러운 전환 [[📄화면 전환 페이트 인/아웃 효과]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CScene_Main.cpp#L166-L195)
 - 씬별 리소스 로드/언로드 관리
 
 **UI 시스템**
@@ -425,10 +426,14 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 > 
 > if-else 중첩으로 구현된 몬스터 AI 로직이 복잡해지고 유지보수가 어려움
 
-**💡 해결 과정**
+**💡 해결 과정** [[📄CState.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CState.h)
 - State 패턴을 도입하여 각 상태를 독립적인 클래스로 분리
 - CState 추상 클래스를 기반으로 IdleState, TraceState, AttackState 구현
+  - [[📄파리 몬스터 TraceState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
+  - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
 - 상태 전환 조건을 정의하고 FSM(Finite State Machine) 구조 적용
+  - [[📄보스 몬스터 TraceState -> AttackState 전환]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumTraceState.cpp#L43-L49)
+  - [[📄보스 몬스터 IdleState -> TraceState 전환]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumIdleState.cpp#L67-L73)
 - 각 몬스터 타입별 상태 클래스를 상속하여 특화된 행동 구현
 
 **✅ 결과**
@@ -444,7 +449,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 > 
 > 고정된 맵 구조로 인한 반복 플레이 시 지루함 발생
 
-**💡 해결 과정**
+**💡 해결 과정** [[📄방 생성 알고리즘]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135)
 - **BFS(Breadth-First Search) 알고리즘**을 활용한 방 배치 시스템 구현
 - 시작 방에서 큐(queue)를 사용하여 인접한 4방향으로 순차적으로 방 확장
 - `countNeighbors()` 함수로 각 방이 **단일 연결**만 가지도록 제약 조건 적용
@@ -453,6 +458,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 맨해튼 거리(Manhattan Distance) 계산을 통한 특수 방 배치
   - **보스방**: 시작 방에서 가장 먼 막다른 방에 배치
   - **보물방**: 시작 방에서 가장 가까운 막다른 방에 배치
+  - [[📄특수 방 배치]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455)
 - JSON 파일 기반 방 레이아웃 로딩 시스템
 
 **✅ 결과**
@@ -471,10 +477,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **💡 해결 과정**
 - CRigidBody 컴포넌트에 힘(Force), 가속도, 속도 개념 도입
-  - 💥 **RigidBody 물리** | [[📄코드 보기]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82)
+  - [[📄CRigidBody 구현]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82)
 - `AddForce()` 함수로 즉각적인 힘 적용 시스템 구현
 - 매 프레임 속도에 마찰력을 적용하여 자연스러운 감속
-- 벽 충돌 시 속도 벡터 반사 처리
+- 벽 충돌 시 속도 벡터 반사 처리(보스 몬스터 한정)
 
 **✅ 결과**
 - 피격 시 넉백 효과로 타격감 향상
@@ -488,12 +494,14 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 > 
 > 다양한 아이템 타입(소모성, 영구, 폭탄 등)을 하나의 클래스로 관리하기 어려움
 
-**💡 해결 과정**
-- CItem 추상 기본 클래스 설계
+**💡 해결 과정** 
+- CItem 추상 기본 클래스 설계 [[📄CItem.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CItem.h)
 - 타입별 특화 클래스 분리: CPickUpItem, CCollectiblesItem, CBomb
 - 각 클래스에서 고유한 상호작용 로직 구현
+  - [[📄폭탄 아이템 동작]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
+  - [[📄특수 아이템 초기화 및 동작]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollectiblesItem.cpp#L29-L57)
 - CollectiblesItem은 복합 UI 구조(받침대, 그림자, 아이템)로 구성
-- 폭탄은 상태 머신 패턴으로 점화/폭발 단계 관리
+- 폭탄은 점화 → 폭발 → 소멸의 상태 머신 구현
 
 **✅ 결과**
 - 아이템 타입별 독립적인 로직으로 확장성 향상
@@ -502,43 +510,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
----
-
-## 💻 코드 샘플
-
-### 📌 State 패턴
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🤖 **State 기본 구조** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CState.h) |
-| 🏃 **TraceState 구현** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63) |
-
-### 🎁 아이템 시스템
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🎨 **아이템 기본 클래스** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CItem.h) |
-| 💎 **PickUpItem 구현** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CPickUpItem.cpp) |
-| 💣 **폭탄 시스템** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66) |
-
-### ⚙️ 컴포넌트 시스템
-
-| 기능 | 링크 |
-|:---:|:---|
-| 💥 **RigidBody 물리** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82) |
-| 🎯 **Collider 충돌** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollisionMgr.cpp#L22-L129) |
-| 🎬 **Animator 애니메이션** | [코드 보기](https://github.com/vfly1189/TBI/blob/main/Client/CAnimator.cpp) |
-
-### 🗺️ 던전 생성
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🏰 **던전 생성 알고리즘** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135) |
-| 🚪 **방 관리 시스템** | [코드 보기](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455) |
----
-
-
----
 
 
 ---
