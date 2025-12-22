@@ -15,7 +15,6 @@
  > 📖 [게임 개요](#-게임-개요) <br>
    🔨 [주요 개발](#-주요-개발) <br>
    🛠️ [문제 해결](#%EF%B8%8F-문제-해결) <br>
-   💻 [코드 샘플](#-코드-샘플)
        </a>
       </td>
       <td valign="top">
@@ -246,34 +245,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 ---
 
-## 💻 코드 샘플
-
-### 📌 핵심 시스템
-
-| 시스템 | 링크 |
-|:---:|:---|
-| 🎮 **SingleTon 매니저 시스템** | [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103) |
-| 🔄 **Core 게임 루프** | [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173) |
-
-### 🗺️ 타일맵 시스템
-
-| 기능 | 링크 |
-|:---:|:---|
-| ✂️ **비트맵 분할 시스템** | [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265) |
-| 🚀 **타일맵 생성 최적화** | [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547) |
-
-### ⚡ 이벤트 시스템
-
-| 기능 | 링크 |
-|:---:|:---|
-| 📝 **이벤트 등록** | [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43) |
-| 🔄 **이벤트 처리** | [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42) |
-
-### 💥 충돌 시스템
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🎯 **충돌 감지** | [코드 보기](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCollisionMgr.cpp#L22-L129) |
 
 ---
 
