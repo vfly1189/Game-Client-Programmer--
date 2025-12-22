@@ -158,7 +158,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
   - [[📄CUI.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CUI.h)
   - [[📄CPanelUI.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CPanelUI.h)
   - [[📄CBtn.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CBtnUI.h)
-- 콜백 함수 시스템을 통한 이벤트 처리 [[📄버튼UI 콜백 함수 시스템템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CBtnUI.h#L90-L109)
+- 콜백 함수 시스템을 통한 이벤트 처리 [[📄버튼UI 콜백 함수 시스템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CBtnUI.h#L90-L109)
 - TextUI 컴포넌트로 텍스트 렌더링 및 외곽선 효과 지원
 
 </details>
@@ -302,7 +302,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - CObject 최상위 클래스를 기반으로 Player, Monster, Item, Projectile 등 구현
 - 각 객체 타입별 특화된 기능을 가진 추상 클래스 설계
 - Clone() 패턴을 통한 효율적인 객체 복제 시스템
-  
 </details>
 
 <details open>
@@ -770,7 +769,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 맵을 4개의 사분면으로 재귀적으로 분할하는 트리 구조 구현 [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
 - 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
 - 카메라 절두체(Frustum) 내 노드만 탐색하여 렌더링 대상 선별 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
-- 충돌 처리 [[📄충돌 처리]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
+- 충돌 처리 [[📄쿼드 트리 충돌 로직]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
 
 **✅ 결과**
 - 렌더링/충돌 검사 대상 오브젝트 수 대폭 감소
