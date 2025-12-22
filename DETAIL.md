@@ -81,7 +81,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **싱글톤 패턴 기반 매니저 시스템 구현** [[📄매니저 시스템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
 - CCore, CTimeMgr, CKeyMgr, CCamera, CSceneMgr 등 핵심 시스템을 싱글톤으로 설계
-  - [[📄SceneMgr 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
+  - [[📄SceneMgr.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSceneMgr.h)
   - [[📄Camera 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCamera.cpp#L42-L70)
   - [[📄KeyMgr 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CkeyMgr.cpp#L77-L133)
 - 게임 전반에 걸쳐 일관된 접근 방식 제공 및 메모리 관리 효율화
@@ -100,6 +100,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 **비트맵 관리 시스템**
 - `unordered_map`을 활용한 비트맵 캐싱 시스템 구현
 - 타일 분할 기능: 큰 이미지를 32x32 픽셀 단위로 분할하여 타일맵 생성
+  - [[📄비트맵 분할 함수]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265) 
 - 초기 로딩 시 모든 리소스를 메모리에 적재하여 런타임 성능 최적화
 
 </details>
@@ -111,6 +112,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **씬 전환 구조**
 - CScene 추상 클래스 기반 상속 구조 (Main, Select_Character, Select_Weapon, Start, Shop, Run_End)
+  - [[📄Scene.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CScene.h)
 - Enter()/Exit() 가상 함수를 통한 씬 진입/탈출 시 리소스 관리
 - 이벤트 지연 처리 시스템으로 안전한 씬 전환
   - [[📄씬 전환 이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L26-L33)
@@ -126,7 +128,10 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **컴포넌트 기반 오브젝트 설계** [[📄CObject.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CObject.h)
 - CObject 추상 클래스를 기반으로 Player, Monster, Weapon, UI 등 다양한 객체 구현
-- Collider, Animator, Rigidbody, Gravity 등 필요에 따라 동적으로 추가 가능한 컴포넌트
+- Collider, Animator, Rigidbody 등 필요에 따라 동적으로 추가 가능한 컴포넌트
+  - [[📄Collider.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CCollider.h)
+  - [[📄Animator.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CAnimator.h)
+  - [[📄Rigidbody.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CRigidbody.h)
 - Clone() 가상 함수를 통한 프로토타입 패턴 구현
 
 </details>
@@ -163,7 +168,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**FMOD 기반 오디오 엔진**
+**FMOD 기반 오디오 엔진** [[📄사운드 매니저]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSoundMgr.h)
 - BGM과 SFX 채널 분리 관리
 - 마스터 볼륨, BGM 볼륨, SFX 볼륨 개별 조절 기능
 - 슬라이더 UI를 통한 실시간 볼륨 조정
@@ -182,7 +187,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 > 
 > GDI/GDI+를 사용한 초기 렌더링에서 타일맵만 그려도 FPS가 20~40대로 저조한 성능
 
-**💡 해결 과정**
+**💡 해결 과정** [[📄Direct2D 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L15-L59)
 - Direct2D API 학습 및 렌더링 파이프라인 재구축
 - `ID2D1HwndRenderTarget`을 통한 하드웨어 가속 렌더링 적용
 - `CreateCompatibleRenderTarget()`을 활용한 오프스크린 렌더링 구현
@@ -198,10 +203,9 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 > 
 > 36x36 그리드의 타일맵을 렌더링할 때 매 프레임마다 1,296개의 개별 타일 객체를 각각 그리는 방식으로 인한 성능 저하
 
-**💡 해결 과정**
-- 타일 합성 시스템 개발 [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265)
+**💡 해결 과정** [[📄타일맵 생성 함수]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
 - 오프스크린 렌더 타겟(`ID2D1BitmapRenderTarget`)을 생성하여 거대한 캔버스(1,152x1,152 픽셀) 준비
-- 게임 시작 시 모든 32x32 픽셀 타일들을 하나의 거대한 비트맵으로 미리 합성 [[📄코드 보기]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
+- 게임 시작 시 모든 32x32 픽셀 타일들을 하나의 거대한 비트맵으로 미리 합성 
 - 테두리 타일은 규칙적으로, 내부 타일은 랜덤하게 배치하여 자연스러운 맵 생성
 - 런타임에는 합성된 단일 비트맵만 렌더링하도록 변경
 
@@ -218,7 +222,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 > 
 > 각 Scene마다 필요한 리소스를 수동으로 로드하여 코드 중복 및 관리 어려움
 
-**💡 해결 과정**
+**💡 해결 과정** [[📄파일 로딩]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CFileMgr.cpp#L64-L100)
 - CFileMgr 클래스 구현으로 폴더 재귀 탐색 기능 추가
 - `WIN32_FIND_DATA`를 활용한 파일 시스템 탐색
 - 파일 확장자별 자동 분류 및 적절한 매니저에 등록
@@ -239,9 +243,10 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **💡 해결 과정**
 - 이벤트 지연 처리 시스템(CEventMgr) 구현
-  - 📝  [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
-  - 🔄  [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+  - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
+  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
 - 프레임 단위 작업이 모두 완료된 후 이벤트 처리
+  - [[📄이벤트 매니저 업데이트 위치]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
 - Scene의 Enter()/Exit() 가상 함수로 명확한 초기화/정리 시점 제공
 - unordered_set을 이용한 중복 이벤트 처리 방지
 
@@ -249,12 +254,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - 안정적인 메모리 관리
 
 <br>
-
----
-
-
----
-
 
 
 
