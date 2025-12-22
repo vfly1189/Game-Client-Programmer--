@@ -96,7 +96,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 **Direct2D 기반 렌더링 파이프라인 구축**
 - GDI/GDI+에서 Direct2D로 전환하여 FPS 20~40에서 60+ FPS로 성능 대폭 개선
 - 자동 더블 버퍼링을 통한 깜박임 없는 부드러운 화면 전환
-- WIC(Windows Imaging Component) 팩토리를 활용한 다양한 이미지 포맷 지원
 
 **비트맵 관리 시스템**
 - `unordered_map`을 활용한 비트맵 캐싱 시스템 구현
@@ -110,10 +109,10 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**유연한 씬 전환 구조**
+**씬 전환 구조**
 - CScene 추상 클래스 기반 상속 구조 (Main, Select_Character, Select_Weapon, Start, Shop, Run_End)
 - Enter()/Exit() 가상 함수를 통한 씬 진입/탈출 시 리소스 관리
-- 이벤트 지연 처리 시스템으로 안전한 씬 전환 보장
+- 이벤트 지연 처리 시스템으로 안전한 씬 전환
 
 </details>
 
@@ -126,18 +125,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - CObject 추상 클래스를 기반으로 Player, Monster, Weapon, UI 등 다양한 객체 구현
 - Collider, Animator, Rigidbody, Gravity 등 필요에 따라 동적으로 추가 가능한 컴포넌트
 - Clone() 가상 함수를 통한 프로토타입 패턴 구현
-
-</details>
-
-<details open>
-<summary><b>✍️ 폰트 시스템</b></summary>
-
-<br>
-
-**커스텀 폰트 로더 구현**
-- DirectWrite API를 활용한 .ttf 폰트 파일 동적 로딩
-- CFontCollectionLoader와 CFontFileEnumerator를 통한 커스텀 폰트 컬렉션 관리
-- 다국어 지원 (영문: Anybody-Medium, 한글: NotoSansKR-Medium)
 
 </details>
 
@@ -190,26 +177,24 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 > GDI/GDI+를 사용한 초기 렌더링에서 타일맵만 그려도 FPS가 20~40대로 저조한 성능
 
 **💡 해결 과정**
-- Direct2D API 학습 및 렌더링 파이프라인 전면 재구축
+- Direct2D API 학습 및 렌더링 파이프라인 재구축
 - `ID2D1HwndRenderTarget`을 통한 하드웨어 가속 렌더링 적용
 - `CreateCompatibleRenderTarget()`을 활용한 오프스크린 렌더링 구현
-- WIC 팩토리를 통한 효율적인 이미지 로딩
 
 **✅ 결과**
-- FPS 60+ 안정적 유지, 깜박임 현상 완전 제거
+- FPS 60+ 안정적 유지, 깜박임 현상 제거
 - 게임 전체의 부드러운 플레이 경험 제공
 
 <br>
 
 ### 2️⃣ 타일맵 렌더링 최적화
-
 > **🚨 문제 상황**
 > 
 > 36x36 그리드의 타일맵을 렌더링할 때 매 프레임마다 1,296개의 개별 타일 객체를 각각 그리는 방식으로 인한 성능 저하
 
 **💡 해결 과정**
 - `CreateCompositeMapBitmap()` 함수를 구현하여 타일 합성 시스템 개발
-- 오프스크린 렌더 타겟(`ID2D1BitmapRenderTarget`)을 생성하여 거대한 캔버스(1,168x1,168 픽셀) 준비
+- 오프스크린 렌더 타겟(`ID2D1BitmapRenderTarget`)을 생성하여 거대한 캔버스(1,152x1,152 픽셀) 준비
 - 게임 시작 시 모든 32x32 픽셀 타일들을 하나의 거대한 비트맵으로 미리 합성
 - 테두리 타일은 규칙적으로, 내부 타일은 랜덤하게 배치하여 자연스러운 맵 생성
 - 런타임에는 합성된 단일 비트맵만 렌더링하도록 변경
@@ -350,10 +335,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
-**유연한 AI 상태 관리**
+**AI 상태 관리**
 - State 패턴을 활용한 몬스터 행동 시스템 구현
 - IDLE, TRACE, ATTACK, DEAD 등 상태별 독립적인 로직
-- 상태 전환 조건을 명확히 정의하여 예측 가능한 AI 동작
+- 상태 전환 조건을 정의하여 예측 가능한 AI 동작
 
 **다양한 몬스터 타입**
 - 기본 추적형, 원거리 공격형, 돌진형 등 다양한 패턴 구현
@@ -464,7 +449,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **💡 해결 과정**
 - State 패턴을 도입하여 각 상태를 독립적인 클래스로 분리
 - CState 추상 클래스를 기반으로 IdleState, TraceState, AttackState 구현
-- 상태 전환 조건을 명확히 정의하고 FSM(Finite State Machine) 구조 적용
+- 상태 전환 조건을 정의하고 FSM(Finite State Machine) 구조 적용
 - 각 몬스터 타입별 상태 클래스를 상속하여 특화된 행동 구현
 
 **✅ 결과**
@@ -624,7 +609,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 풀스크린 쿼드를 통한 라이팅 패스 구현
 
 **렌더링 파이프라인 구조**
-- Shadow Pass: 4096x4096 그림자맵 생성
 - Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장
 - Lighting Pass: G-Buffer 데이터 기반 조명 계산
 - Forward Pass: 투명 객체 처리 (알파 블렌딩)
@@ -640,7 +624,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 동일 메시의 다수 객체를 한 번의 DrawCall로 처리
 - 인스턴스 버퍼를 통한 Transform 데이터 전달
 - MeshRenderer, ModelRenderer, AnimRenderer별 인스턴싱 지원
-- DrawIndexedInstanced를 활용한 배치 렌더링
 
 **성능 최적화**
 - DrawCall 수 대폭 감소
