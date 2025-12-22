@@ -571,16 +571,16 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
-**디퍼드 렌더링 시스템 구축**
-- Forward Rendering에서 Deferred Rendering으로 전환하여 다중 광원 처리 최적화
+**디퍼드 렌더링 시스템 구축** [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
+- Forward Rendering에서 Deferred Rendering으로 전환하여 다중 광원 처리 최적화 
 - G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
 - 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
 - 풀스크린 쿼드를 통한 라이팅 패스 구현
 
 **렌더링 파이프라인 구조**
-- Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장
-- Lighting Pass: G-Buffer 데이터 기반 조명 계산
-- Forward Pass: 투명 객체 처리 (알파 블렌딩)
+- Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
+- Lighting Pass: G-Buffer 데이터 기반 조명 계산 [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L162)
+- Forward Pass: 투명 객체 처리 (알파 블렌딩) [[📄]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
 
 </details>
 
@@ -593,6 +593,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 동일 메시의 다수 객체를 한 번의 DrawCall로 처리
 - 인스턴스 버퍼를 통한 Transform 데이터 전달
 - MeshRenderer, ModelRenderer, AnimRenderer별 인스턴싱 지원
+  - [[📄MeshRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L348)
+  - [[📄ModelRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L350-L386)
+  - [[📄AnimRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
+
 
 **성능 최적화**
 - DrawCall 수 대폭 감소
@@ -606,11 +610,11 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
-**쿼드 트리(Quad Tree) 구현**
+**쿼드 트리(Quad Tree) 구현** [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
 - 2D 공간을 4분할하는 트리 자료구조 설계 및 적용
-- 각 노드에 해당 영역 내 오브젝트 정보 저장
+- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
 - 탐색/삽입/삭제 연산에 따라 노드 분할과 병합 자동 관리
-- 카메라 시야(Frustum)와 노드 영역의 교차 검사로 렌더링 대상을 신속하게 필터링
+- 카메라 시야(Frustum)와 노드 영역의 교차 검사로 렌더링 대상을 신속하게 필터링 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
 
 **최적화 기법**
 - 오브젝트 수가 많아질수록 전체 탐색(O(n)) 대신 부분 공간 탐색(O(log n))으로 성능 대폭 향상
@@ -643,13 +647,15 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 <br>
 
 **스켈레탈 애니메이션**
-- FBX 기반 본 애니메이션 구현
+- FBX 기반 본 애니메이션 구현 [[📄애니메이션 정보 저장]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L575-L608)
 - Compute Shader를 활용한 스키닝 연산
 - 애니메이션 블렌딩 및 전환
+  - [[📄애니메이션 블렌딩]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L57-L130)
+  - [[📄애니메이션 블렌딩-셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20Render.fx#L118-L193)
 - 루트 모션(Root Motion) 지원
 
 **애니메이션 최적화**
-- GPU 스키닝으로 CPU 부하 감소
+- GPU 스키닝으로 CPU 부하 감소 [[📄인스턴싱 + GPU 스키닝]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
 - 애니메이션 인스턴싱 지원
 - LOD에 따른 애니메이션 품질 조절
 
@@ -661,9 +667,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 <br>
 
 **유연한 게임 오브젝트 시스템**
-- GameObject 기반 계층 구조
+- GameObject 기반 계층 구조 [[📄GameObject.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/GameObject.h)
 - Transform, MeshRenderer, Collider 등 다양한 컴포넌트
-- Component 추가/제거/검색 시스템
 - 부모-자식 관계를 통한 Transform 계층
 
 **매니저 시스템**
@@ -680,15 +685,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 <br>
 
 **물리 기반 충돌 처리**
-- AABB(Axis-Aligned Bounding Box) 충돌 검사
-- OBB(Oriented Bounding Box) 지원
-- Sphere Collider 구현
+- AABB(Axis-Aligned Bounding Box) 충돌 검사 [[📄AABB 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L421-L492)
+- Sphere Collider 구현 [[📄Sphere Collider 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L494-L580)
 - 계층적 충돌 그룹 관리
 
-**충돌 이벤트 시스템**
-- OnCollisionEnter/Stay/Exit 콜백
-- 레이어 기반 충돌 필터링
-- 물리 재질별 반응 처리
 
 </details>
 
@@ -697,7 +697,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
-**쿼터뷰 카메라**
+**쿼터뷰 카메라** [[📄메인 카메라]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Client/CameraScript.cpp#L10-L69)
 - 플레이어 추적 카메라
 - 부드러운 카메라 이동 (Lerp)
 - 맵 경계 제한
@@ -793,49 +793,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 전략적 게임플레이 요소 강화
 - 탐색의 재미 추가
 - 시야 공유를 통한 팀 플레이 지원
-
-<br>
-
----
-
-## 💻 코드 샘플
-
-### 📌 Deferred Rendering 파이프라인
-
-| 시스템 | 링크 |
-|:---:|:---|
-| 🎨 **G-Buffer 생성** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/main/Engine/Graphics.cpp#L333-L390) |
-| 💡 **Lighting Pass 셰이더** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20DeferredLighting.fx) |
-
-### 🎭 인스턴싱 시스템
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🔄 **인스턴스 버퍼 관리** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/InstancingBuffer.cpp) |
-| 🎮 **MeshRenderer 인스턴싱** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/MeshRenderer.cpp#L91-L116) |
-
-### 🌑 쿼드 트리
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🌓 **쿼드 트리 노드 삽입** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257) |
-| ✨ **쿼드 트리 쿼리** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L75-L93) |
-
-### 🌫️ Fog of War
-
-| 기능 | 링크 |
-|:---:|:---|
-| 👁️ **FOW 계산 로직** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/FOW.fx) |
-
-### 🎬 애니메이션 시스템
-
-| 기능 | 링크 |
-|:---:|:---|
-| 🦴 **스켈레탈 애니메이션** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L575-L611) |
-| ⚡ **키프레임 보간** | [코드 보기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L749-L785) |
-
----
-
 
 ---
 
