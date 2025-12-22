@@ -309,7 +309,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 <summary><b>🎁 객체 지향적 아이템 설계 (계층 구조 및 시스템)</b></summary>
 
 <br>
-**추상화 및 확장성 설계** [[📄CItem.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CItem.h)
+
+**추상화 및 확장성 설계**[[📄CItem.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CItem.h)
 - `CItem` 추상 클래스를 정의하고 `enum`으로 타입을 관리하여 확장성 확보
 - 기능과 역할에 따라 3가지 핵심 파생 클래스로 분화하여 구현
 
