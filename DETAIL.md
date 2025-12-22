@@ -580,7 +580,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **렌더링 파이프라인 구조**
 - Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
 - Lighting Pass: G-Buffer 데이터 기반 조명 계산 [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L162)
-- Forward Pass: 투명 객체 처리 (알파 블렌딩) [[📄]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
+- Forward Pass: 투명 객체 처리 (알파 블렌딩) [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
 
 </details>
 
@@ -596,7 +596,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
   - [[📄MeshRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L348)
   - [[📄ModelRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L350-L386)
   - [[📄AnimRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
-
 
 **성능 최적화**
 - DrawCall 수 대폭 감소
@@ -628,7 +627,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
-**FOW 메커니즘**
+**FOW 메커니즘** [[📄FOW 계산]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L47-L72)
 - 플레이어 시야 범위 기반 가시성 계산
 - 실시간 탐색 영역 업데이트
 - 셰이더에서 픽셀별 가시성 판정
@@ -637,7 +636,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **구현 세부사항**
 - 월드 좌표 기반 거리 계산
 - 동적 시야 범위 조절 가능
-- 팀 플레이 시 시야 공유 로직
 
 </details>
 
@@ -722,9 +720,11 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 > 다수의 동적 광원 사용 시 Forward Rendering 방식에서 성능 저하 발생 (광원 수 × 오브젝트 수의 연산)
 
 **💡 해결 과정**
-- Deferred Rendering 파이프라인 설계 및 구현
+- Deferred Rendering 파이프라인 설계 및 구현 [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
 - G-Buffer 4개 생성 (Albedo, Normal, Position, Material)
 - 지오메트리 패스와 라이팅 패스 분리
+  -  [[📄Geometry Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L435)
+  -  [[📄Lighting Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L454-L502)
 - 멀티 렌더 타겟(MRT)을 통한 동시 렌더링
 - 풀스크린 쿼드로 화면 전체에 조명 계산
 - 투명 객체는 Forward Rendering으로 별도 처리
@@ -744,6 +744,9 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **💡 해결 과정**
 - GPU 인스턴싱 시스템 도입
+  -  [[📄MeshRenderer Instancing]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/MeshRenderer.cpp#L91-L116)
+  -  [[📄ModelAnimator Instancing]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L421-L442)
+  -  [[📄Model Instancing]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelRenderer.cpp#L85-L127)
 - 인스턴스 버퍼 생성 및 Transform 데이터 전송
 - `DrawIndexedInstanced()` API 활용
 - 같은 메시/머티리얼을 가진 객체들을 배치로 묶어 처리
@@ -764,10 +767,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **💡 해결 과정**
 - 쿼드 트리(Quad Tree) 자료구조 도입으로 공간 분할
-- 맵을 4개의 사분면으로 재귀적으로 분할하는 트리 구조 구현
-- 각 노드에 해당 영역 내 오브젝트 정보 저장
-- 카메라 절두체(Frustum) 내 노드만 탐색하여 렌더링 대상 선별
-- 충돌 검사 시 인접 영역의 오브젝트만 체크
+- 맵을 4개의 사분면으로 재귀적으로 분할하는 트리 구조 구현 [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
+- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
+- 카메라 절두체(Frustum) 내 노드만 탐색하여 렌더링 대상 선별 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
+- 충돌 처리 [[📄충돌 처리]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
 
 **✅ 결과**
 - 렌더링/충돌 검사 대상 오브젝트 수 대폭 감소
@@ -782,8 +785,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 > 
 > 전략 요소가 중요한 게임에서 플레이어 시야 제한 및 탐색 영역 표시 필요
 
-**💡 해결 과정**
-- 플레이어 위치 기반 시야 범위 계산
+**💡 해결 과정** [[📄FOW 계산]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L47-L72)
+- 플레이어 위치 기반 시야 범위 계산 
 - 픽셀 셰이더에서 월드 좌표와 플레이어 위치 간 거리 계산
 - 거리에 따른 가시성 계수 적용
 - 그라데이션 효과로 시야 경계 자연스럽게 처리
@@ -792,7 +795,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **✅ 결과**
 - 전략적 게임플레이 요소 강화
 - 탐색의 재미 추가
-- 시야 공유를 통한 팀 플레이 지원
 
 ---
 
