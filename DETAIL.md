@@ -357,22 +357,19 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **AI 상태 관리**
 - State 패턴을 활용한 몬스터 행동 시스템 구현 [[📄CState.h]](https://github.com/vfly1189/TBI/blob/main/Client/CState.h)
-- IDLE, TRACE, ATTACK, DEAD 등 상태별 독립적인 로직
+- IDLE, TRACE, ATTACK, DEAD 등 상태별 독립적인 로직 
   - [[📄파리 몬스터 TraceState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
-    - ![파리 추적](https://github.com/user-attachments/assets/33cbe640-c99f-4651-bdd3-f058cb5a1db2)
-
-  - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
-    - ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734)
-   
+  - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)  
   - [[📄원거리 공격형 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
-    - ![Horf 몬스터](https://github.com/user-attachments/assets/6792ba1d-cc72-4054-9db4-8bcd0f158db9)
 
 - 상태 전환 조건을 정의하여 예측 가능한 AI 동작
 
 **다양한 몬스터 타입**
 - 기본 추적형, 원거리 공격형, 돌진형 등 다양한 패턴 구현
 - 각 몬스터별 고유한 상태 머신과 애니메이션 적용
-
+- | **파리 몬스터** | **원거리 몬스터** | **보스 몬스터** 
+    | :---: | :---: | :---: |
+    | ![파리 추적](https://github.com/user-attachments/assets/33cbe640-c99f-4651-bdd3-f058cb5a1db2) | ![Horf 몬스터](https://github.com/user-attachments/assets/6792ba1d-cc72-4054-9db4-8bcd0f158db9) | ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734) |
 </details>
 
 <details open>
