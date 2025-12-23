@@ -323,6 +323,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **3. 폭탄 아이템 (Bomb)** [[📄폭탄 동작 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
 - 점화(Ignite) → 폭발(Explode) → 소멸(Dead)
+  - ![폭탄](https://github.com/user-attachments/assets/75f1caeb-97e1-40b8-97fd-8ba791233793)
 - 폭발 시 충돌체(Collider) 크기를 동적으로 확장하여 광역 데미지 처리
 
 </details>
