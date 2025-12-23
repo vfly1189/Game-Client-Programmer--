@@ -528,32 +528,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 피격 시 넉백 효과로 타격감 향상
 - 포물선을 그리는 눈물 발사로 원작 느낌 재현
 
-<br>
-
-### 4️⃣ 아이템 계층 구조 설계 및 동적 효과 적용
-
-> **🚨 문제 상황**
-> 
-> 다양한 아이템 타입(소모성, 영구, 폭탄 등)을 하나의 클래스로 관리하기 어려움
-
-**💡 해결 과정** 
-- CItem 추상 기본 클래스 설계 [[📄CItem.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CItem.h)
-- 타입별 특화 클래스 분리: CPickUpItem, CCollectiblesItem, CBomb
-- 각 클래스에서 고유한 상호작용 로직 구현
-  - [[📄폭탄 아이템 동작]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
-  - [[📄특수 아이템 초기화 및 동작]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollectiblesItem.cpp#L29-L57)
-- CollectiblesItem은 복합 UI 구조(받침대, 그림자, 아이템)로 구성
-- 폭탄은 점화 → 폭발 → 소멸의 상태 머신 구현
-
-**✅ 결과**
-- 아이템 타입별 독립적인 로직으로 확장성 향상
-- 새로운 아이템 추가 시 기존 코드 영향 최소화
-- 아이템별 고유한 효과와 애니메이션 적용 가능
-
-<br>
-
-
-
 ---
 
 # 🎮 이터널 리턴 모작
