@@ -117,7 +117,8 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - 이벤트 지연 처리 시스템으로 안전한 씬 전환
   - [[📄씬 전환 이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L26-L33)
   - [[📄이벤트 매니저 update]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
-  - [[📄이벤트 실행]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L71-L80)
+  - [[📄이벤트 실행]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L71-L80) 
+- ![씬전환-1](https://github.com/user-attachments/assets/204ca5d7-a298-480b-add6-d2cc7059701a)![씬전환-2](https://github.com/user-attachments/assets/15368ea7-bc48-474b-a26a-6f6321f9d2cd)
 
 </details>
 
@@ -160,6 +161,8 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
   - [[📄CBtn.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CBtnUI.h)
 - 콜백 함수 시스템을 통한 이벤트 처리 [[📄버튼UI 콜백 함수 시스템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CBtnUI.h#L90-L109)
 - TextUI 컴포넌트로 텍스트 렌더링 및 외곽선 효과 지원
+- ![UI](https://github.com/user-attachments/assets/afb4b6f7-7733-4251-9294-30503a1073dd)
+
 
 </details>
 
@@ -172,6 +175,8 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - BGM과 SFX 채널 분리 관리
 - 마스터 볼륨, BGM 볼륨, SFX 볼륨 개별 조절 기능
 - 슬라이더 UI를 통한 실시간 볼륨 조정
+- ![음향 조절](https://github.com/user-attachments/assets/b3692234-9d25-4c7d-a87d-42c6076ef09f)
+
 
 </details>
 
@@ -201,8 +206,8 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 ### 2️⃣ 타일맵 렌더링 최적화
 > **🚨 문제 상황**
 > 
-> 36x36 그리드의 타일맵을 렌더링할 때 매 프레임마다 1,296개의 개별 타일 객체를 각각 그리는 방식으로 인한 성능 저하
 > 36x36 크기의 타일맵을 구현하면서 매 프레임 1,296번의 DrawBitmap을 호출.
+> 
 > 초기에는 600 FPS 이상이 나와 문제가 없어 보였으나, 몬스터와 투사체가 늘어나는 후반부 웨이브에서는 렌더링 부하가 로직 처리에 영향을 줄 위험이 있었음.
 
 **💡 해결 과정** [[📄타일맵 생성 함수]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
