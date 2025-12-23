@@ -118,8 +118,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
   - [[📄씬 전환 이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L26-L33)
   - [[📄이벤트 매니저 update]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
   - [[📄이벤트 실행]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L71-L80) 
-- ![씬전환-1](https://github.com/user-attachments/assets/204ca5d7-a298-480b-add6-d2cc7059701a)![씬전환-2](https://github.com/user-attachments/assets/15368ea7-bc48-474b-a26a-6f6321f9d2cd)
-
 </details>
 
 <details open>
@@ -175,8 +173,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - BGM과 SFX 채널 분리 관리
 - 마스터 볼륨, BGM 볼륨, SFX 볼륨 개별 조절 기능
 - 슬라이더 UI를 통한 실시간 볼륨 조정
-- ![음향 조절](https://github.com/user-attachments/assets/b3692234-9d25-4c7d-a87d-42c6076ef09f)
-
 
 </details>
 
@@ -335,12 +331,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **1. 수집형 아이템 (PickUpItem)**
 - 동전, 하트, 열쇠, 폭탄 등 소모성 아이템 관리
 - 충돌 시(`OnCollisionEnter`) 자동 수집 및 플레이어 스탯/인벤토리 반영
-  - ![픽업아이템 획득](https://github.com/user-attachments/assets/95e0795a-3e6e-4039-82b0-c05b71865c45)
 
 **2. 장식형 아이템 (CollectiblesItem)**
 - 영구 능력치 상승 아이템 (패시브 효과) [[📄특수 아이템 초기화]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollectiblesItem.cpp#L29-L57)
 - 받침대, 그림자, 아이템 본체를 포함하는 복합 렌더링 구조 및 동적 이미지 로딩
-  - ![아이템 획득 및 적용](https://github.com/user-attachments/assets/09b499cf-fe3a-43c9-beb1-e17dd4fed194)
 
 **3. 폭탄 아이템 (Bomb)** [[📄폭탄 동작 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
 - 점화(Ignite) → 폭발(Explode) → 소멸(Dead)
@@ -367,9 +361,9 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **다양한 몬스터 타입**
 - 기본 추적형, 원거리 공격형, 돌진형 등 다양한 패턴 구현
 - 각 몬스터별 고유한 상태 머신과 애니메이션 적용
-- | **파리 몬스터** | **원거리 몬스터** | **보스 몬스터** 
-    | :---: | :---: | :---: |
-    | ![파리 추적](https://github.com/user-attachments/assets/33cbe640-c99f-4651-bdd3-f058cb5a1db2) | ![Horf 몬스터](https://github.com/user-attachments/assets/6792ba1d-cc72-4054-9db4-8bcd0f158db9) | ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734) |
+- | **보스 몬스터** |
+    | :---: |
+    | ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734) |
 </details>
 
 <details open>
