@@ -657,24 +657,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 </details>
 
 <details open>
-<summary><b>🏗️ 컴포넌트 기반 아키텍처</b></summary>
-
-<br>
-
-**유연한 게임 오브젝트 시스템**
-- GameObject 기반 계층 구조 [[📄GameObject.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/GameObject.h)
-- Transform, MeshRenderer, Collider 등 다양한 컴포넌트
-- 부모-자식 관계를 통한 Transform 계층
-
-**매니저 시스템**
-- SceneManager: 씬 전환 및 오브젝트 관리
-- ResourceManager: 메시, 텍스처, 셰이더 리소스 관리
-- InputManager: 키보드/마우스 입력 처리
-- TimeManager: 델타타임 및 FPS 관리
-
-</details>
-
-<details open>
 <summary><b>🎯 충돌 감지 시스템</b></summary>
 
 <br>
@@ -687,22 +669,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details open>
-<summary><b>🎮 카메라 시스템</b></summary>
-
-<br>
-
-**쿼터뷰 카메라** [[📄메인 카메라]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Client/CameraScript.cpp#L10-L69)
-- 플레이어 추적 카메라
-- 부드러운 카메라 이동 (Lerp)
-- 맵 경계 제한
-
-**뷰/프로젝션 행렬 관리**
-- View Matrix: 카메라 위치 및 방향
-- Projection Matrix: 원근/직교 투영 전환
-- Frustum Culling 지원
-
-</details>
 
 <br>
 
