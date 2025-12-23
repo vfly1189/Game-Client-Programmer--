@@ -323,8 +323,8 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 **3. 폭탄 아이템 (Bomb)** [[📄폭탄 동작 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
 - 점화(Ignite) → 폭발(Explode) → 소멸(Dead)
-  - ![폭탄](https://github.com/user-attachments/assets/75f1caeb-97e1-40b8-97fd-8ba791233793)
 - 폭발 시 충돌체(Collider) 크기를 동적으로 확장하여 광역 데미지 처리
+  - ![폭탄](https://github.com/user-attachments/assets/75f1caeb-97e1-40b8-97fd-8ba791233793)
 
 </details>
 
@@ -361,8 +361,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 시작방, 보물방, 보스방 등 특수 방 배치 로직 [[📄특수 방 배치]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455)
 - 방 간 연결 통로 자동 생성
 <img width="507" height="128" alt="image" src="https://github.com/user-attachments/assets/872c7f53-d02c-4983-acfe-d897bcf4c3c9" />
-
-
 
 **타일 기반 맵 시스템**
 - 벽, 바닥, 문 등 타일 타입별 충돌 처리
@@ -402,23 +400,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
-<details open>
-<summary><b>🎁 아이템 시스템</b></summary>
-
-<br>
-
-**수집형 아이템 (PickUpItem)**
-- 동전, 하트, 열쇠, 폭탄 등 소모성 아이템
-- 충돌 시 자동 수집 및 효과 적용
-
-**장식형 아이템 (CollectiblesItem)**
-- 영구 능력치 상승 아이템
-- 동적 이미지 로딩 시스템
-
-**폭탄 아이템**
-- 점화 → 폭발 → 소멸의 상태 머신 구현
-- 시간 기반 상태 전환 로직
-- 폭발 시 충돌 영역 동적 확장
 
 </details>
 
