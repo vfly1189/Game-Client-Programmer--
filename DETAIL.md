@@ -316,7 +316,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **1. 수집형 아이템 (PickUpItem)**
 - 동전, 하트, 열쇠, 폭탄 등 소모성 아이템 관리
 - 충돌 시(`OnCollisionEnter`) 자동 수집 및 플레이어 스탯/인벤토리 반영
-  - ![픽업아이템 획득](https://github.com/user-attachments/assets/a4a04965-a53b-4170-9ec0-ae7e039ba65d)
+  - ![픽업아이템 획득](https://github.com/user-attachments/assets/95e0795a-3e6e-4039-82b0-c05b71865c45)
 
 **2. 장식형 아이템 (CollectiblesItem)**
 - 영구 능력치 상승 아이템 (패시브 효과) [[📄특수 아이템 초기화]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollectiblesItem.cpp#L29-L57)
