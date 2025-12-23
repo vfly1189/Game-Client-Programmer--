@@ -574,6 +574,11 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
 - 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
 - 풀스크린 쿼드를 통한 라이팅 패스 구현
+- | **Albedo** | **Normal** |
+  | :---: | :---: |
+  | <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="682" height="381" alt="G-Buffer(Normal)"     src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" />|
+  | **Position (World Space)** | **Material** |
+  | <img width="681" height="383" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="383" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
 
 **렌더링 파이프라인 구조**
 - Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
