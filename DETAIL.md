@@ -198,8 +198,13 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - `CreateCompatibleRenderTarget()`을 활용한 오프스크린 렌더링 구현
 
 **✅ 결과**
-- FPS 60+ 안정적 유지, 깜박임 현상 제거
-- 게임 전체의 부드러운 플레이 경험 제공
+- **안정적인 퍼포먼스**: GDI에서 Direct2D 전환 후, 대규모 웨이브에서도 **FPS 60+** 를 안정적으로 유지
+- **시각적 개선**: 더블 버퍼링 적용으로 화면 깜박임(Flickering) 현상 제거
+- **플레이 경험**: 수백 개의 투사체와 몬스터가 등장하는 상황에서도 끊김 없는 부드러운 조작감 구현
+
+| **대규모 웨이브** | **FPS 변화** |
+| :---: | :---: |
+| ![몬스터 많을때 플레이-1](https://github.com/user-attachments/assets/326b4b49-d345-45b0-bc99-995a12504daf) | ![몬스터 많을때 플레이-2](https://github.com/user-attachments/assets/36cd55b9-d3a5-4cbe-bef0-1e822fc2d569) |
 
 <br>
 
@@ -316,7 +321,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **계층적 오브젝트 구조** [[📄CObject.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CObject.h)
 - CObject 최상위 클래스를 기반으로 Player, Monster, Item, Projectile 등 구현
 - 각 객체 타입별 특화된 기능을 가진 추상 클래스 설계
-- Clone() 패턴을 통한 효율적인 객체 복제 시스템
 </details>
 
 <details open>
@@ -483,11 +487,23 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - `countNeighbors()` 함수로 각 방이 **단일 연결**만 가지도록 제약 조건 적용
 - 방향을 랜덤으로 섞어(`std::shuffle`) 매번 다른 던전 구조 생성
 - 최소 방 개수(10개)와 최대 방 개수(레벨에 따라 동적 조정) 조건 만족 시까지 재생성
+  - | **1단계** | **2단계** | **3단계** |
+    | :---: | :---: | :---: |
+    | <img width="807" height="412" alt="image" src="https://github.com/user-attachments/assets/7d77cb29-e9e2-4caa-a34d-289e533a91af" /> | <img width="963" height="457" alt="image" src="https://github.com/user-attachments/assets/1f449f2d-f487-4053-b59b-203d965fd757" /> | <img width="1133" height="491" alt="image" src="https://github.com/user-attachments/assets/db3d42a8-f9ba-4fb6-8691-c53ae7fa475e" />|
 - 맨해튼 거리(Manhattan Distance) 계산을 통한 특수 방 배치
   - **보스방**: 시작 방에서 가장 먼 막다른 방에 배치
   - **보물방**: 시작 방에서 가장 가까운 막다른 방에 배치
   - [[📄특수 방 배치]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455)
 - JSON 파일 기반 방 레이아웃 로딩 시스템
+
+**💡왜 BFS 알고리즘인가?**
+- 백트래킹(Backtracking) 피로도 최소화
+  - DFS의 선형적 구조는 맵 이동 동선이 지나치게 길어지는 단점이 존재.
+  - BFS를 통해 시작점 중심의 방사형 클러스터를 형성하여, 플레이어가 상점이나 보물방을 이용하기 위해 이동하는 불필요한 시간을 줄이고 전투 밀도를 높였습니다.
+
+- 확장성을 고려한 공간 스캔
+  - 순차적으로 인접 공간을 탐색하는 구조 덕분에, 추후 '2x2 대형 방'이나 '특수 모양 방'을 추가할 때 주변 빈 공간을 체크하고 할당하는 알고리즘으로 확장하기 유리하다고 판단.
+
 
 **✅ 결과**
 - 매 플레이마다 연결성이 보장된 유기적인 던전 구조 생성
@@ -507,6 +523,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - CRigidBody 컴포넌트에 힘(Force), 가속도, 속도 개념 도입
   - [[📄CRigidBody 구현]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82)
 - `AddForce()` 함수로 즉각적인 힘 적용 시스템 구현
+  - ![RigidBody](https://github.com/user-attachments/assets/ffaa5fc2-3c23-4de9-9a78-f540ad6e8cad)
 - 매 프레임 속도에 마찰력을 적용하여 자연스러운 감속
 - 벽 충돌 시 속도 벡터 반사 처리(보스 몬스터 한정)
 
