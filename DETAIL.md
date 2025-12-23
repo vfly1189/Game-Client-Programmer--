@@ -316,10 +316,12 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **1. 수집형 아이템 (PickUpItem)**
 - 동전, 하트, 열쇠, 폭탄 등 소모성 아이템 관리
 - 충돌 시(`OnCollisionEnter`) 자동 수집 및 플레이어 스탯/인벤토리 반영
+  - ![픽업아이템 획득](https://github.com/user-attachments/assets/a4a04965-a53b-4170-9ec0-ae7e039ba65d)
 
 **2. 장식형 아이템 (CollectiblesItem)**
 - 영구 능력치 상승 아이템 (패시브 효과) [[📄특수 아이템 초기화]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollectiblesItem.cpp#L29-L57)
 - 받침대, 그림자, 아이템 본체를 포함하는 복합 렌더링 구조 및 동적 이미지 로딩
+  - ![아이템획득 및 적용](https://github.com/user-attachments/assets/a217bea1-e7b8-4ea4-9720-c6fae8f372b9)
 
 **3. 폭탄 아이템 (Bomb)** [[📄폭탄 동작 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBomb.cpp#L33-L66)
 - 점화(Ignite) → 폭발(Explode) → 소멸(Dead)
@@ -342,6 +344,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
   - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
     - ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734)
+   
+  - [[📄원거리 공격형 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
+    - ![Horf 몬스터](https://github.com/user-attachments/assets/261e5218-8fd1-45b5-81d3-dd2c85e5bafd)
+
 
 - 상태 전환 조건을 정의하여 예측 가능한 AI 동작
 
@@ -376,7 +382,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **CRigidBody 컴포넌트**
 - 중력, 속도, 마찰력을 고려한 물리 시뮬레이션 [[📄물리 효과 적용]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82)
 - 넉백, 발사체 궤적 등 물리 기반 전투 효과
-- 벽 충돌 시 반사 처리(보스 투사체 한정)
+- 벽 충돌 시 반사 처리(보스 몬스터 한정)
 
 **충돌 감지 시스템** [[📄충돌 감지]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CCollisionMgr.cpp#L40-L129)
 - CCollider 컴포넌트를 통한 AABB 충돌 검사
@@ -412,6 +418,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 메인 메뉴, 캐릭터 선택, 던전, 보스방 씬 구현
 - 페이드 인/아웃 효과를 통한 부드러운 전환 [[📄화면 전환 페이트 인/아웃 효과]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CScene_Main.cpp#L166-L195)
 - 씬별 리소스 로드/언로드 관리
+  - ![씬전환](https://github.com/user-attachments/assets/df75dc6c-7d53-4988-acaf-37cb9361608f)
 
 **UI 시스템**
 - 체력, 아이템 개수 등 게임 HUD 표시
