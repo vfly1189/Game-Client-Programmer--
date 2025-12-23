@@ -725,6 +725,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **💡 해결 과정**
 - Deferred Rendering 파이프라인 설계 및 구현 [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
 - G-Buffer 4개 생성 (Albedo, Normal, Position, Material)
+  - ![디퍼드렌더링](https://github.com/user-attachments/assets/16f34e58-f14a-44b4-ac76-c26db09755ca)
 - 지오메트리 패스와 라이팅 패스 분리
   -  [[📄Geometry Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L435)
   -  [[📄Lighting Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L454-L502)
@@ -779,6 +780,10 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 렌더링/충돌 검사 대상 오브젝트 수 대폭 감소
 - 넓은 맵에서도 안정적인 프레임 유지
 - 공간 쿼리 성능 향상 (O(n) → O(log n))
+- 객체 500개에서의 성능비교
+  - <img width="1048" height="656" alt="객체 500개 성능비교" src="https://github.com/user-attachments/assets/956a6342-f9a2-494a-b33a-128847239bc0" />
+
+
 
 <br>
 
