@@ -337,7 +337,11 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - State 패턴을 활용한 몬스터 행동 시스템 구현 [[📄CState.h]](https://github.com/vfly1189/TBI/blob/main/Client/CState.h)
 - IDLE, TRACE, ATTACK, DEAD 등 상태별 독립적인 로직
   - [[📄파리 몬스터 TraceState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
+    - ![파리 추적](https://github.com/user-attachments/assets/33cbe640-c99f-4651-bdd3-f058cb5a1db2)
+
   - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
+    - ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734)
+
 - 상태 전환 조건을 정의하여 예측 가능한 AI 동작
 
 **다양한 몬스터 타입**
