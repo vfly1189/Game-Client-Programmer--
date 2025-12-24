@@ -416,30 +416,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 ## 🛠️ 문제 해결
 
-### 1️⃣ State 패턴을 통한 몬스터 AI 관리
-
-> **🚨 문제 상황**
-> 
-> if-else 중첩으로 구현된 몬스터 AI 로직이 복잡해지고 유지보수가 어려움
-
-**💡 해결 과정** [[📄CState.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CState.h)
-- State 패턴을 도입하여 각 상태를 독립적인 클래스로 분리
-- CState 추상 클래스를 기반으로 IdleState, TraceState, AttackState 구현
-  - [[📄파리 몬스터 TraceState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
-  - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
-- 상태 전환 조건을 정의하고 FSM(Finite State Machine) 구조 적용
-  - [[📄보스 몬스터 TraceState -> AttackState 전환]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumTraceState.cpp#L43-L49)
-  - [[📄보스 몬스터 IdleState -> TraceState 전환]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumIdleState.cpp#L67-L73)
-- 각 몬스터 타입별 상태 클래스를 상속하여 특화된 행동 구현
-
-**✅ 결과**
-- 코드 가독성 및 유지보수성 대폭 향상
-- 새로운 몬스터 타입 추가 시 기존 코드 수정 최소화
-- 상태별 독립적인 디버깅 가능
-
-<br>
-
-### 2️⃣ BFS 기반 절차적 던전 생성 시스템
+### 1️⃣ BFS 기반 절차적 던전 생성 시스템
 
 > **🚨 문제 상황**
 > 
@@ -484,6 +461,28 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 막다른 방 조건으로 보상/도전 방 자연스럽게 배치
 
 <br>
+
+### 2️⃣ State 패턴을 통한 몬스터 AI 관리
+
+> **🚨 문제 상황**
+> 
+> if-else 중첩으로 구현된 몬스터 AI 로직이 복잡해지고 유지보수가 어려움
+
+**💡 해결 과정** [[📄CState.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CState.h)
+- State 패턴을 도입하여 각 상태를 독립적인 클래스로 분리
+- CState 추상 클래스를 기반으로 IdleState, TraceState, AttackState 구현
+  - [[📄파리 몬스터 TraceState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
+  - [[📄보스 몬스터 AttackState]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
+- 상태 전환 조건을 정의하고 FSM(Finite State Machine) 구조 적용
+  - [[📄보스 몬스터 TraceState -> AttackState 전환]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumTraceState.cpp#L43-L49)
+  - [[📄보스 몬스터 IdleState -> TraceState 전환]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumIdleState.cpp#L67-L73)
+- 각 몬스터 타입별 상태 클래스를 상속하여 특화된 행동 구현
+
+**✅ 결과**
+- 코드 가독성 및 유지보수성 대폭 향상
+- 새로운 몬스터 타입 추가 시 기존 코드 수정 최소화
+- 상태별 독립적인 디버깅 가능
+
 
 ### 3️⃣ 물리 기반 넉백 및 투사체 시스템
 
