@@ -79,12 +79,14 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br>
 
-**싱글톤 패턴 기반 매니저 시스템 구현** [[📄매니저 시스템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L58-L103)
-- CCore, CTimeMgr, CKeyMgr, CCamera, CSceneMgr 등 핵심 시스템을 싱글톤으로 설계
-  - [[📄SceneMgr.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSceneMgr.h)
-  - [[📄Camera 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCamera.cpp#L42-L70)
-  - [[📄KeyMgr 구조]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CkeyMgr.cpp#L77-L133)
-- 게임 전반에 걸쳐 일관된 접근 방식 제공 및 메모리 관리 효율화
+**Manager-Scene-Object 3계층 구조** 기반 엔진 설계 (싱글톤 패턴)
+- CCore를 중심으로 10개 Manager (Time, Key, Camera, Scene 등)를 싱글톤으로 초기화
+  [[📄매니저 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L88-L100)
+- 메인 루프에서 매 프레임 각 Manager의 update()를 순차 호출하여 게임 로직 처리
+  [[📄프레임 처리 흐름]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
+- Scene 추상 클래스 기반 상속으로 Main/Shop/Run_End 등 6개 씬 관리
+  [[📄씬 구조]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSceneMgr.cpp)
+- 각 씬 내 GROUP_TYPE별로 객체들을 벡터로 관리하고 update/finalupdate/render 순서 보장
 
 </details>
 
@@ -106,21 +108,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 </details>
 
 <details open>
-<summary><b>🎬 씬 관리 시스템</b></summary>
-
-<br>
-
-**씬 전환 구조**
-- CScene 추상 클래스 기반 상속 구조 (Main, Select_Character, Select_Weapon, Start, Shop, Run_End)
-  - [[📄Scene.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CScene.h)
-- Enter()/Exit() 가상 함수를 통한 씬 진입/탈출 시 리소스 관리
-- 이벤트 지연 처리 시스템으로 안전한 씬 전환
-  - [[📄씬 전환 이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L26-L33)
-  - [[📄이벤트 매니저 update]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
-  - [[📄이벤트 실행]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L71-L80) 
-</details>
-
-<details open>
 <summary><b>🧩 게임 오브젝트 시스템</b></summary>
 
 <br>
@@ -131,7 +118,6 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
   - [[📄Collider.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CCollider.h)
   - [[📄Animator.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CAnimator.h)
   - [[📄Rigidbody.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CRigidbody.h)
-- Clone() 가상 함수를 통한 프로토타입 패턴 구현
 
 </details>
 
@@ -148,30 +134,12 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 </details>
 
 <details open>
-<summary><b>🖼️ UI 시스템</b></summary>
+<summary><b>🖼️ UI 및 사운드 시스템</b></summary>
 
 <br>
 
-**계층적 UI 구조**
-- PanelUI, BtnUI, SliderUI 등 다양한 UI 컴포넌트
-  - [[📄CUI.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CUI.h)
-  - [[📄CPanelUI.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CPanelUI.h)
-  - [[📄CBtn.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CBtnUI.h)
-- 콜백 함수 시스템을 통한 이벤트 처리 [[📄버튼UI 콜백 함수 시스템]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CBtnUI.h#L90-L109)
-- TextUI 컴포넌트로 텍스트 렌더링 및 외곽선 효과 지원
-- ![UI](https://github.com/user-attachments/assets/afb4b6f7-7733-4251-9294-30503a1073dd)
-
-
-</details>
-
-<details open>
-<summary><b>🔊 사운드 시스템</b></summary>
-
-<br>
-
-**FMOD 기반 오디오 엔진** [[📄사운드 매니저]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSoundMgr.h)
-- BGM과 SFX 채널 분리 관리
-- 마스터 볼륨, BGM 볼륨, SFX 볼륨 개별 조절 기능
+- 계층적 UI 컴포넌트 (Panel, Button, Slider, Text)와 콜백 기반 이벤트 처리
+- FMOD 기반 멀티채널 오디오 (BGM/SFX 분리 관리)
 - 슬라이더 UI를 통한 실시간 볼륨 조정
 
 </details>
@@ -408,32 +376,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **CAnimator 컴포넌트**
 - 프레임 기반 스프라이트 애니메이션 시스템
 - 애니메이션 재생, 일시정지, 반복 제어 기능 [[📄애니메이션 기능]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CAnimator.cpp#L109-L154)
-
-**동적 애니메이션 생성** [[📄플레이어 애니메이션 스프라이트 관리]](https://github.com/vfly1189/TBI/blob/master/TBI/CPlayerMgr.h)
-- 런타임에 이미지 분할 및 애니메이션 생성
 - 캐릭터, 몬스터, 아이템별 다양한 애니메이션 적용
-
-</details>
-
-
-</details>
-
-<details open>
-<summary><b>🎬 씬 관리 시스템</b></summary>
-
-<br>
-
-**씬 전환 구조**
-- 메인 메뉴, 캐릭터 선택, 던전, 보스방 씬 구현
-- 페이드 인/아웃 효과를 통한 부드러운 전환 [[📄화면 전환 페이트 인/아웃 효과]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CScene_Main.cpp#L166-L195)
-- 씬별 리소스 로드/언로드 관리
-  - ![씬전환](https://github.com/user-attachments/assets/507fe226-f282-47dc-8563-ec03adada943)
-
-
-**UI 시스템**
-- 체력, 아이템 개수 등 게임 HUD 표시
-- 계층적 UI 구조로 복잡한 UI 구성 가능
-- 버튼, 패널 등 상호작용 가능한 UI 컴포넌트
 
 </details>
 
@@ -617,24 +560,13 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 충돌 검사/렌더링 등 많은 반복 연산이 필요한 곳에서 연산량 감소
 - 넓은 맵, 많은 오브젝트가 배치되는 상황에서도 프레임 드랍 없이 효율적 처리
 
-</details>
-
-<details open>
-<summary><b>🌫️ Fog of War (전장의 안개) 시스템</b></summary>
-
-<br>
-
-**FOW 메커니즘** [[📄FOW 계산]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L47-L72)
-- 플레이어 시야 범위 기반 가시성 계산
-- 실시간 탐색 영역 업데이트
-- 셰이더에서 픽셀별 가시성 판정
-- 그라데이션 효과로 자연스러운 시야 전환
-
-**구현 세부사항**
-- 월드 좌표 기반 거리 계산
-- 동적 시야 범위 조절 가능
+**쿼드트리 기반 충돌 처리**
+- AABB(Axis-Aligned Bounding Box) 충돌 검사 [[📄AABB 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L421-L492)
+- Sphere Collider 구현 [[📄Sphere Collider 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L494-L580)
+- 계층적 충돌 그룹 관리
 
 </details>
+
 
 <details open>
 <summary><b>🎬 애니메이션 시스템</b></summary>
@@ -655,20 +587,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - LOD에 따른 애니메이션 품질 조절
 
 </details>
-
-<details open>
-<summary><b>🎯 충돌 감지 시스템</b></summary>
-
-<br>
-
-**물리 기반 충돌 처리**
-- AABB(Axis-Aligned Bounding Box) 충돌 검사 [[📄AABB 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L421-L492)
-- Sphere Collider 구현 [[📄Sphere Collider 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L494-L580)
-- 계층적 충돌 그룹 관리
-
-
-</details>
-
 
 <br>
 
@@ -742,27 +660,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - 공간 쿼리 성능 향상 (O(n) → O(log n))
 - 객체 500개에서의 성능비교
   - <img width="1048" height="656" alt="객체 500개 성능비교" src="https://github.com/user-attachments/assets/956a6342-f9a2-494a-b33a-128847239bc0" />
-
-
-
-<br>
-
-### 4️⃣ Fog of War 시스템 구현
-
-> **🚨 문제 상황**
-> 
-> 전략 요소가 중요한 게임에서 플레이어 시야 제한 및 탐색 영역 표시 필요
-
-**💡 해결 과정** [[📄FOW 계산]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L47-L72)
-- 플레이어 위치 기반 시야 범위 계산 
-- 픽셀 셰이더에서 월드 좌표와 플레이어 위치 간 거리 계산
-- 거리에 따른 가시성 계수 적용
-- 그라데이션 효과로 시야 경계 자연스럽게 처리
-- 라이팅 패스에서 FOW 효과 적용
-
-**✅ 결과**
-- 전략적 게임플레이 요소 강화
-- 탐색의 재미 추가
 
 ---
 
