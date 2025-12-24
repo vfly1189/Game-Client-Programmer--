@@ -90,10 +90,13 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **Manager-Scene-Object 3계층 구조** 기반 엔진 설계 (싱글톤 패턴)
 - CCore를 중심으로 10개 Manager (Time, Key, Camera, Scene 등)를 싱글톤으로 초기화
+  [[📄매니저 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L88-L100) 
   <a href="https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L88-L100" target="_blank">[📄매니저 초기화]</a>
 - 메인 루프에서 매 프레임 각 Manager의 update()를 순차 호출하여 게임 로직 처리
+  [[📄프레임 처리 흐름]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173) 
   <a href="https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173" target="_blank">[📄프레임 처리 흐름]</a>
 - Scene 추상 클래스 기반 상속으로 Main/Shop/Run_End 등 6개 씬 관리
+  [[📄씬 구조]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSceneMgr.cpp) 
   <a href="https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSceneMgr.cpp" target="_blank">[📄씬 구조]</a>
 - 각 씬 내 GROUP_TYPE별로 객체들을 벡터로 관리하고 update/finalupdate/render 순서 보장
 
