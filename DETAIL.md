@@ -91,6 +91,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 **Manager-Scene-Object 3계층 구조** 기반 엔진 설계 (싱글톤 패턴)
 - CCore를 중심으로 10개 Manager (Time, Key, Camera, Scene 등)를 싱글톤으로 초기화
   [[📄매니저 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L88-L100)
+  <a href="https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135" target="_blank">📄방 생성 알고리즘</a>
 - 메인 루프에서 매 프레임 각 Manager의 update()를 순차 호출하여 게임 로직 처리
   [[📄프레임 처리 흐름]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
 - Scene 추상 클래스 기반 상속으로 Main/Shop/Run_End 등 6개 씬 관리
