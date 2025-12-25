@@ -93,7 +93,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
   [[📄매니저 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L88-L100) 
 - 메인 루프에서 매 프레임 각 Manager의 update()를 순차 호출하여 게임 로직 처리
   [[📄프레임 처리 흐름]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173) 
-- Scene 추상 클래스 기반 상속으로 Main/Shop/Run_End 등 6개 씬 관리
+- Scene 추상 클래스 기반 상속으로 Main/Shop/Run_End 등 6개 씬 제작 및 관리
   [[📄씬 구조]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSceneMgr.cpp) 
 - 각 씬 내 GROUP_TYPE별로 객체들을 벡터로 관리하고 update/finalupdate/render 순서 보장
 
@@ -112,9 +112,25 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - `unordered_map`을 활용한 비트맵 캐싱 시스템 구현
 - 타일 분할 기능: 큰 이미지를 32x32 픽셀 단위로 분할하여 타일맵 생성
   - [[📄비트맵 분할 함수]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265) 
-- 초기 로딩 시 모든 리소스를 메모리에 적재하여 런타임 성능 최적화
 
 </details>
+
+<details open> 
+<summary><b>🏗️ 아키텍처 및 이벤트 시스템</b></summary>
+
+<br>
+  
+**지연 처리(Delayed Processing) 기반 이벤트 시스템**
+- 프레임 동기화: 게임 로직 도중 발생하는 객체 생성/삭제, 씬 전환 요청을 즉시 처리하지 않고 큐(vector<tEvent>)에 저장
+  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+- 일괄 처리: 모든 로직 업데이트가 끝난 후 CEventMgr::update()에서 이벤트를 일괄 처리하여, 로직 도중 참조 무효화 방지
+- 생명주기 관리: CreateObject, DeleteObject 등 전역 함수를 통해 어디서든 안전하게 객체 생명주기 제어
+  - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
+
+</details>
+
+
+
 
 <details open>
 <summary><b>🧩 게임 오브젝트 시스템</b></summary>
@@ -131,25 +147,12 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 </details>
 
 <details open>
-<summary><b>📦 리소스 관리</b></summary>
-
-<br>
-
-**자동 리소스 로더** [[📄파일 로딩]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CFileMgr.cpp#L64-L100)
-- 게임 시작 시 content 폴더를 재귀적으로 탐색하여 모든 png, mp3, wav 파일 자동 로딩
-- 파일명을 태그로 사용하여 간편한 리소스 접근
-- 경로 관리자(CPathMgr)를 통한 상대 경로 처리
-
-</details>
-
-<details open>
 <summary><b>🖼️ UI 및 사운드 시스템</b></summary>
 
 <br>
 
 - 계층적 UI 컴포넌트 (Panel, Button, Slider, Text)와 콜백 기반 이벤트 처리
 - FMOD 기반 멀티채널 오디오 (BGM/SFX 분리 관리)
-- 슬라이더 UI를 통한 실시간 볼륨 조정
 
 </details>
 
@@ -207,50 +210,34 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 | ![타일최적화(Before)](https://github.com/user-attachments/assets/e3b623a7-a8d7-4381-8404-7a0877b81e6d) | ![타일최적화(After)](https://github.com/user-attachments/assets/d997642b-122b-469d-aef6-ad89d118bd60) |
 | **DrawCall: 1,296회 / FPS: ~650** | **DrawCall: 1회 / FPS: ~1,400** |
 
-<br>
 
-### 3️⃣ 리소스 로딩 시스템 자동화
-
+### 3️⃣ 이벤트 처리 시 중복 삭제로 인한 메모리 오염 방지
 > **🚨 문제 상황**
-> 
-> 각 Scene마다 필요한 리소스를 수동으로 로드하여 코드 중복 및 관리 어려움
-
-**💡 해결 과정** [[📄파일 로딩]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CFileMgr.cpp#L64-L100)
-- CFileMgr 클래스 구현으로 폴더 재귀 탐색 기능 추가
-- `WIN32_FIND_DATA`를 활용한 파일 시스템 탐색
-- 파일 확장자별 자동 분류 및 적절한 매니저에 등록
-  - `.png` → Direct2DMgr
-  - `.mp3/.wav` → CSoundMgr (BGM은 main_title_bgm 키워드로 자동 구분)
-
-**✅ 결과**
-- 리소스 로드 코드 대폭 간소화
-- 새로운 리소스 추가 시 파일만 추가하면 자동 인식
-
-<br>
-
-### 4️⃣ 메모리 관리 및 씬 전환 안정성
-
-> **🚨 문제 상황**
-> 
-> 씬 전환 시 객체 소멸 타이밍 문제로 인한 댕글링 포인터 발생 가능성
+>
+> 객체 삭제 요청(DELETE_OBJECT)을 지연 처리하기 위해 vector에 담아 관리했습니다.
+>
+> 그러나 다수의 투사체가 동시에 하나의 몬스터를 타격하여 사망 처리가 중복 발생할 경우, 동일한 객체 주소에 대한 삭제 요청이 vector에 여러 번 적재되는 문제가 발생.
+>
+> 이로 인해 메모리 해제 시 Double Free 오류나 댕글링 포인터 접근으로 인한 크래시가 발생.
 
 **💡 해결 과정**
-- 이벤트 지연 처리 시스템(CEventMgr) 구현
-  - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
-  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
-- 프레임 단위 작업이 모두 완료된 후 이벤트 처리
-  - [[📄이벤트 매니저 업데이트 위치]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
-- Scene의 Enter()/Exit() 가상 함수로 명확한 초기화/정리 시점 제공
-- unordered_set을 이용한 중복 이벤트 처리 방지
+
+- 삭제 스케줄링 컨테이너 변경: 삭제 대기열을 단순 vector에서 unordered_set로 변경
+- 삭제 로직 분리 및 최적화
+  - EventMgr::Excute에서 삭제 이벤트 발생 시, 해당 객체를 Dead 상태로 마킹하고 unordered_set에 삽입 (중복 요청 자동 제거)
+    - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
+    - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+  - 프레임의 마지막에 m_setDeadScheduled를 순회하며 실제 delete 수행
+    - [[📄이벤트 매니저 업데이트 위치]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
+- 안전한 생명주기 보장: 삭제된 객체는 다음 프레임 시작 전까지 메모리에 존재하되 Dead 상태이므로, 다른 로직에서의 참조 오류를 방지
 
 **✅ 결과**
-- 안정적인 메모리 관리
-
-<br>
-
+- 동일 프레임 내 중복 삭제 요청이 들어와도 메모리 해제는 단 한 번만 수행됨을 보장
+- 다수의 오브젝트가 상호작용하는 난전 상황에서도 안정적인 메모리 관리 구현
 
 ---
 
+<br>
 
 # 🎮 TBI 모작
 
@@ -287,7 +274,7 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 1. BFS를 이용한 던전 생성.
 2. FSM으로 다양한 몬스터 AI를 관리.
 
-이전에 배운 기술을 새로운 프로젝트에 적용하고, 그 과정에서 발견한 개선점을 다음 프로젝트에 역으로 반영하는 반복적 성장 경험
+이전에 배운 기술을 새로운 프로젝트에 적용하고, 그 과정에서 발견한 개선점을 다음 프로젝트에 역으로 반영하는 반복적 성장을 경험했습니다.
 
 ## 🤔 왜 TBI를 만들었는가?
 
@@ -315,6 +302,23 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **계층적 오브젝트 구조** [[📄CObject.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CObject.h)
 - CObject 최상위 클래스를 기반으로 Player, Monster, Item, Projectile 등 구현
 - 각 객체 타입별 특화된 기능을 가진 추상 클래스 설계
+</details>
+
+<details open>
+<summary><b>🗺️ 절차적 던전 생성 시스템</b></summary>
+
+<br>
+
+**랜덤 던전 생성 알고리즘**
+- 방 배치 알고리즘을 통한 무작위 던전 구조 생성 [[📄방 생성 알고리즘]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135)
+- 시작방, 보물방, 보스방 등 특수 방 배치 로직 [[📄특수 방 배치]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455)
+- 방 간 연결 통로 자동 생성
+<img width="507" height="128" alt="image" src="https://github.com/user-attachments/assets/872c7f53-d02c-4983-acfe-d897bcf4c3c9" />
+
+**타일 기반 맵 시스템**
+- 벽, 문 등 타일 타입별 충돌 처리
+- 방 입장 시 문 개폐 애니메이션 및 몬스터 스폰
+
 </details>
 
 <details open>
@@ -362,23 +366,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 - | **보스 몬스터** |
     | :---: |
     | ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734) |
-</details>
-
-<details open>
-<summary><b>🗺️ 절차적 던전 생성 시스템</b></summary>
-
-<br>
-
-**랜덤 던전 생성 알고리즘**
-- 방 배치 알고리즘을 통한 무작위 던전 구조 생성 [[📄방 생성 알고리즘]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135)
-- 시작방, 보물방, 보스방 등 특수 방 배치 로직 [[📄특수 방 배치]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L395-L455)
-- 방 간 연결 통로 자동 생성
-<img width="507" height="128" alt="image" src="https://github.com/user-attachments/assets/872c7f53-d02c-4983-acfe-d897bcf4c3c9" />
-
-**타일 기반 맵 시스템**
-- 벽, 문 등 타일 타입별 충돌 처리
-- 방 입장 시 문 개폐 애니메이션 및 몬스터 스폰
-
 </details>
 
 <details open>
