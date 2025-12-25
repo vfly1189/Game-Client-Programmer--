@@ -587,6 +587,26 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 </details>
 
+<details open>
+<summary><b>🧭 NavMesh 기반 길찾기 시스템</b></summary>
+
+<br>
+
+**3D 공간 길찾기 구현**
+- NavMesh 구축
+  - 맵 데이터를 로드하여 다각형(Triangle) 그래프로 구성된 네비게이션 메쉬 구축
+- A 알고리즘*
+  - 출발지와 목적지가 속한 삼각형을 찾아 최단 경로(Triangle Path)를 산출하고, Funnel Algorithm을 응용해 부드러운 이동 경로 생성
+  - ![NavMesh](https://github.com/user-attachments/assets/5c0fb898-07a2-4029-986e-475e1bb2e61a)
+- NavMeshAgent
+  - 상태 패턴(Idle, Moving)을 적용하여 이동 로직 분리
+  - 매 프레임 UpdateMovement에서 GetNearestPointOnNavMesh를 호출하여, Spatial Grid로 최적화된 검색을 통해 캐릭터를 NavMesh 표면 위로 투영하고 이동 경로 보정
+
+
+</details> 
+
+
+
 
 <details open>
 <summary><b>🎬 애니메이션 시스템</b></summary>
@@ -638,26 +658,31 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 
 <br>
 
-### 2️⃣ 인스턴싱을 통한 DrawCall 최적화
+### 2️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)
 
 > **🚨 문제 상황**
 > 
-> 동일한 메시를 가진 다수의 오브젝트 렌더링 시 DrawCall이 과도하게 증가하여 CPU 병목 발생
+> 캐릭터가 이동할 때마다 지형의 높낮이를 반영하고 경로 이탈을 방지하기 위해 현재 위치가 "어떤 삼각형 위에 있는지" 판별해야 합니다.
+> 
+> 맵이 넓어 NavMesh의 삼각형 개수가 수천 개로 늘어나자, 매 프레임 GetNearestPointOnNavMesh에서 전체 삼각형을 순회(Linear Search, O(N))하는 방식이 심각한 CPU 병목을 유발했습니다.
 
-**💡 해결 과정**
-- GPU 인스턴싱 시스템 도입
-  -  [[📄MeshRenderer Instancing]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/MeshRenderer.cpp#L91-L116)
-  -  [[📄ModelAnimator Instancing]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L421-L442)
-  -  [[📄Model Instancing]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelRenderer.cpp#L85-L127)
-- 인스턴스 버퍼 생성 및 Transform 데이터 전송
-- `DrawIndexedInstanced()` API 활용
-- 같은 메시/머티리얼을 가진 객체들을 배치로 묶어 처리
-- Structured Buffer를 통한 인스턴스별 데이터 전달
+**💡 해결 과정**​
+
+- 공간 해싱(Spatial Grid) 도입
+  - 맵 전체를 일정 크기(CellSize: 25.0f)의 그리드로 분할
+  - unordered_map<uint64, vector<int>>를 사용하여 각 그리드 셀에 포함된 삼각형 인덱스를 미리 매핑 (InitializeSpatialGrid)
+  - <img width="1122" height="357" alt="image" src="https://github.com/user-attachments/assets/a3135a41-b5e9-46ca-b498-18f5b455663d" />
+- 검색 로직 최적화
+  - GetNearestPointOnNavMesh 호출 시, 캐릭터의 월드 좌표를 그리드 키(Key)로 변환
+  - 전체 삼각형을 뒤지는 대신, 해당 셀에 속한 소수의 삼각형만 검사하도록 변경하여 연산량 최소화
+  - m_lastFoundTriangle 변수를 통한 캐싱으로 연속적인 프레임에서의 검색 비용 추가 절감
 
 **✅ 결과**
-- DrawCall 수 **수천 회 → 수십 회**로 대폭 감소
-- CPU 사용률 감소 및 프레임 안정화
-- 대규모 오브젝트 배치 가능
+- 삼각형 검색 복잡도를 O(N) → O(1) (평균) 수준으로 단축
+- 다수의 NPC가 동시에 길찾기와 이동 보정을 수행해도 프레임 저하 없는 안정적인 퍼포먼스 확보
+- | case 1 | case 2 |
+    | :---: | :---: |
+    | <img width="360" height="149" alt="image" src="https://github.com/user-attachments/assets/43d4a9ba-5cbd-43da-bc92-ab82ded95206" /> | <img width="355" height="140" alt="image" src="https://github.com/user-attachments/assets/efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" /> |
 
 <br>
 
