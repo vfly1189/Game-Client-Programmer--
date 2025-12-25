@@ -111,7 +111,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 **비트맵 관리 시스템**
 - `unordered_map`을 활용한 비트맵 캐싱 시스템 구현
 - 타일 분할 기능: 큰 이미지를 32x32 픽셀 단위로 분할하여 타일맵 생성
-  - [[📄비트맵 분할 함수]](https://보
+  - [[📄비트맵 분할 함수]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265)
 
 </details>
 
