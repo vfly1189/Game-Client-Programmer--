@@ -75,7 +75,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 1. GDI+ → Direct2D 전환으로 FPS를 20~40 → 60+로 개선
 2. 타일맵 렌더링을 1,296회 DrawCall에서 1회로 최적화.
 
-이 과정에서 게임 엔진의 기본 아키텍처 설계와 성능 최적화의 중요성을 깨닫게 되었습니다다.
+이 과정에서 게임 엔진의 기본 아키텍처 설계와 성능 최적화의 중요성을 깨닫게 되었습니다.
 
 <br>
 
@@ -595,12 +595,13 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **3D 공간 길찾기 구현**
 - NavMesh 구축
   - 맵 데이터를 로드하여 다각형(Triangle) 그래프로 구성된 네비게이션 메쉬 구축
-- A 알고리즘*
-  - 출발지와 목적지가 속한 삼각형을 찾아 최단 경로(Triangle Path)를 산출하고, Funnel Algorithm을 응용해 부드러운 이동 경로 생성
+- A* 알고리즘
+  - 출발지와 목적지가 속한 삼각형을 찾아 최단 경로(Triangle Path)를 산출하고, String Pulling(경로 단축) 기법을 적용하여, 지그재그 형태의 A* 경로를 **직선화(Smoothing)** 하고 자연스러운 이동 구현
   - ![NavMesh](https://github.com/user-attachments/assets/5c0fb898-07a2-4029-986e-475e1bb2e61a)
 - NavMeshAgent
   - 상태 패턴(Idle, Moving)을 적용하여 이동 로직 분리
-  - 매 프레임 UpdateMovement에서 GetNearestPointOnNavMesh를 호출하여, Spatial Grid로 최적화된 검색을 통해 캐릭터를 NavMesh 표면 위로 투영하고 이동 경로 보정
+  - 매 프레임 UpdateMovement에서 GetNearestPointOnNavMesh를 호출
+  - Spatial Grid로 최적화된 검색을 통해 캐릭터를 NavMesh 표면 위로 투영하고 이동 경로 보정
 
 
 </details> 
