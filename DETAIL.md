@@ -122,10 +122,10 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **지연 처리(Delayed Processing) 기반 이벤트 시스템**
 - 프레임 동기화: 게임 로직 도중 발생하는 객체 생성/삭제, 씬 전환 요청을 즉시 처리하지 않고 vector에 저장
-- [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L44-L92)
+  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L44-L92)
 - 일괄 처리: 모든 로직 업데이트가 끝난 후 CEventMgr::update()에서 이벤트를 일괄 처리하여, 로직 도중 참조 무효화 방지
 - 생명주기 관리: CreateObject, DeleteObject 등 전역 함수를 통해 어디서든 안전하게 객체 생명주기 제어
-- [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
+  - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
 
 </details>
 
@@ -140,9 +140,9 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 **컴포넌트 기반 오브젝트 설계** [[📄CObject.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CObject.h)
 - CObject 추상 클래스를 기반으로 Player, Monster, Weapon, UI 등 다양한 객체 구현
 - Collider, Animator, Rigidbody 등 필요에 따라 동적으로 추가 가능한 컴포넌트
-- [[📄Collider.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CCollider.h)
-- [[📄Animator.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CAnimator.h)
-- [[📄Rigidbody.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CRigidbody.h)
+  - [[📄Collider.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CCollider.h)
+  - [[📄Animator.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CAnimator.h)
+  - [[📄Rigidbody.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CRigidbody.h)
 
 </details>
 
@@ -225,17 +225,15 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 - 삭제 스케줄링 컨테이너 변경: 삭제 대기열을 단순 vector에서 unordered_set로 변경
 - 삭제 로직 분리 및 최적화
 - EventMgr::Excute에서 삭제 이벤트 발생 시, 해당 객체를 Dead 상태로 마킹하고 unordered_set에 삽입 (중복 요청 자동 제거)
-- [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
-- [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+  - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
+  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
 - 프레임의 마지막에 m_setDeadScheduled를 순회하며 실제 delete 수행
-- [[📄이벤트 매니저 업데이트 위치]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
+  - [[📄이벤트 매니저 업데이트 위치]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
 - 안전한 생명주기 보장: 삭제된 객체는 다음 프레임 시작 전까지 메모리에 존재하되 Dead 상태이므로, 다른 로직에서의 참조 오류를 방지
 
 **✅ 결과**
 - 동일 프레임 내 중복 삭제 요청이 들어와도 메모리 해제는 단 한 번만 수행됨을 보장
 - 다수의 오브젝트가 상호작용하는 난전 상황에서도 안정적인 메모리 관리 구현
-
----
 
 ---
 
