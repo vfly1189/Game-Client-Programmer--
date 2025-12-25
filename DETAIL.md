@@ -121,8 +121,8 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 <br>
   
 **지연 처리(Delayed Processing) 기반 이벤트 시스템**
-- 프레임 동기화: 게임 로직 도중 발생하는 객체 생성/삭제, 씬 전환 요청을 즉시 처리하지 않고 큐(vector<tEvent>)에 저장
-  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
+- 프레임 동기화: 게임 로직 도중 발생하는 객체 생성/삭제, 씬 전환 요청을 즉시 처리하지 않고 vector에 저장
+  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L44-L92)
 - 일괄 처리: 모든 로직 업데이트가 끝난 후 CEventMgr::update()에서 이벤트를 일괄 처리하여, 로직 도중 참조 무효화 방지
 - 생명주기 관리: CreateObject, DeleteObject 등 전역 함수를 통해 어디서든 안전하게 객체 생명주기 제어
   - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
