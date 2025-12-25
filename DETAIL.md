@@ -121,10 +121,10 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 <br>
 
 **지연 처리(Delayed Processing) 기반 이벤트 시스템**
-- 프레임 동기화: 게임 로직 도중 발생하는 객체 생성/삭제, 씬 전환 요청을 즉시 처리하지 않고 vector에 저장
+- 이벤트 큐(vector): 게임 로직 도중 발생하는 객체 생성/삭제, 씬 전환 요청을 즉시 수행하지 않고 순차적으로 큐에 저장하여 프레임 동기화 유지
   - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L44-L92)
-- 일괄 처리: 모든 로직 업데이트가 끝난 후 CEventMgr::update()에서 이벤트를 일괄 처리하여, 로직 도중 참조 무효화 방지
-- 생명주기 관리: CreateObject, DeleteObject 등 전역 함수를 통해 어디서든 안전하게 객체 생명주기 제어
+- 일괄 처리(Execute): 모든 로직 업데이트가 끝난 후 이벤트를 일괄 실행. 특히 객체 삭제 요청은 **중복 방지 컨테이너(unordered_set)** 를 통해 안전하게 처리
+- 생명주기 관리: 전역 함수(Create/DeleteObject)를 제공하여 어디서든 안전하게 객체 생명주기 제어
   - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
 
 </details>
@@ -182,7 +182,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 | :---: | :---: |
 | ![몬스터 많을때 플레이-1](https://github.com/user-attachments/assets/276c08d4-d76a-4fa5-a3a7-a5933ff0b6d1) | ![몬스터 많을때 플레이-2](https://github.com/user-attachments/assets/09890ffb-9d42-46b5-814c-603897c64c91) |
 
-<br>
+<br><br>
 
 ### 2️⃣ 타일맵 렌더링 최적화
 > **🚨 문제 상황**
@@ -210,6 +210,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 | ![타일최적화(Before)](https://github.com/user-attachments/assets/b5534d3c-3910-4649-914d-8c13902e7670) | ![타일최적화(After)](https://github.com/user-attachments/assets/08e592ca-8a7e-4ad2-9cb7-264ab596d6be) |
 | **DrawCall: 1,296회 / FPS: ~650** | **DrawCall: 1회 / FPS: ~1,400** |
 
+<br><br>
 
 ### 3️⃣ 이벤트 처리 시 중복 삭제로 인한 메모리 오염 방지
 > **🚨 문제 상황**
@@ -222,15 +223,16 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 **💡 해결 과정**
 
-- 삭제 스케줄링 컨테이너 변경: 삭제 대기열을 단순 vector에서 unordered_set로 변경
-- 삭제 로직 분리 및 최적화
-- EventMgr::Excute에서 삭제 이벤트 발생 시, 해당 객체를 Dead 상태로 마킹하고 unordered_set에 삽입 (중복 요청 자동 제거)
-  - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
-  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L22-L42)
-- 프레임의 마지막에 m_setDeadScheduled를 순회하며 실제 delete 수행
-  - [[📄이벤트 매니저 업데이트 위치]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173)
-- 안전한 생명주기 보장: 삭제된 객체는 다음 프레임 시작 전까지 메모리에 존재하되 Dead 상태이므로, 다른 로직에서의 참조 오류를 방지
+- 이벤트 처리 구조 개선:
+  - 이벤트 큐(vector)는 요청 순서 보장을 위해 유지하되, 실제 삭제할 객체를 모아두는 컨테이너를 별도로 분리
 
+- 중복 제거 로직 적용 (unordered_set):
+  - Execute 함수에서 삭제 이벤트를 처리할 때, 해당 객체를 즉시 지우지 않고 unordered_set (삭제 스케줄러) 에 삽입 [[📄객체 삭제 이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L61-L69)
+  - Set 자료구조의 특성을 이용해 동일 객체에 대한 중복 삭제 요청이 들어와도 자동으로 1회만 등록되도록 구현
+
+- 지연 삭제 수행:
+  - 모든 이벤트 처리가 끝난 후, unordered_set에 모인 객체들만 순회하며 최종적으로 delete 수행 [[📄객체 삭제]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L24-L30)
+ 
 **✅ 결과**
 - 동일 프레임 내 중복 삭제 요청이 들어와도 메모리 해제는 단 한 번만 수행됨을 보장
 - 다수의 오브젝트가 상호작용하는 난전 상황에서도 안정적인 메모리 관리 구현
