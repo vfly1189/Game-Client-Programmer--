@@ -228,7 +228,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
   - 이벤트 큐(vector)는 요청 순서 보장을 위해 유지하되, 실제 삭제할 객체를 모아두는 컨테이너를 별도로 분리
 
 - 중복 제거 로직 적용 (unordered_set):
-  - Execute 함수에서 삭제 이벤트를 처리할 때, 해당 객체를 즉시 지우지 않고 unordered_set (삭제 스케줄러) 에 삽입 [[📄객체 삭제 이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L61-L69)
+  - Execute 함수에서 삭제 이벤트를 처리할 때, 해당 객체를 즉시 지우지 않고 unordered_set (삭제 스케줄러) 에 삽입 [[📄객체 삭제 이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L61-L69)
   - Set 자료구조의 특성을 이용해 동일 객체에 대한 중복 삭제 요청이 들어와도 자동으로 1회만 등록되도록 구현
 
 - 지연 삭제 수행:
