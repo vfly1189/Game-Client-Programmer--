@@ -271,9 +271,9 @@
 **🛠️ 기술적 구현**
 - **A* 알고리즘**: 출발지와 목적지가 속한 삼각형(Triangle)을 찾아 최적의 경로(Triangle Path) 산출
 - **String Pulling (경로 평활화)**: 지그재그 형태의 경로를 직선화하여 자연스러운 이동 동선 생성
-  - | **NavMesh상에서의 이동** |
-    | :---: |
-    | ![NavMesh](https://github.com/user-attachments/assets/5c0fb898-07a2-4029-986e-475e1bb2e61a) |
+  - | **NavMesh 스무딩 (x)** | **NavMesh 스무딩 (O)** |
+    | :---: | :---: |
+    | ![NavMesh-스무딩x](https://github.com/user-attachments/assets/b9f093b3-bff1-434e-b170-fdee9c4e83df) | ![NavMesh-스무딩o](https://github.com/user-attachments/assets/456e6486-6547-4893-80c6-bba4817ac855) |
 
 - **NavMesh Agent**: 상태 패턴(Idle, Moving)을 적용하여 이동 로직을 캡슐화하고, 매 프레임 `GetNearestPointOnNavMesh`를 통해 현재 위치를 보정
 
