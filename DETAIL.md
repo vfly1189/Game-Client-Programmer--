@@ -55,6 +55,7 @@
  🎮 [이터널리턴 모작](#-이터널-리턴-모작) <br>
  
  > 📖 [게임 개요](#-게임-개요) <br>
+   📌 [학습 목표 및 달성](#-학습-목표-및-달성) <br>
    🔨 [주요 개발](#-주요-개발) <br>
    🛠️ [문제 해결](#%EF%B8%8F-문제-해결) <br>
        </a>
@@ -84,13 +85,11 @@
 <br>
 <br>
 
+---
+
 # 🎮 이터널 리턴 모작
 
-<p align="left">
-  <img src="https://github.com/user-attachments/assets/1d959a57-f3e9-4a0a-86ab-3b0b7e336d19" width="800"/>
-</p>
-
-<div align="left">
+<img width="1000" height="800" alt="image" src="https://github.com/user-attachments/assets/ee737290-1c9e-47af-95b2-b62d47e51f0c" />
 
 ### 📌 프로젝트 정보
 
@@ -99,7 +98,7 @@
 | 🎯 **장르** | 쿼터뷰, 배틀로얄, MOBA |
 | ⏱️ **개발 기간** | 2개월 |
 | 👥 **개발 인원** | 2인 (프로그래머로 참여) |
-| 🛠️ **개발 환경** | C++, DirectX11, FMOD, ImGui |
+| 🛠️ **개발 환경** | C++, DirectX11, FMOD |
 | 🎬 **시연 영상** | [YouTube 바로가기](https://www.youtube.com/watch?v=b6XVkd0xc-E&list=LL&index=19&t=1s) |
 | 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/DirectX11/Eternal%20Return%20%EB%AA%A8%EC%9E%91) |
 | 💾 **GitHub** | [소스코드](https://github.com/HyangRim/DirectX11-Engine-Client) |
@@ -107,25 +106,55 @@
 </div>
 
 <br>
+<br>
 
 ## 📖 게임 개요
 
-이터널 리턴은 배틀로얄과 MOBA 장르가 결합된 쿼터뷰 서바이벌 게임입니다. 플레이어는 특정 캐릭터를 선택하여 맵을 탐색하며 재료를 수집하고, 제작 시스템을 통해 장비를 강화하여 최후의 1인(또는 1팀)이 되는 것을 목표로 합니다. 전략적인 동선 계획과 실시간 전투가 결합된 독특한 게임플레이가 특징입니다. 
+**장르**: 쿼터뷰 배틀로얄 / MOBA (Multiplayer Online Battle Arena)
+
+이터널 리턴은 전략적인 쿼터뷰 시점의 생존 게임입니다. 플레이어는 루미아 섬에서 재료를 파밍하고 장비를 제작하여 캐릭터를 성장시키며, 최후의 1인이 될 때까지 생존해야 합니다.
+
+**🔄 핵심 루프 (Core Loop)**
+1. **파밍 및 제작**: 맵 곳곳의 재료 수집
+2. **장비 강화**: 상위 등급 장비 제작으로 전투력 상승
+3. **생존 경쟁**: 금지 구역 회피 및 다른 생존자와의 전투
+4. **승리**: 최후의 1인 생존
+
+**🎯 개발 초점**
+- DirectX 11을 이용한 **3D 렌더링 파이프라인 구축**
+- **엔진 레벨의 성능 최적화** 및 아키텍처 설계
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
 </div>
 
-## 📌 학습 목표 및 내용
+<br>
+<br>
 
-**게임 엔진 레벨의 고급 렌더링 최적화 기법 습득**
+## 📌 학습 목표 및 달성
 
-1. Deferred Rendering 도입으로 광원 수에 독립적인 성능 확보 (Forward 대비 O(광원 수) → O(1))
-2. GPU 인스턴싱으로 DrawCall을 수천 회에서 수십 회로 감소 (약 90% 축소)
-3. QuadTree 공간 분할로 충돌/렌더링 성능 향상 (O(n) → O(log n))
+> **"게임 엔진 레벨의 고급 렌더링 최적화 기법 습득"**
 
-엔진 차원의 성능 최적화 원리와 실제 적용 방법을 습득했습니다.
+이 프로젝트의 핵심 목표는 상용 엔진 없이 DirectX 11 API로 3D 게임 엔진을 직접 구현하며, 대규모 리소스를 효율적으로 처리하는 최적화 기술을 체화하는 것이었습니다.
 
+### 1️⃣ 고급 렌더링 파이프라인 구축
+- **Deferred Rendering 도입**: 다수의 동적 광원(Point Light 등) 처리를 위해 Forward 방식 대신 Deferred 방식을 적용하여 연산 효율성 확보
+- **G-Buffer 및 MRT 활용**: Albedo, Normal, Position 등 지오메트리 정보를 MRT(Multi Render Target)에 저장하여 라이팅 연산 최적화
+
+### 2️⃣ 대규모 오브젝트 처리 최적화
+- **GPU Instancing**: 동일한 메시를 사용하는 수천 개의 오브젝트(풀, 나무 등) 렌더링 시 발생하는 DrawCall 병목 현상 해결 (DrawCall 90% 이상 감소)
+- **Quad Tree 공간 분할**: 절두체 선별(Frustum Culling) 및 충돌 검사 비용을 획기적으로 줄이기 위해 공간 분할 알고리즘 적용
+
+### 3️⃣ 3D 게임 엔진 기술 심화
+- **NavMesh 길찾기**: 복잡한 지형에서의 NPC 이동을 위한 네비게이션 메쉬 및 경로 탐색 알고리즘 구현
+- **GPU Skinning**: 캐릭터 애니메이션 연산을 CPU에서 GPU(Compute Shader)로 이관하여 퍼포먼스 향상
+<br>
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
+
+<br>
 <br>
 
 ---
@@ -241,6 +270,10 @@
 </details>
 
 <br>
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
 
 ---
 
