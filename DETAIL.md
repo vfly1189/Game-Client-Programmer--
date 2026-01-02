@@ -1,7 +1,48 @@
 # 📑 이형규 포트폴리오
->   <b>C++, Win32API, DX11</b>을 이용한 게임 개발의 경험이 있습니다. <br>
+## INTRODUCTION
 
-## <b> 주요 기술 - C++, DirectX11 </b>
+### 개발자로서의 이형규
+
+**🤝 함께 성장하는 팀 플레이어**
+
+- 나의 코드가 팀원과 호환되는가를 항상 먼저 생각합니다.
+- 짧은 주석, 코드 리뷰, 기술 문서화를 통해 팀원이 시간을 투자할 필요 없이 바로 이해하고 사용할 수 있도록 돕습니다.
+
+**🧠 끝까지 파고드는 문제 해결자**
+
+- 겉으로 보이는 증상이 아닌 근본 원인을 찾습니다.
+- "왜 느린가?" "어디가 병목인가?"를 어렴풋이 고민하는 것이 아니라, 프로파일러와 데이터로 직접 검증하고 해결합니다.
+
+**🔧 완성도에 타협하지 않는 장인**
+
+- 동작하는 코드 × 좋은 코드. 성능, 가독성 모두 확실하지 않으면 끝까지 고민합니다.
+- 기술 부채를 쌓지 않고, 1프레임의 낭비도 없도록 깔끔하게 최적화를 추구합니다.
+
+**📈 한계를 뛰어넘는 진취적 도전자**
+
+- 치명적인 버그 앞에서도 당황하지 않고, 핵심 원인을 집중력으로 돌파합니다.
+- 불가능 같던 성능 향상도 자료구조와 알고리즘 개선으로 기술적 난제를 해결한 경험이 있습니다.
+
+<br>
+<br>
+
+
+---
+
+## 💡 관심사 & 가치관
+
+- 일상에서도 항상 개발에 대한 아이디어를 떠올립니다. 게임 플레이 중에도 "이건 어떻게 구현했을까?"를 생각하며, 기술적 호기심을 놓지 않습니다.
+
+- 팀 프로젝트를 진행할 때는 타인의 코드에 대한 이해가 빠른 편이며, 소통할 때 상대의 의도를 잘 파악합니다.
+- 책임감이 있어, 한 번 시작한 일은 끝까지 몰두합니다.
+
+- 플레이어가 게임을 즐기는 데 방해받지 않도록, 안정적인 프레임과 자연스러운 조작감을 중시합니다.
+- 누구나 쉽게 즐길 수 있고, 기술적으로도 탄탄한 게임을 만드는 것이 목표입니다.
+
+<br>
+<br>
+
+---
 
 ## 목차
 
@@ -11,7 +52,8 @@
       <td valign="top">
        <a>
         
- 🎮 [Brotato 모작](#-brotato-모작) <br>
+ 🎮 [이터널리턴 모작](#-이터널-리턴-모작) <br>
+ 
  > 📖 [게임 개요](#-게임-개요) <br>
    🔨 [주요 개발](#-주요-개발) <br>
    🛠️ [문제 해결](#%EF%B8%8F-문제-해결) <br>
@@ -19,7 +61,7 @@
       </td>
       <td valign="top">
       <a>
- 🎮 [TBI 모작](#-tbi-모작) <br>
+ 🎮 [Brotato 모작](#-brotato-모작) <br>
  
  > 📖 [게임 개요](#-게임-개요-1) <br>
    🔨 [주요 개발](#-주요-개발-1) <br>
@@ -28,7 +70,7 @@
       </td>
       <td valign="top">
       <a>
- 🎮 [이터널리턴 모작](#-이터널-리턴-모작) <br>
+ 🎮  [TBI 모작](#-tbi-모작) <br>
  
  > 📖 [게임 개요](#-게임-개요-2) <br>
    🔨 [주요 개발](#-주요-개발-2) <br>
@@ -39,6 +81,238 @@
   </tbody>
 </table>
 
+<br>
+<br>
+
+# 🎮 이터널 리턴 모작
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/1d959a57-f3e9-4a0a-86ab-3b0b7e336d19" width="800"/>
+</p>
+
+<div align="left">
+
+### 📌 프로젝트 정보
+
+| 항목 | 내용 |
+|:---:|:---|
+| 🎯 **장르** | 쿼터뷰, 배틀로얄, MOBA |
+| ⏱️ **개발 기간** | 2개월 |
+| 👥 **개발 인원** | 2인 (프로그래머로 참여) |
+| 🛠️ **개발 환경** | C++, DirectX11, FMOD, ImGui |
+| 🎬 **시연 영상** | [YouTube 바로가기](https://www.youtube.com/watch?v=b6XVkd0xc-E&list=LL&index=19&t=1s) |
+| 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/DirectX11/Eternal%20Return%20%EB%AA%A8%EC%9E%91) |
+| 💾 **GitHub** | [소스코드](https://github.com/HyangRim/DirectX11-Engine-Client) |
+
+</div>
+
+<br>
+
+## 📖 게임 개요
+
+이터널 리턴은 배틀로얄과 MOBA 장르가 결합된 쿼터뷰 서바이벌 게임입니다. 플레이어는 특정 캐릭터를 선택하여 맵을 탐색하며 재료를 수집하고, 제작 시스템을 통해 장비를 강화하여 최후의 1인(또는 1팀)이 되는 것을 목표로 합니다. 전략적인 동선 계획과 실시간 전투가 결합된 독특한 게임플레이가 특징입니다. 
+
+## 📌 학습 목표 및 내용
+
+**게임 엔진 레벨의 고급 렌더링 최적화 기법 습득**
+
+1. Deferred Rendering 도입으로 광원 수에 독립적인 성능 확보 (Forward 대비 O(광원 수) → O(1))
+2. GPU 인스턴싱으로 DrawCall을 수천 회에서 수십 회로 감소 (약 90% 축소)
+3. QuadTree 공간 분할로 충돌/렌더링 성능 향상 (O(n) → O(log n))
+
+엔진 차원의 성능 최적화 원리와 실제 적용 방법을 습득했습니다.
+
+<br>
+
+---
+
+## 🔨 주요 개발
+
+<details open>
+<summary><b>🎨 Deferred Rendering 파이프라인</b></summary>
+
+<br>
+
+**디퍼드 렌더링 시스템 구축** [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
+- Forward Rendering에서 Deferred Rendering으로 전환하여 다중 광원 처리 최적화 
+- G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
+- 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
+- 풀스크린 쿼드를 통한 라이팅 패스 구현
+- | **Albedo** | **Normal** |
+  | :---: | :---: |
+  | <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="682" height="381" alt="G-Buffer(Normal)"     src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" />|
+  | **Position (World Space)** | **Material** |
+  | <img width="681" height="383" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="383" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
+
+**렌더링 파이프라인 구조**
+- Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
+- Lighting Pass: G-Buffer 데이터 기반 조명 계산 [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L162)
+- Forward Pass: 투명 객체 처리 (알파 블렌딩) [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
+
+</details>
+
+<details open>
+<summary><b>🎭 인스턴싱 기반 렌더링</b></summary>
+
+<br>
+
+**GPU 인스턴싱 시스템**
+- 동일 메시의 다수 객체를 한 번의 DrawCall로 처리
+- 인스턴스 버퍼를 통한 Transform 데이터 전달
+- MeshRenderer, ModelRenderer, AnimRenderer별 인스턴싱 지원
+  - [[📄MeshRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L348)
+  - [[📄ModelRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L350-L386)
+  - [[📄AnimRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
+
+**성능 최적화**
+- DrawCall 수 대폭 감소
+- CPU-GPU 병목 현상 해소
+- 대규모 오브젝트 렌더링 안정화
+
+</details>
+
+<details open>
+<summary><b>🌑 쿼드 트리</b></summary>
+
+<br>
+
+**쿼드 트리(Quad Tree) 구현** [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
+- 2D 공간을 4분할하는 트리 자료구조 설계 및 적용
+- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
+- 탐색/삽입/삭제 연산에 따라 노드 분할과 병합 자동 관리
+- 카메라 시야(Frustum)와 노드 영역의 교차 검사로 렌더링 대상을 신속하게 필터링 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
+
+**최적화 기법**
+- 오브젝트 수가 많아질수록 전체 탐색(O(n)) 대신 부분 공간 탐색(O(log n))으로 성능 대폭 향상
+- 충돌 검사/렌더링 등 많은 반복 연산이 필요한 곳에서 연산량 감소
+- 넓은 맵, 많은 오브젝트가 배치되는 상황에서도 프레임 드랍 없이 효율적 처리
+
+**쿼드트리 기반 충돌 처리**
+- AABB(Axis-Aligned Bounding Box) 충돌 검사 [[📄AABB 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L421-L492)
+- Sphere Collider 구현 [[📄Sphere Collider 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L494-L580)
+- 계층적 충돌 그룹 관리
+
+</details>
+
+<details open>
+<summary><b>🧭 NavMesh 기반 길찾기 시스템</b></summary>
+
+<br>
+
+**3D 공간 길찾기 구현**
+- NavMesh 구축
+  - 맵 데이터를 로드하여 다각형(Triangle) 그래프로 구성된 네비게이션 메쉬 구축
+- A* 알고리즘
+  - 출발지와 목적지가 속한 삼각형을 찾아 최단 경로(Triangle Path)를 산출하고, String Pulling(경로 단축) 기법을 적용하여, 지그재그 형태의 A* 경로를 **직선화(Smoothing)** 하고 자연스러운 이동 구현
+  - ![NavMesh](https://github.com/user-attachments/assets/5c0fb898-07a2-4029-986e-475e1bb2e61a)
+- NavMeshAgent
+  - 상태 패턴(Idle, Moving)을 적용하여 이동 로직 분리
+  - 매 프레임 UpdateMovement에서 GetNearestPointOnNavMesh를 호출
+  - Spatial Grid로 최적화된 검색을 통해 캐릭터를 NavMesh 표면 위로 투영하고 이동 경로 보정
+
+
+</details> 
+
+
+
+
+<details open>
+<summary><b>🎬 애니메이션 시스템</b></summary>
+
+<br>
+
+**스켈레탈 애니메이션**
+- FBX 기반 본 애니메이션 구현 [[📄애니메이션 정보 저장]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L575-L608)
+- Compute Shader를 활용한 스키닝 연산
+- 애니메이션 블렌딩 및 전환
+  - [[📄애니메이션 블렌딩]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L57-L130)
+  - [[📄애니메이션 블렌딩-셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20Render.fx#L118-L193)
+- 루트 모션(Root Motion) 지원
+
+**애니메이션 최적화**
+- GPU 스키닝으로 CPU 부하 감소 [[📄인스턴싱 + GPU 스키닝]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
+- 애니메이션 인스턴싱 지원
+- LOD에 따른 애니메이션 품질 조절
+
+</details>
+
+<br>
+
+---
+
+## 🛠️ 문제 해결
+
+### 1️⃣ Forward에서 Deferred Rendering으로 전환
+
+> **🚨 문제 상황**
+> 
+> 다수의 동적 광원 사용 시 Forward Rendering 방식에서 성능 저하 발생 (광원 수 × 오브젝트 수의 연산)
+
+**💡 해결 과정**
+- Deferred Rendering 파이프라인 설계 및 구현 [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
+- G-Buffer 4개 생성 (Albedo, Normal, Position, Material)
+  - ![디퍼드렌더링](https://github.com/user-attachments/assets/16f34e58-f14a-44b4-ac76-c26db09755ca)
+- 지오메트리 패스와 라이팅 패스 분리
+  -  [[📄Geometry Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L435)
+  -  [[📄Lighting Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L454-L502)
+- 멀티 렌더 타겟(MRT)을 통한 동시 렌더링
+- 풀스크린 쿼드로 화면 전체에 조명 계산
+- 투명 객체는 Forward Rendering으로 별도 처리
+
+**✅ 결과**
+- 다중 광원 사용 시 성능 대폭 향상
+- 광원 수에 비례하지 않는 안정적인 프레임
+- 복잡한 조명 효과 구현 가능
+
+<br>
+
+### 2️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)
+
+> **🚨 문제 상황**
+> 
+> 캐릭터가 이동할 때마다 지형의 높낮이를 반영하고 경로 이탈을 방지하기 위해 현재 위치가 "어떤 삼각형 위에 있는지" 판별해야 합니다.
+> 
+> 맵이 넓어 NavMesh의 삼각형 개수가 수천 개로 늘어나자, 매 프레임 GetNearestPointOnNavMesh에서 전체 삼각형을 순회(Linear Search, O(N))하는 방식이 심각한 CPU 병목을 유발했습니다.
+
+**💡 해결 과정**​
+
+- 공간 해싱(Spatial Grid) 도입
+  - 맵 전체를 일정 크기(CellSize: 25.0f)의 그리드로 분할
+  - unordered_map<uint64, vector<int>>를 사용하여 각 그리드 셀에 포함된 삼각형 인덱스를 미리 매핑 (InitializeSpatialGrid)
+  - <img width="1122" height="357" alt="image" src="https://github.com/user-attachments/assets/a3135a41-b5e9-46ca-b498-18f5b455663d" />
+- 검색 로직 최적화
+  - GetNearestPointOnNavMesh 호출 시, 캐릭터의 월드 좌표를 그리드 키(Key)로 변환
+  - 전체 삼각형을 뒤지는 대신, 해당 셀에 속한 소수의 삼각형만 검사하도록 변경하여 연산량 최소화
+  - m_lastFoundTriangle 변수를 통한 캐싱으로 연속적인 프레임에서의 검색 비용 추가 절감
+
+**✅ 결과**
+- 삼각형 검색 복잡도를 O(N) → O(1) (평균) 수준으로 단축
+- 다수의 NPC가 동시에 길찾기와 이동 보정을 수행해도 프레임 저하 없는 안정적인 퍼포먼스 확보
+- | case 1 | case 2 |
+    | :---: | :---: |
+    | <img width="360" height="149" alt="image" src="https://github.com/user-attachments/assets/43d4a9ba-5cbd-43da-bc92-ab82ded95206" /> | <img width="355" height="140" alt="image" src="https://github.com/user-attachments/assets/efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" /> |
+
+<br>
+
+### 3️⃣ 쿼드 트리 기반 공간 분할 최적화
+
+> **🚨 문제 상황**
+> 
+> 넓은 맵에서 모든 오브젝트에 대해 충돌/렌더링 검사를 수행하여 불필요한 연산 발생
+
+**💡 해결 과정**
+- 쿼드 트리(Quad Tree) 자료구조 도입으로 공간 분할
+- 맵을 4개의 사분면으로 재귀적으로 분할하는 트리 구조 구현 [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
+- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
+- 카메라 절두체(Frustum) 내 노드만 탐색하여 렌더링 대상 선별 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
+- 충돌 처리 [[📄쿼드 트리 충돌 로직]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
+
+**✅ 결과**
+- 렌더링/충돌 검사 대상 오브젝트 수 대폭 감소
+- 넓은 맵에서도 안정적인 프레임 유지
+- 공간 쿼리 성능 향상 (O(n) → O(log n))
+- 객체 500개에서의 성능비교
+  - <img width="1048" height="656" alt="객체 500개 성능비교" src="https://github.com/user-attachments/assets/956a6342-f9a2-494a-b33a-128847239bc0" />
 
 ---
 
@@ -474,238 +748,6 @@ The Binding of Isaac(TBI)는 로그라이크 던전 크롤러 게임으로, 플�
 **✅ 결과**
 - 피격 시 넉백 효과로 타격감 향상
 - 포물선을 그리는 눈물 발사로 원작 느낌 재현
-
----
-
-# 🎮 이터널 리턴 모작
-
-<p align="left">
-  <img src="https://github.com/user-attachments/assets/1d959a57-f3e9-4a0a-86ab-3b0b7e336d19" width="800"/>
-</p>
-
-<div align="left">
-
-### 📌 프로젝트 정보
-
-| 항목 | 내용 |
-|:---:|:---|
-| 🎯 **장르** | 쿼터뷰, 배틀로얄, MOBA |
-| ⏱️ **개발 기간** | 2개월 |
-| 👥 **개발 인원** | 2인 (프로그래머로 참여) |
-| 🛠️ **개발 환경** | C++, DirectX11, FMOD, ImGui |
-| 🎬 **시연 영상** | [YouTube 바로가기](https://www.youtube.com/watch?v=b6XVkd0xc-E&list=LL&index=19&t=1s) |
-| 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/DirectX11/Eternal%20Return%20%EB%AA%A8%EC%9E%91) |
-| 💾 **GitHub** | [소스코드](https://github.com/HyangRim/DirectX11-Engine-Client) |
-
-</div>
-
-<br>
-
-## 📖 게임 개요
-
-이터널 리턴은 배틀로얄과 MOBA 장르가 결합된 쿼터뷰 서바이벌 게임입니다. 플레이어는 특정 캐릭터를 선택하여 맵을 탐색하며 재료를 수집하고, 제작 시스템을 통해 장비를 강화하여 최후의 1인(또는 1팀)이 되는 것을 목표로 합니다. 전략적인 동선 계획과 실시간 전투가 결합된 독특한 게임플레이가 특징입니다. 
-
-## 📌 학습 목표 및 내용
-
-**게임 엔진 레벨의 고급 렌더링 최적화 기법 습득**
-
-1. Deferred Rendering 도입으로 광원 수에 독립적인 성능 확보 (Forward 대비 O(광원 수) → O(1))
-2. GPU 인스턴싱으로 DrawCall을 수천 회에서 수십 회로 감소 (약 90% 축소)
-3. QuadTree 공간 분할로 충돌/렌더링 성능 향상 (O(n) → O(log n))
-
-엔진 차원의 성능 최적화 원리와 실제 적용 방법을 습득했습니다.
-
-<br>
-
----
-
-## 🔨 주요 개발
-
-<details open>
-<summary><b>🎨 Deferred Rendering 파이프라인</b></summary>
-
-<br>
-
-**디퍼드 렌더링 시스템 구축** [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
-- Forward Rendering에서 Deferred Rendering으로 전환하여 다중 광원 처리 최적화 
-- G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
-- 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
-- 풀스크린 쿼드를 통한 라이팅 패스 구현
-- | **Albedo** | **Normal** |
-  | :---: | :---: |
-  | <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="682" height="381" alt="G-Buffer(Normal)"     src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" />|
-  | **Position (World Space)** | **Material** |
-  | <img width="681" height="383" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="383" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
-
-**렌더링 파이프라인 구조**
-- Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
-- Lighting Pass: G-Buffer 데이터 기반 조명 계산 [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L162)
-- Forward Pass: 투명 객체 처리 (알파 블렌딩) [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
-
-</details>
-
-<details open>
-<summary><b>🎭 인스턴싱 기반 렌더링</b></summary>
-
-<br>
-
-**GPU 인스턴싱 시스템**
-- 동일 메시의 다수 객체를 한 번의 DrawCall로 처리
-- 인스턴스 버퍼를 통한 Transform 데이터 전달
-- MeshRenderer, ModelRenderer, AnimRenderer별 인스턴싱 지원
-  - [[📄MeshRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L348)
-  - [[📄ModelRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L350-L386)
-  - [[📄AnimRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
-
-**성능 최적화**
-- DrawCall 수 대폭 감소
-- CPU-GPU 병목 현상 해소
-- 대규모 오브젝트 렌더링 안정화
-
-</details>
-
-<details open>
-<summary><b>🌑 쿼드 트리</b></summary>
-
-<br>
-
-**쿼드 트리(Quad Tree) 구현** [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
-- 2D 공간을 4분할하는 트리 자료구조 설계 및 적용
-- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
-- 탐색/삽입/삭제 연산에 따라 노드 분할과 병합 자동 관리
-- 카메라 시야(Frustum)와 노드 영역의 교차 검사로 렌더링 대상을 신속하게 필터링 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
-
-**최적화 기법**
-- 오브젝트 수가 많아질수록 전체 탐색(O(n)) 대신 부분 공간 탐색(O(log n))으로 성능 대폭 향상
-- 충돌 검사/렌더링 등 많은 반복 연산이 필요한 곳에서 연산량 감소
-- 넓은 맵, 많은 오브젝트가 배치되는 상황에서도 프레임 드랍 없이 효율적 처리
-
-**쿼드트리 기반 충돌 처리**
-- AABB(Axis-Aligned Bounding Box) 충돌 검사 [[📄AABB 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L421-L492)
-- Sphere Collider 구현 [[📄Sphere Collider 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L494-L580)
-- 계층적 충돌 그룹 관리
-
-</details>
-
-<details open>
-<summary><b>🧭 NavMesh 기반 길찾기 시스템</b></summary>
-
-<br>
-
-**3D 공간 길찾기 구현**
-- NavMesh 구축
-  - 맵 데이터를 로드하여 다각형(Triangle) 그래프로 구성된 네비게이션 메쉬 구축
-- A* 알고리즘
-  - 출발지와 목적지가 속한 삼각형을 찾아 최단 경로(Triangle Path)를 산출하고, String Pulling(경로 단축) 기법을 적용하여, 지그재그 형태의 A* 경로를 **직선화(Smoothing)** 하고 자연스러운 이동 구현
-  - ![NavMesh](https://github.com/user-attachments/assets/5c0fb898-07a2-4029-986e-475e1bb2e61a)
-- NavMeshAgent
-  - 상태 패턴(Idle, Moving)을 적용하여 이동 로직 분리
-  - 매 프레임 UpdateMovement에서 GetNearestPointOnNavMesh를 호출
-  - Spatial Grid로 최적화된 검색을 통해 캐릭터를 NavMesh 표면 위로 투영하고 이동 경로 보정
-
-
-</details> 
-
-
-
-
-<details open>
-<summary><b>🎬 애니메이션 시스템</b></summary>
-
-<br>
-
-**스켈레탈 애니메이션**
-- FBX 기반 본 애니메이션 구현 [[📄애니메이션 정보 저장]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L575-L608)
-- Compute Shader를 활용한 스키닝 연산
-- 애니메이션 블렌딩 및 전환
-  - [[📄애니메이션 블렌딩]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L57-L130)
-  - [[📄애니메이션 블렌딩-셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20Render.fx#L118-L193)
-- 루트 모션(Root Motion) 지원
-
-**애니메이션 최적화**
-- GPU 스키닝으로 CPU 부하 감소 [[📄인스턴싱 + GPU 스키닝]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
-- 애니메이션 인스턴싱 지원
-- LOD에 따른 애니메이션 품질 조절
-
-</details>
-
-<br>
-
----
-
-## 🛠️ 문제 해결
-
-### 1️⃣ Forward에서 Deferred Rendering으로 전환
-
-> **🚨 문제 상황**
-> 
-> 다수의 동적 광원 사용 시 Forward Rendering 방식에서 성능 저하 발생 (광원 수 × 오브젝트 수의 연산)
-
-**💡 해결 과정**
-- Deferred Rendering 파이프라인 설계 및 구현 [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
-- G-Buffer 4개 생성 (Albedo, Normal, Position, Material)
-  - ![디퍼드렌더링](https://github.com/user-attachments/assets/16f34e58-f14a-44b4-ac76-c26db09755ca)
-- 지오메트리 패스와 라이팅 패스 분리
-  -  [[📄Geometry Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L435)
-  -  [[📄Lighting Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L454-L502)
-- 멀티 렌더 타겟(MRT)을 통한 동시 렌더링
-- 풀스크린 쿼드로 화면 전체에 조명 계산
-- 투명 객체는 Forward Rendering으로 별도 처리
-
-**✅ 결과**
-- 다중 광원 사용 시 성능 대폭 향상
-- 광원 수에 비례하지 않는 안정적인 프레임
-- 복잡한 조명 효과 구현 가능
-
-<br>
-
-### 2️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)
-
-> **🚨 문제 상황**
-> 
-> 캐릭터가 이동할 때마다 지형의 높낮이를 반영하고 경로 이탈을 방지하기 위해 현재 위치가 "어떤 삼각형 위에 있는지" 판별해야 합니다.
-> 
-> 맵이 넓어 NavMesh의 삼각형 개수가 수천 개로 늘어나자, 매 프레임 GetNearestPointOnNavMesh에서 전체 삼각형을 순회(Linear Search, O(N))하는 방식이 심각한 CPU 병목을 유발했습니다.
-
-**💡 해결 과정**​
-
-- 공간 해싱(Spatial Grid) 도입
-  - 맵 전체를 일정 크기(CellSize: 25.0f)의 그리드로 분할
-  - unordered_map<uint64, vector<int>>를 사용하여 각 그리드 셀에 포함된 삼각형 인덱스를 미리 매핑 (InitializeSpatialGrid)
-  - <img width="1122" height="357" alt="image" src="https://github.com/user-attachments/assets/a3135a41-b5e9-46ca-b498-18f5b455663d" />
-- 검색 로직 최적화
-  - GetNearestPointOnNavMesh 호출 시, 캐릭터의 월드 좌표를 그리드 키(Key)로 변환
-  - 전체 삼각형을 뒤지는 대신, 해당 셀에 속한 소수의 삼각형만 검사하도록 변경하여 연산량 최소화
-  - m_lastFoundTriangle 변수를 통한 캐싱으로 연속적인 프레임에서의 검색 비용 추가 절감
-
-**✅ 결과**
-- 삼각형 검색 복잡도를 O(N) → O(1) (평균) 수준으로 단축
-- 다수의 NPC가 동시에 길찾기와 이동 보정을 수행해도 프레임 저하 없는 안정적인 퍼포먼스 확보
-- | case 1 | case 2 |
-    | :---: | :---: |
-    | <img width="360" height="149" alt="image" src="https://github.com/user-attachments/assets/43d4a9ba-5cbd-43da-bc92-ab82ded95206" /> | <img width="355" height="140" alt="image" src="https://github.com/user-attachments/assets/efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" /> |
-
-<br>
-
-### 3️⃣ 쿼드 트리 기반 공간 분할 최적화
-
-> **🚨 문제 상황**
-> 
-> 넓은 맵에서 모든 오브젝트에 대해 충돌/렌더링 검사를 수행하여 불필요한 연산 발생
-
-**💡 해결 과정**
-- 쿼드 트리(Quad Tree) 자료구조 도입으로 공간 분할
-- 맵을 4개의 사분면으로 재귀적으로 분할하는 트리 구조 구현 [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
-- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
-- 카메라 절두체(Frustum) 내 노드만 탐색하여 렌더링 대상 선별 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
-- 충돌 처리 [[📄쿼드 트리 충돌 로직]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
-
-**✅ 결과**
-- 렌더링/충돌 검사 대상 오브젝트 수 대폭 감소
-- 넓은 맵에서도 안정적인 프레임 유지
-- 공간 쿼리 성능 향상 (O(n) → O(log n))
-- 객체 500개에서의 성능비교
-  - <img width="1048" height="656" alt="객체 500개 성능비교" src="https://github.com/user-attachments/assets/956a6342-f9a2-494a-b33a-128847239bc0" />
 
 ---
 
