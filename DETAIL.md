@@ -191,7 +191,7 @@
   | <img width="681" height="381" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="381" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
 
 **렌더링 파이프라인 구조**
-- Geometry Pass (Deferred): 불투명 객체의 지오메트리 정보를 G-Buffer에 저장 <a href="https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx" target="_blank">[[📄G-Buffer 셰이더]]</a>
+- Geometry Pass (Deferred): 불투명 객체의 지오메트리 정보를 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
 - Lighting Pass (Deferred): G-Buffer 데이터를 기반으로 조명 계산  [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L169)
 - Forward Pass (Transparent/UI): 투명/반투명 객체(알파 블렌딩, UI 등)를 Forward로 렌더링하여 최종 합성 [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
 
@@ -204,22 +204,27 @@
 
 
 <details open>
-<summary><h3>🎭 인스턴싱 기반 렌더링</h3></summary>
+<summary><h3>🎭 인스턴싱 기반 렌더링 (GPU Instancing)</h3></summary>
 
 <br>
 
-**GPU 인스턴싱 시스템**
-- 동일 메시의 다수 객체를 한 번의 DrawCall로 처리
-- 인스턴스 버퍼를 통한 Transform 데이터 전달
-- MeshRenderer, ModelRenderer, AnimRenderer별 인스턴싱 지원
-  - [[📄MeshRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L348)
-  - [[📄ModelRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L350-L386)
-  - [[📄AnimRenderer]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
+**구현 배경 및 목표**
+- 넓은 필드에 배치된 수천 개의 나무, 풀, 환경 오브젝트로 인한 **DrawCall 병목 현상(CPU Overhead) 해결**
+- 개별 DrawCall 발생을 억제하고, 동일한 메쉬를 사용하는 객체들을 한 번의 API 호출로 처리
 
-**성능 최적화**
-- DrawCall 수 대폭 감소
-- CPU-GPU 병목 현상 해소
-- 대규모 오브젝트 렌더링 안정화
+**🛠️ 기술적 구현**
+- **인스턴스 버퍼(Instance Buffer)**: `World Matrix` 및 색상 정보를 담은 버퍼를 별도로 생성하여 VS(Vertex Shader)에 전달
+- **배칭(Batching) 시스템**: 매 프레임 렌더링 큐에 등록된 객체 중, 동일한 키(Mesh + Material)를 가진 객체를 자동으로 묶어서 처리
+- **다양한 렌더러 지원**: 정적 메쉬뿐만 아니라 애니메이션이 포함된 객체도 인스턴싱 지원
+  - [[📄MeshRenderer (정적 객체)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L348)
+  - [[📄AnimRenderer (애니메이션 객체)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
+
+**📊 최적화 로직 비교**
+| 구분 | 기존 방식 (Individual) | 개선 방식 (Instancing) | 효과 |
+| :---: | :--- | :--- | :--- |
+| **API 호출** | 객체 수(N)만큼 호출 | **1회 호출** (Batch 단위) | **CPU 오버헤드 최소화** |
+| **데이터 전달** | 매번 상수 버퍼(CB) 갱신 | **인스턴스 버퍼**로 일괄 전달 | **버스 대역폭 효율화** |
+| **확장성** | 오브젝트 증가 시 성능 급락 | 수천 개가 늘어도 **비용 일정** | **대규모 씬 처리 가능** |
 
 </details>
 
@@ -228,26 +233,28 @@
 <br>
 
 <details open>
-<summary><h3>🌑 쿼드 트리</h3></summary>
+<summary><h3>🌑 쿼드 트리 (공간 분할)</h3></summary>
 
 <br>
 
-**쿼드 트리(Quad Tree) 구현** [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
-- 2D 공간을 4분할하는 트리 자료구조 설계 및 적용
-- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
-- 탐색/삽입/삭제 연산에 따라 노드 분할과 병합 자동 관리
-- 카메라 시야(Frustum)와 노드 영역의 교차 검사로 렌더링 대상을 신속하게 필터링 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
+**구현 의도 및 설계**
+- **마우스 Picking 최적화**: 3D 공간의 Raycasting 비용을 줄이기 위해, 화면을 4분할하여 마우스가 위치한 Leaf Node만 검사하도록 설계 [file:54]
+- **충돌 처리 효율화**: 근접 전투 중심 게임 특성상, 인접한 객체끼리만 충돌 검사를 수행하면 되므로 전체 검사(Brute Force, O(N²))를 방지 [file:52]
 
-**최적화 기법**
-- 오브젝트 수가 많아질수록 전체 탐색(O(n)) 대신 부분 공간 탐색(O(log n))으로 성능 대폭 향상
-- 충돌 검사/렌더링 등 많은 반복 연산이 필요한 곳에서 연산량 감소
-- 넓은 맵, 많은 오브젝트가 배치되는 상황에서도 프레임 드랍 없이 효율적 처리
+**🛠️ 기술적 구현**
+- **재귀적 공간 분할**: 맵 전체를 루트 노드로 시작하여, 객체 밀도에 따라 최대 깊이(Depth)까지 4분할 수행
+- **동적/정적 분리**: 
+  - `Static Tree`: 지형, 건물 등 움직이지 않는 객체 전용 (한 번 빌드 후 유지)
+  - `Dynamic Tree`: 캐릭터, 투사체 등 움직이는 객체 전용 (매 프레임 재빌드 및 최적화) [file:55]
+- **노드 관리**: 각 노드는 자신의 영역(Boundary)과 포함된 객체 리스트를 관리하며, 부모-자식 관계를 통해 계층적 탐색 지원
+  - [[📄QuadTree.h (헤더)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
+  - [[📄노드 객체 삽입 (Insert)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
 
-**쿼드트리 기반 충돌 처리**
-- AABB(Axis-Aligned Bounding Box) 충돌 검사 [[📄AABB 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L421-L492)
-- Sphere Collider 구현 [[📄Sphere Collider 충돌 검사]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L494-L580)
-- 계층적 충돌 그룹 관리
+**📊 기본 성능 평가**
+- **탐색 속도**: 전체 객체 순회(Linear Search) 대비 탐색 속도 **O(N) → O(log N)** 수준으로 향상
+- **절두체 선별(Frustum Culling)**: 카메라 시야 밖의 노드를 통째로 렌더링 파이프라인에서 제외하여 GPU 부하 감소
 
+> **🚀 심화 최적화**: 빌드 비용 역전 현상 해결 및 화면 밖 객체 처리 이슈는 하단 **[🛠️ 문제 해결](#quadtree-optimization)** 파트에서 상세히 다룹니다.
 </details>
 
 <br>
@@ -359,7 +366,7 @@
 
 <br>
 
-### 3️⃣ 쿼드 트리 기반 공간 분할 최적화
+### 3️⃣ 쿼드 트리 기반 공간 분할 최적화<a name="quadtree-optimization"></a>
 
 > **🚨 문제 상황**
 > 
