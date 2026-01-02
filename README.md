@@ -15,6 +15,8 @@
 
 > ( 2025.07 ~ 2025.09 ) ( 2개월 )
 
+<img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/b5edd5af-9ce7-4f17-bc8a-84f8bb745edd" />
+
 ### 🔧사용 기술 및 언어
 - Visual Studio 2022, C++ , DirectX11 , HLSL , Win32API
   
@@ -46,6 +48,7 @@
 
 > ( 2025.02 ~ 2025.03 ) ( 3주 )
 
+<img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/707d63de-187c-40e8-a571-43c336de358f" />
 
 ### 🔧사용 기술 및 언어
 - Visual Studio 2022, Win32API, DirectWrite, Direct2D, GDI+, FMOD
@@ -76,6 +79,9 @@
 ## 🎮 TBI : The Binding Of Isaac ([상세내용](DETAIL.md#-tbi-모작))
 
 > ( 2025.03 ~ 2025.05 ) ( 2개월 )
+
+<img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/cc18a536-58fd-4679-8d4b-b7c3e95af758" />
+
 
 ### 🔧사용 기술 및 언어
 - Visual Studio 2022, Win32API, DirectWrite, Direct2D, GDI+, FMOD
