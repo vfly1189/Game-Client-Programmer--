@@ -164,30 +164,47 @@
 ## 🔨 주요 개발
 
 <details open>
-<summary><b>🎨 Deferred Rendering 파이프라인</b></summary>
+<summary><h3>🎨 Deferred Rendering 파이프라인 (Hybrid)</h3></summary>
 
 <br>
 
-**디퍼드 렌더링 시스템 구축** [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
-- Forward Rendering에서 Deferred Rendering으로 전환하여 다중 광원 처리 최적화 
+**Hybrid 렌더링 파이프라인 구축 (Deferred + Forward)**  
+- 불투명(Geometry)은 **Deferred Rendering**으로 처리하여 다중 광원 환경에서 성능을 확보  
+- 투명/반투명(예: UI, 알파 블렌딩 오브젝트)은 **Forward Rendering**으로 별도 처리하여 블렌딩 문제 해결  
+- 결과적으로 **불투명은 MRT 기반 G-Buffer**, **투명은 Forward Pass**로 렌더링하는 Hybrid 구조로 구성 [file:44]
+
+- | **Deferred Render** | **Hybrid ( Forward + Deferred )** |
+  | :---: | :---: |
+  | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/9baddec0-184e-4fd2-b54c-27656f34afc3" /> | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/6dfe8d4e-7d5f-412d-902d-9b43237c1937"/> |
+
+
+
+**G-Buffer 구성 (MRT)**
 - G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
 - 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
 - 풀스크린 쿼드를 통한 라이팅 패스 구현
+
 - | **Albedo** | **Normal** |
   | :---: | :---: |
-  | <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="682" height="381" alt="G-Buffer(Normal)"     src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" />|
+  | <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="681" height="381" alt="G-Buffer(Normal)"     src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" />|
   | **Position (World Space)** | **Material** |
-  | <img width="681" height="383" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="383" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
+  | <img width="681" height="381" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="381" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
 
 **렌더링 파이프라인 구조**
-- Geometry Pass: 불투명 객체의 지오메트리 정보 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
-- Lighting Pass: G-Buffer 데이터 기반 조명 계산 [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L162)
-- Forward Pass: 투명 객체 처리 (알파 블렌딩) [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
+- Geometry Pass (Deferred): 불투명 객체의 지오메트리 정보를 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
+- Lighting Pass (Deferred): G-Buffer 데이터를 기반으로 조명 계산  [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L162)
+- Forward Pass (Transparent/UI): 투명/반투명 객체(알파 블렌딩, UI 등)를 Forward로 렌더링하여 최종 합성 [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
+
 
 </details>
 
+<br>
+<hr>
+<br>
+
+
 <details open>
-<summary><b>🎭 인스턴싱 기반 렌더링</b></summary>
+<summary><h3>🎭 인스턴싱 기반 렌더링</h3></summary>
 
 <br>
 
@@ -206,8 +223,12 @@
 
 </details>
 
+<br>
+<hr>
+<br>
+
 <details open>
-<summary><b>🌑 쿼드 트리</b></summary>
+<summary><h3>🌑 쿼드 트리</h3></summary>
 
 <br>
 
@@ -229,8 +250,12 @@
 
 </details>
 
+<br>
+<hr>
+<br>
+
 <details open>
-<summary><b>🧭 NavMesh 기반 길찾기 시스템</b></summary>
+<summary><h3>🧭 NavMesh 기반 길찾기 시스템</h3></summary>
 
 <br>
 
@@ -248,11 +273,12 @@
 
 </details> 
 
-
-
+<br>
+<hr>
+<br>
 
 <details open>
-<summary><b>🎬 애니메이션 시스템</b></summary>
+<summary><h3>🎬 애니메이션 시스템</h3></summary>
 
 <br>
 
