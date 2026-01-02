@@ -264,16 +264,21 @@
 
 <br>
 
-**3D 공간 길찾기 구현**
-- NavMesh 구축
-  - 맵 데이터를 로드하여 다각형(Triangle) 그래프로 구성된 네비게이션 메쉬 구축
-- A* 알고리즘
-  - 출발지와 목적지가 속한 삼각형을 찾아 최단 경로(Triangle Path)를 산출하고, String Pulling(경로 단축) 기법을 적용하여, 지그재그 형태의 A* 경로를 **직선화(Smoothing)** 하고 자연스러운 이동 구현
+**구현 의도 및 설계**
+- **3D 공간 경로 탐색**: 복잡한 지형지물(장애물)을 피해 목적지까지 도달하는 NPC(AI) 이동 로직 구현
+- **네비게이션 메쉬(NavMesh) 구축**: 맵 데이터를 로드하여 이동 가능한 영역을 다각형(Triangle) 그래프로 구성
+
+**🛠️ 기술적 구현**
+- **A* 알고리즘**: 출발지와 목적지가 속한 삼각형(Triangle)을 찾아 최적의 경로(Triangle Path) 산출
+- **String Pulling (경로 평활화)**: 지그재그 형태의 경로를 직선화하여 자연스러운 이동 동선 생성
   - ![NavMesh](https://github.com/user-attachments/assets/5c0fb898-07a2-4029-986e-475e1bb2e61a)
-- NavMeshAgent
-  - 상태 패턴(Idle, Moving)을 적용하여 이동 로직 분리
-  - 매 프레임 UpdateMovement에서 GetNearestPointOnNavMesh를 호출
-  - Spatial Grid로 최적화된 검색을 통해 캐릭터를 NavMesh 표면 위로 투영하고 이동 경로 보정
+- **NavMesh Agent**: 상태 패턴(Idle, Moving)을 적용하여 이동 로직을 캡슐화하고, 매 프레임 `GetNearestPointOnNavMesh`를 통해 현재 위치를 보정
+
+**📊 기본 성능 및 한계**
+- **정확성**: 다각형 기반 탐색으로 복잡한 지형에서도 정밀한 경로 탐색 보장
+- **성능 병목**: 넓은 맵에서 수천 개의 삼각형을 매 프레임 전수조사(Linear Search)할 경우 CPU 부하 발생
+
+> **🚀 성능 20배 향상**: 공간 해싱(Spatial Grid)을 도입하여 검색 속도를 **300µs → 14µs**로 최적화한 사례는 하단 **[🛠️ 문제 해결](#navmesh-optimization)** 파트에서 상세히 다룹니다.
 
 
 </details> 
@@ -336,7 +341,7 @@
 
 <br>
 
-### 2️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)
+### 2️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)<a name="navmesh-optimization"></a>
 
 > **🚨 문제 상황**
 > 
