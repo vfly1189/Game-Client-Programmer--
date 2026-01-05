@@ -538,8 +538,8 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 - **리소스 매니저** : `unordered_map`을 활용한 텍스처(비트맵) 캐싱 시스템을 구축하여 중복 로딩 방지 및 빠른 리소스 접근 지원
 - **타일맵 렌더링 최적화 (Batching)** : 
     - 32x32 타일 1,296개(36x36)를 매 프레임 개별 렌더링하던 방식을 개선
-    - 전체 타일을 하나의 오프스크린 비트맵(Off-screen Bitmap)에 미리 병합(Bake)하여 **DrawCall을 1,296회 → 1회로 감소**
-      - [[📄오프스크린 비트맵 Baking]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
+    - 1,296회의 개별 드로우 콜을 하나의 비트맵 렌더링으로 병합(Batching) **DrawCall을 1,296회 → 1회로 감소**
+      - [[📄오프스크린 비트맵]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
 
 > **🚀 성능 개선 사례**:
 > 1. GDI+ 대비 20배 이상의 성능 향상을 이뤄낸 **[Direct2D 전환기]** 는 하단 **[🛠️ 문제 해결](#direct2d-optimization)**에서 다룹니다.
@@ -987,7 +987,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
  **📉 생성 결과 비교**
  - | **DFS (선형적 구조)** | **BFS (방사형 구조)** |
    | :---: | :---: |
-   | <img width="1323" height="356" alt="image" src="https://github.com/user-attachments/assets/1e306575-30a7-4e01-9ced-034f47b57052" />| <img width="1317" height="356" alt="image" src="https://github.com/user-attachments/assets/bae38606-a6ab-4b75-ae65-9d1da2673cd3" />|>
+   | <img width="1323" height="356" alt="image" src="https://github.com/user-attachments/assets/1e306575-30a7-4e01-9ced-034f47b57052" />| <img width="1317" height="356" alt="image" src="https://github.com/user-attachments/assets/bae38606-a6ab-4b75-ae65-9d1da2673cd3" /> |
    | *한 줄로 길게 늘어짐* | *중심에서 고르게 퍼져나감* |
 
 
