@@ -108,7 +108,7 @@
 | ⏱️ **개발 기간** | 2개월 |
 | 👥 **개발 인원** | 2인 (프로그래머로 참여) |
 | 🛠️ **개발 환경** | C++, DirectX11, HLSL |
-| 🎬 **시연 영상** | [YouTube 바로가기](https://www.youtube.com/watch?v=b6XVkd0xc-E&list=LL&index=19&t=1s) |
+| 🎬 **시연 영상** | [YouTube 바로가기](https://youtu.be/b6XVkd0xc-E?si=XHB1nkE6C2-JarC8) |
 | 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/DirectX11/Eternal%20Return%20%EB%AA%A8%EC%9E%91) |
 | 💾 **GitHub** | [소스코드](https://github.com/HyangRim/DirectX11-Engine-Client) |
 
