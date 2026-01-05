@@ -539,7 +539,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 - **타일맵 렌더링 최적화 (Batching)** : 
     - 32x32 타일 1,296개(36x36)를 매 프레임 개별 렌더링하던 방식을 개선
     - 전체 타일을 하나의 오프스크린 비트맵(Off-screen Bitmap)에 미리 병합(Bake)하여 **DrawCall을 1,296회 → 1회로 감소**
-  - [[📄비트맵 병합 및 렌더링]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265)
+      - [[📄오프스크린 비트맵 Baking]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
 
 > **🚀 성능 개선 사례**:
 > 1. GDI+ 대비 20배 이상의 성능 향상을 이뤄낸 **[Direct2D 전환기]** 는 하단 **[🛠️ 문제 해결](#direct2d-optimization)**에서 다룹니다.
