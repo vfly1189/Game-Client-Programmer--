@@ -817,7 +817,12 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
 </div>
 
+<br>
+<br>
+
 ---
+
+<br>
 
 ## 🔨 주요 개발
 
@@ -835,11 +840,11 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 
 > **🚀 알고리즘 이슈 해결**: 단순 랜덤 배치가 아닌, **[BFS 기반의 유기적인 던전 생성]** 과정과 맵 구조 밸런싱 최적화 내용은 하단 **[1️⃣ 절차적 맵 생성 이슈](#bfs-map-gen)**에서 자세히 다룹니다.
 
+</details>
+
 <div align="right">
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
 </div>
-
-</details>
 
 <br>
 <hr>
@@ -862,11 +867,11 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 
 > **🚀 구조적 문제 해결**: 복잡한 몬스터 패턴을 체계적으로 관리하기 위해 도입한 **[State 패턴(FSM) 설계]**와 이를 통한 AI 로직 개선 과정은 하단 **[2️⃣ 복잡한 AI 상태 관리](#fsm-pattern)**에서 자세히 다룹니다.
 
+</details>
+
 <div align="right">
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
 </div>
-
-</details>
 
 <br>
 <hr>
@@ -883,11 +888,11 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 - **반사 벡터 처리** : 투사체가 벽이나 장애물에 충돌할 때 입사각과 반사각을 계산하여 튕겨 나가는 물리적 상호작용을 적용. (보스 패턴 등 활용)
 - **정밀한 충돌 처리** : `CCollisionMgr`를 통해 레이어(Layer)별 충돌 필터링을 적용, 아군/적군/지형 간의 불필요한 연산을 배제하고 정확한 충돌 이벤트를 처리.
 
+</details>
+
 <div align="right">
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
 </div>
-
-</details>
 
 <br>
 <hr>
@@ -905,11 +910,11 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
     - **수집형(PickUp)** : 획득 즉시 소모되는 아이템 (하트, 동전 등)
     - **장식형(Collectibles)** : 획득 시 플레이어의 스탯을 영구적으로 변경하거나 특수 효과를 부여하는 아이템 (받침대 + 본체 + 그림자 렌더링 구조 적용)
 
+</details>
+
 <div align="right">
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
 </div>
-
-</details>
 
 <br>
 <hr>
@@ -926,16 +931,18 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 - **프레임 단위 정밀 제어** : `DeltaTime`을 누적하여 프레임 전환 속도를 조절하고, `Repeat`, `Stop`, `Reverse` 등 다양한 재생 모드를 지원하여 상황에 맞는 연출을 구현. [[📄애니메이션 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CAnimator.cpp#L109-L154)
 - **상태 동기화** : FSM의 상태 변화(Idle → Run → Attack)에 따라 자동으로 적절한 애니메이션 클립을 교체(Switching)하도록 설계하여, 시각적 표현과 내부 로직의 일체감을 확보.
 
+</details>
+
 <div align="right">
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
 </div>
-
-</details>
 
 <br>
 <br>
 
 ---
+
+<br>
 
 ## 🛠️ 문제 해결
 
@@ -983,6 +990,12 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
    | *한 줄로 길게 늘어짐* | *중심에서 고르게 퍼져나감* |
 
 
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
 <br>
 
 ### 2️⃣ State 패턴을 통한 몬스터 AI 관리: 복잡도 해소 <a name="fsm-pattern"></a>
