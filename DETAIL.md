@@ -168,11 +168,10 @@
 
 <br>
 
-**Hybrid 렌더링 파이프라인 구축 (Deferred + Forward)**  
-- 불투명(Geometry)은 **Deferred Rendering**으로 처리하여 다중 광원 환경에서 성능을 확보  
-- 투명/반투명(예: UI, 알파 블렌딩 오브젝트)은 **Forward Rendering**으로 별도 처리하여 블렌딩 문제 해결  
-- 결과적으로 **불투명은 MRT 기반 G-Buffer**, **투명은 Forward Pass**로 렌더링하는 Hybrid 구조로 구성 [file:44]
-
+**렌더링 파이프라인 구조**
+- **Hybrid 구조 설계**: 불투명 객체(Deferred)와 투명 객체(Forward)를 분리하여 처리하는 혼합 파이프라인 구축
+- **MRT(Multiple Render Targets)**: 4개의 G-Buffer(Albedo, Normal, Position, Material)에 지오메트리 정보를 동시 출력하도록 셰이더 및 RTV 설정
+- **Lighting Pass**: G-Buffer 텍스처를 입력받아 화면 전체에 조명 연산 수행
 - | **Deferred Render** | **Hybrid ( Forward + Deferred )** |
   | :---: | :---: |
   | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/9baddec0-184e-4fd2-b54c-27656f34afc3" /> | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/6dfe8d4e-7d5f-412d-902d-9b43237c1937"/> |
@@ -183,7 +182,6 @@
 - G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
 - 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
 - 풀스크린 쿼드를 통한 라이팅 패스 구현
-
 - | **Albedo** | **Normal** |
   | :---: | :---: |
   | <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="681" height="381" alt="G-Buffer(Normal)"     src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" />|
@@ -195,8 +193,13 @@
 - Lighting Pass (Deferred): G-Buffer 데이터를 기반으로 조명 계산  [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L169)
 - Forward Pass (Transparent/UI): 투명/반투명 객체(알파 블렌딩, UI 등)를 Forward로 렌더링하여 최종 합성 [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
 
+> **🚀 기술 도입 배경**: 다중 광원 처리를 위한 포워드 렌더링의 한계와 해결 과정은 하단 **[🛠️ 문제 해결](#deferred-rendering)** 파트에서 다룹니다.
 
 </details>
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
 
 <br>
 <hr>
@@ -228,88 +231,72 @@
 
 </details>
 
-<br>
-<hr>
-<br>
-
-<details open>
-<summary><h3>🌑 쿼드 트리 (공간 분할)</h3></summary>
-
-<br>
-
-**구현 의도 및 설계**
-- **마우스 Picking 최적화**: 3D 공간의 Raycasting 비용을 줄이기 위해, 화면을 4분할하여 마우스가 위치한 Leaf Node만 검사하도록 설계
-- **충돌 처리 효율화**: 근접 전투 중심 게임 특성상, 인접한 객체끼리만 충돌 검사를 수행하면 되므로 전체 검사(Brute Force, O(N²))를 방지
-
-**🛠️ 기술적 구현**
-- **재귀적 공간 분할**: 맵 전체를 루트 노드로 시작하여, 객체 밀도와 영역 크기에 따라 재귀적으로 4분할 수행
-- **객체 관리**: 화면에 존재하는 모든 동적/정적 오브젝트를 트리에 삽입하여 공간 정보를 갱신 및 관리
-- **노드 시스템**: 각 노드는 자신의 영역(Boundary)과 포함된 객체 리스트를 관리하며, 부모-자식 관계를 통해 계층적 탐색 지원
-  - [[📄QuadTree.h (헤더)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
-  - [[📄노드 객체 삽입 (Insert)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
-
-**📊 기본 성능 평가**
-- **탐색 속도**: 전체 객체 순회(Linear Search) 대비 탐색 속도 **O(N) → O(log N)** 수준으로 향상
-- **절두체 선별(Frustum Culling)**: 카메라 시야 밖의 노드를 통째로 렌더링 파이프라인에서 제외하여 GPU 부하 감소
-
-> **🚀 심화 최적화**: 빌드 비용 역전 현상 해결 및 화면 밖 객체 처리 이슈는 하단 **[🛠️ 문제 해결](#quadtree-optimization)** 파트에서 상세히 다룹니다.
-</details>
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
 
 <br>
 <hr>
 <br>
 
 <details open>
-<summary><h3>🧭 NavMesh 기반 길찾기 시스템</h3></summary>
+<summary><h3>🌑 쿼드 트리 (공간 분할 자료구조)</h3></summary>
 
 <br>
 
-**구현 의도 및 설계**
-- **3D 공간 경로 탐색**: 복잡한 지형지물(장애물)을 피해 목적지까지 도달하는 NPC(AI) 이동 로직 구현
-- **네비게이션 메쉬(NavMesh) 구축**: 맵 데이터를 로드하여 이동 가능한 영역을 다각형(Triangle) 그래프로 구성
+**자료구조 설계**
+- **재귀적 노드 시스템**: `QuadTreeNode` 클래스가 4개의 자식 노드 포인터와 자신의 영역(BoundingBox) 정보를 가지는 트리 구조
+- **동적 객체 관리**: 오브젝트의 위치가 변경될 때마다 트리의 노드를 갱신(Update)하거나 재삽입(Re-insert)하는 로직 구현
 
-**🛠️ 기술적 구현**
-- **A* 알고리즘**: 출발지와 목적지가 속한 삼각형(Triangle)을 찾아 최적의 경로(Triangle Path) 산출
-- **String Pulling (경로 평활화)**: 지그재그 형태의 경로를 직선화하여 자연스러운 이동 동선 생성
-  - | **NavMesh 스무딩 (x)** | **NavMesh 스무딩 (O)** |
-    | :---: | :---: |
-    | ![NavMesh-스무딩x](https://github.com/user-attachments/assets/b9f093b3-bff1-434e-b170-fdee9c4e83df) | ![NavMesh-스무딩o](https://github.com/user-attachments/assets/456e6486-6547-4893-80c6-bba4817ac855) |
+**핵심 기능**
+- **공간 쿼리(Spatial Query)**: 특정 영역(절두체, 마우스 피킹 Ray)과 겹치는 노드만 빠르게 선별하는 인터페이스 제공
+- **충돌 그룹 관리**: 노드 단위로 객체 리스트를 관리하여 인접한 객체끼리만 상호작용하도록 설계
 
-- **NavMesh Agent**: 상태 패턴(Idle, Moving)을 적용하여 이동 로직을 캡슐화하고, 매 프레임 `GetNearestPointOnNavMesh`를 통해 현재 위치를 보정
+**관련 이미지**
+| **마우스 Picking** | **충돌 처리** |
+| :---: | :---: |
+| <img width="1267" height="708" alt="image" src="https://github.com/user-attachments/assets/7accc4dd-0591-4851-ad2a-5f9eeac8a0ad" /> | <img width="1267" height="709" alt="image" src="https://github.com/user-attachments/assets/63a9e9e8-4f4f-4292-bba7-6cd7235e22f3" /> |
 
-**📊 기본 성능 및 한계**
-- **정확성**: 다각형 기반 탐색으로 복잡한 지형에서도 정밀한 경로 탐색 보장
-- **성능 병목**: 넓은 맵에서 수천 개의 삼각형을 매 프레임 전수조사(Linear Search)할 경우 CPU 부하 발생
+**관련 코드**
+- [[📄QuadTree.h (헤더 설계)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
+- [[📄Node Insert (객체 삽입 로직)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
 
-> **🚀 성능 20배 향상**: 공간 해싱(Spatial Grid)을 도입하여 검색 속도를 **300µs → 14µs**로 최적화한 사례는 하단 **[🛠️ 문제 해결](#navmesh-optimization)** 파트에서 상세히 다룹니다.
-
-
-</details> 
-
-<br>
-<hr>
-<br>
-
-<details open>
-<summary><h3>🎬 애니메이션 시스템</h3></summary>
-
-<br>
-
-**스켈레탈 애니메이션**
-- FBX 기반 본 애니메이션 구현 [[📄애니메이션 정보 저장]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L575-L608)
-- Compute Shader를 활용한 스키닝 연산
-- 애니메이션 블렌딩 및 전환
-  - [[📄애니메이션 블렌딩]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/ModelAnimator.cpp#L57-L130)
-  - [[📄애니메이션 블렌딩-셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20Render.fx#L118-L193)
-- 루트 모션(Root Motion) 지원
-
-**애니메이션 최적화**
-- GPU 스키닝으로 CPU 부하 감소 [[📄인스턴싱 + GPU 스키닝]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
-- 애니메이션 인스턴싱 지원
-- LOD에 따른 애니메이션 품질 조절
+> **🚀 성능 최적화 사례**: 쿼드트리를 활용한 획기적인 충돌 처리 성능 개선(135배) 결과는 하단 **[🛠️ 문제 해결](#quadtree-optimization)** 파트에서 상세히 다룹니다.
 
 </details>
 
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
+<details open>
+<summary><h3>🧭 NavMesh 길찾기 시스템</h3></summary>
+
+<br>
+
+**시스템 아키텍처**
+- **NavMesh 데이터**: 맵 데이터를 삼각형(Triangle) 그래프 형태로 변환하여 이동 가능 영역 정의
+- **경로 탐색(Pathfinding)**: 시작점과 도착점이 포함된 삼각형을 찾고, A* 알고리즘으로 연결된 삼각형들의 최단 경로 리스트 산출
+
+**보정 알고리즘**
+- **String Pulling**: 삼각형 중심을 잇는 지그재그 경로를 `Line-of-Sight` 검사를 통해 최단 직선 경로로 변환
+- **Agent FSM**: AI 캐릭터의 이동 상태(Idle, Move)를 관리하고 NavMesh 위로 위치를 투영(Projection)하는 에이전트 클래스 구현
+
+**관련 이미지**
+| **NavMesh 스무딩 (Before)** | **NavMesh 스무딩 (After)** |
+| :---: | :---: |
+| ![NavMesh-스무딩x](https://github.com/user-attachments/assets/b9f093b3-bff1-434e-b170-fdee9c4e83df) | ![NavMesh-스무딩o](https://github.com/user-attachments/assets/456e6486-6547-4893-80c6-bba4817ac855) |
+
+> **🚀 검색 속도 최적화**: 대규모 맵에서의 경로 탐색 병목을 해결한 'Spatial Grid' 기법은 하단 **[🛠️ 문제 해결](#navmesh-optimization)** 파트에서 상세히 다룹니다.
+
+</details>
+
+<br>
+<br>
 <br>
 
 <div align="right">
@@ -320,55 +307,66 @@
 
 ## 🛠️ 문제 해결
 
-### 1️⃣ Forward에서 Deferred Rendering으로 전환
+### 1️⃣ Forward에서 Deferred Rendering으로 전환 (Hybrid)<a name="deferred-rendering"></a>
 
-> **🚨 문제 상황**
+> **🚨 문제 상황: Forward Rendering의 구조적 한계**
 > 
-> 다수의 동적 광원 사용 시 Forward Rendering 방식에서 성능 저하 발생 (광원 수 × 오브젝트 수의 연산)
+> **성능 병목** : 다수의 동적 광원(Skill Effects, Lights)이 배치되자 $O(\text{객체 수} \times \text{광원 수})$의 연산량으로 인해 프레임이 급격히 저하됨
+> 
+> **픽셀 오버드로우** : 화면에 보이지 않는 픽셀(Depth Test 실패)까지 불필요하게 셰이딩 연산을 수행하여 GPU 자원을 낭비함
 
 **💡 해결 과정**
-- Deferred Rendering 파이프라인 설계 및 구현 [[📄Deferred Rendering 구현]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L75-L113)
-- G-Buffer 4개 생성 (Albedo, Normal, Position, Material)
-  - ![디퍼드렌더링](https://github.com/user-attachments/assets/16f34e58-f14a-44b4-ac76-c26db09755ca)
-- 지오메트리 패스와 라이팅 패스 분리
-  -  [[📄Geometry Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L435)
-  -  [[📄Lighting Pass]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L454-L502)
-- 멀티 렌더 타겟(MRT)을 통한 동시 렌더링
-- 풀스크린 쿼드로 화면 전체에 조명 계산
-- 투명 객체는 Forward Rendering으로 별도 처리
+
+1.  **Deferred Rendering (지연 렌더링) 구현**
+    *   **G-Buffer (MRT) 구축** : 4개의 Render Target에 물체의 정보를 동시에 기록하도록 셰이더 및 RTV 설정
+        *   `Albedo`(색상), `Normal`(법선), `Position`(좌표), `Material`(재질)
+        *   | **G-Buffer 실시간 구성 (MRT Debug View)** | 
+            | :---: |
+            | ![디퍼드렌더링](https://github.com/user-attachments/assets/f576aec2-0b4f-43db-8a5a-bc6250ff3a01) |
+    *   **Lighting Pass** : G-Buffer 데이터를 샘플링하여 화면 전체(Screen Space)에 조명 연산 수행. 연산량을 **$O(\text{화면 해상도} \times \text{광원 수})$** 로 고정하여 객체 수 증가에 따른 성능 저하 방지
+
+2.  **Hybrid Rendering으로 파이프라인 완성**
+    *   **문제** : Deferred 방식의 구조적 한계로 인해 투명/반투명 객체(Alpha Blending) 처리가 불가능
+    *   **해결 (Hybrid)** : 렌더링 파이프라인을 이원화하여 각 패스의 장점 결합
+        *   **불투명 객체 (Opaque)** : Deferred Pass로 처리하여 다중 광원 연산 최적화
+        *   **반투명/UI 객체 (Transparent)** : Lighting Pass 이후 Forward Pass로 렌더링하여 알파 블렌딩 정상 처리
+    * | **Deferred Only (반투명/UI 미적용)** | **Hybrid (Deferred + Forward)** |
+      | :---: | :---: |
+      | <img width="1225" height="687" alt="image" src="https://github.com/user-attachments/assets/532b1300-8d61-492d-895f-298bf2efb7bd" /> | <img width="1462" height="820" alt="image" src="https://github.com/user-attachments/assets/4d721451-2f37-4160-bb71-78030de7103c" /> |
+
 
 **✅ 결과**
-- 다중 광원 사용 시 성능 대폭 향상
-- 광원 수에 비례하지 않는 안정적인 프레임
-- 복잡한 조명 효과 구현 가능
+*   **다중 광원 최적화**: 수백 개의 광원이 배치되어도 안정적인 60 FPS 유지
+*   **표현력 향상**: Deferred의 이점(많은 광원)과 Forward의 이점(반투명 처리)을 모두 확보하여 화려한 게임 씬 구성 가능
+*   **G-Buffer 시각화**: 각 Render Target이 정상적으로 출력됨을 디버깅 모드로 확인
 
 <br>
 
 ### 2️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)<a name="navmesh-optimization"></a>
 
-> **🚨 문제 상황**
+> **🚨 문제 상황: 선형 탐색(Linear Search)으로 인한 병목**
 > 
-> 캐릭터가 이동할 때마다 지형의 높낮이를 반영하고 경로 이탈을 방지하기 위해 현재 위치가 "어떤 삼각형 위에 있는지" 판별해야 합니다.
-> 
-> 맵이 넓어 NavMesh의 삼각형 개수가 수천 개로 늘어나자, 매 프레임 GetNearestPointOnNavMesh에서 전체 삼각형을 순회(Linear Search, O(N))하는 방식이 심각한 CPU 병목을 유발했습니다.
+> *   **구조적 문제** : 캐릭터가 이동할 때마다 현재 위치를 NavMesh 위의 유효한 지점으로 보정하기 위해 `GetNearestPointOnNavMesh`를 호출.
+> *   **성능 저하** : 별도의 공간 분할 없이 구현된 초기 로직은 맵 전체의 삼각형(20,000개+)을 순차적으로 검사하는 $O(N)$ 비용 발생 [file:48]
+> *   **코드 병목** : `GetNearestPointOnNavMesh` 내부에서 모든 삼각형과의 거리를 계산하는 반복문이 매 프레임 실행됨.
 
-**💡 해결 과정**​
+**💡 해결 과정**
 
-- 공간 해싱(Spatial Grid) 도입
-  - 맵 전체를 일정 크기(CellSize: 25.0f)의 그리드로 분할
-  - unordered_map<uint64, vector<int>>를 사용하여 각 그리드 셀에 포함된 삼각형 인덱스를 미리 매핑 (InitializeSpatialGrid)
-  - <img width="1122" height="357" alt="image" src="https://github.com/user-attachments/assets/a3135a41-b5e9-46ca-b498-18f5b455663d" />
-- 검색 로직 최적화
-  - GetNearestPointOnNavMesh 호출 시, 캐릭터의 월드 좌표를 그리드 키(Key)로 변환
-  - 전체 삼각형을 뒤지는 대신, 해당 셀에 속한 소수의 삼각형만 검사하도록 변경하여 연산량 최소화
-  - m_lastFoundTriangle 변수를 통한 캐싱으로 연속적인 프레임에서의 검색 비용 추가 절감
+1.  **공간 분할(Spatial Partitioning) 도입**
+    *   맵 전체를 일정 크기의 **그리드(Grid)** 형태로 분할하고, 각 셀에 포함된 삼각형을 HashMap에 저장
+    *   [[📄NavMesh.cpp :: InitializeSpatialGrid]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/NavMesh.cpp#L440)
+
+2.  **검색 알고리즘 최적화 ($O(N) \rightarrow O(1)$)**
+    *   **해시맵(HashMap) 활용** : 입력된 월드 좌표를 키(Key)로 변환하여 $O(1)$ 시간 복잡도로 현재 속한 셀에 즉시 접근
+    *   **탐색 범위 축소** : 전체 삼각형을 순회하는 대신, 해당 셀에 등록된 **소수의 삼각형만 검사** 하도록 로직 변경
+    *   [[📄NavMesh.cpp :: GetNearestPointOnNavMesh (최적화 로직)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/NavMesh.cpp#L93-L129)
 
 **✅ 결과**
-- 삼각형 검색 복잡도를 O(N) → O(1) (평균) 수준으로 단축
-- 다수의 NPC가 동시에 길찾기와 이동 보정을 수행해도 프레임 저하 없는 안정적인 퍼포먼스 확보
-- | case 1 | case 2 |
+*   **성능 검증** : 탐색 소요 시간 **301μs → 14μs** (약 **21.5배** 성능 향상)
+*   **확장성 확보** : 맵 크기가 커지거나 삼각형이 늘어나도 탐색 비용이 일정하게 유지됨
+*   | **Linear Search (최적화 전)** | **Spatial Grid (최적화 후)** |
     | :---: | :---: |
-    | <img width="360" height="149" alt="image" src="https://github.com/user-attachments/assets/43d4a9ba-5cbd-43da-bc92-ab82ded95206" /> | <img width="355" height="140" alt="image" src="https://github.com/user-attachments/assets/efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" /> |
+    | ![Linear Search](https://github.com/user-attachments/assets/43d4a9ba-5cbd-43da-bc92-ab82ded95206) | ![Spatial Grid](https://github.com/user-attachments/assets/efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56) |
 
 <br>
 
