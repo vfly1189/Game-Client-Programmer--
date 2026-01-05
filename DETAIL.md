@@ -72,7 +72,7 @@
  > 📖 [게임 개요](#-게임-개요-1) <br>
    📌 [학습 목표 및 달성](#-학습-목표-및-달성-1) <br>
    🔨 [주요 개발](#-주요-개발-1) <br>
-   🛠️ [문제 해결](#%EF%B8%8F-문제-해결-1) <br>
+   🛠️ [문제 해결](#troubleshooting-brotato) <br>
       </a>
       </td>
       <td valign="top">
@@ -82,7 +82,7 @@
  > 📖 [게임 개요](#-게임-개요-2) <br>
    📌 [학습 목표 및 달성](#-학습-목표-및-달성-2) <br>
    🔨 [주요 개발](#-주요-개발-2) <br>
-   🛠️ [문제 해결](#%EF%B8%8F-문제-해결-2) <br>
+   🛠️ [문제 해결](#troubleshooting-tbi) <br>
       </a>
       </td>
     </tr>
@@ -610,7 +610,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 <br>
 
-## 🛠️ 문제 해결
+## 🛠️ 문제 해결<a name="troubleshooting-brotato"></a>
 
 ### 1️⃣ GDI+에서 Direct2D 전환을 통한 렌더링 최적화<a name="direct2d-optimization"></a>
 
@@ -945,7 +945,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 
 <br>
 
-## 🛠️ 문제 해결
+## 🛠️ 문제 해결<a name="troubleshooting-tbi"></a>
 
 ### 1️⃣ 절차적 맵 생성 이슈: DFS vs BFS 비교 분석<a name="bfs-map-gen"></a>
 
