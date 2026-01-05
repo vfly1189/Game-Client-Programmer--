@@ -294,7 +294,7 @@
 - **경로 탐색(Pathfinding)**: 시작점과 도착점이 포함된 삼각형을 찾고, A* 알고리즘으로 연결된 삼각형들의 최단 경로 리스트 산출
 
 **보정 알고리즘**
-- **String Pulling**: 삼각형 중심을 잇는 지그재그 경로를 `Line-of-Sight` 검사를 통해 최단 직선 경로로 변환 [[📄경로 스무]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L307-L360)
+- **String Pulling**: 삼각형 중심을 잇는 지그재그 경로를 `Line-of-Sight` 검사를 통해 최단 직선 경로로 변환 [[📄경로 스무딩]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L307-L360)
 - **Agent FSM**: AI 캐릭터의 이동 상태(Idle, Move)를 관리하고 NavMesh 위로 위치를 투영(Projection)하는 에이전트 클래스 구현
 
 **관련 이미지**
