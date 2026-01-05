@@ -62,7 +62,7 @@
  > 📖 [게임 개요](#-게임-개요) <br>
    📌 [학습 목표 및 달성](#-학습-목표-및-달성) <br>
    🔨 [주요 개발](#-주요-개발) <br>
-   🛠️ [문제 해결](#%EF%B8%8F-문제-해결) <br>
+   🛠️ [문제 해결](#troubleshooting-eternal-return) <br>
        </a>
       </td>
       <td valign="top">
@@ -317,7 +317,7 @@
 
 <br>
 
-## 🛠️ 문제 해결
+## 🛠️ 문제 해결<a name="troubleshooting-eternal-return"></a>
 
 ### 1️⃣ Forward에서 Deferred Rendering으로 전환 (Hybrid)<a name="deferred-rendering"></a>
 
