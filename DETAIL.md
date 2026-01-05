@@ -858,7 +858,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
   
 **"복잡한 패턴을 체계적으로 관리하는 상태(State) 패턴 도입"**
 
-- **유한 상태 머신 (FSM) 설계** : 몬스터의 행동을 `Idle`, `Trace`, `Attack`, `Dead` 등의 상태 클래스로 분리하여 관리함으로써, 조건문(if-else) 도배를 방지하고 유지보수성을 높였습니다. [[📄CState.h]](https://github.com/vfly1189/TBI/blob/main/Client/CState.h)
+- **유한 상태 머신 (FSM) 설계** : 몬스터의 행동을 `Idle`, `Trace`, `Attack`, `Dead` 등의 상태 클래스로 분리하여 관리함으로써, 조건문(if-else) 도배를 방지하고 유지보수성을 높였습니다. [[📄CState.h]](https://github.com/vfly1189/TBI/blob/e32ef1e500817b39cec13dc5ce6077ed149d3487/TBI/CState.h#L1-L30)
 - **다양한 패턴 구현** :
     - **Trace State** : 벡터 연산을 통해 플레이어를 자연스럽게 추적 [[📄추적 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
     - **Attack State** : 보스 몬스터의 탄막 발사, 돌진 등 복잡한 공격 패턴을 독립된 클래스로 구현 [[📄보스 공격]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
