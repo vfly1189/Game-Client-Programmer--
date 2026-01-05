@@ -506,6 +506,8 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 ---
 
+## 🔨 주요 개발
+
 <details open>
 <summary><h3>🎨 렌더링 시스템 및 최적화</h3></summary>
 
