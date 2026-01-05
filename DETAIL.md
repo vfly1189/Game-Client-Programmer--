@@ -339,7 +339,13 @@
 *   **다중 광원 최적화**: 수백 개의 광원이 배치되어도 안정적인 60 FPS 유지
 *   **표현력 향상**: Deferred의 이점(많은 광원)과 Forward의 이점(반투명 처리)을 모두 확보하여 화려한 게임 씬 구성 가능
 *   **G-Buffer 시각화**: 각 Render Target이 정상적으로 출력됨을 디버깅 모드로 확인
+  
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
 
+<br>
+<hr>
 <br>
 
 ### 2️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)<a name="navmesh-optimization"></a>
@@ -374,6 +380,12 @@
     | :---: | :---: |
     | <img width="600" height="300" alt="530234536-43d4a9ba-5cbd-43da-bc92-ab82ded95206" src="https://github.com/user-attachments/assets/30f19404-e250-4b92-a0b6-bbe8559085e1" /> | <img width="600" height="300" alt="530234561-efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" src="https://github.com/user-attachments/assets/ad405d09-a50a-4730-8f42-4312e70d70ca" /> |
 
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
 <br>
 
 ### 3️⃣ 쿼드 트리 기반 공간 분할 최적화<a name="quadtree-optimization"></a>
@@ -409,6 +421,14 @@
 *   | **충돌 처리 최적화 (Node 내부 검사)** | **결과** |
     | :---: | :---: |
     | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/ad1519df-17e7-412a-a11f-657f5d8e04f8" /> |
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
 
 ---
 
