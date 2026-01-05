@@ -443,12 +443,13 @@
 ### 📌 프로젝트 정보
 
 | 항목 | 내용 |
-|:---:|:---|
-| 🎯 **장르** | 탑다운 슈팅, 로그라이크 |
+|:---:|:---:|
+| 🎯 **장르** | 탑다운 슈팅, 로그라이크 서바이벌 |
 | ⏱️ **개발 기간** | 3주 |
 | 👥 **개발 인원** | 2인 (프로그래머로 참여) |
-| 🛠️ **개발 환경** | C++, Win32 API, Direct2D, FMOD |
-| 🎬 **시연 영상** | [YouTube 바로가기](https://www.youtube.com/watch?v=d-VZS1AdvtA&list=LL&index=3) |
+| 🛠️ **개발 환경** | C++, Direct2D, Win32 API |
+| 🎬 **시연 영상** | [YouTube 바로가기](https://youtu.be/d-VZS1AdvtA?si=zvILKb3qGncavOqS) |
+| 💾 **GitHub** | [소스코드](https://github.com/HyangRim/BrotatoClone) |
 
 </div>
 
@@ -456,103 +457,133 @@
 
 ## 📖 게임 개요
 
-Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, 플레이어는 감자 캐릭터를 조작하여 웨이브 방식으로 몰려오는 적들을 물리치며 생존하는 것이 목표입니다. 각 웨이브 사이 상점에서 무기와 아이템을 구매하여 캐릭터를 강화하고, 다양한 빌드 조합을 통해 전략적인 플레이가 가능합니다.
+**장르** : 탑다운 슈팅 / 로그라이크 서바이벌
 
-## 📌 학습 목표 및 내용
+Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인을 물리치는 탑다운 아레나 슈팅 게임입니다. 최대 6개의 무기를 동시에 사용하며, 다양한 아이템과 특성을 조합하여 자신만의 빌드를 구축하고 생존해야 합니다.
 
-**게임 엔진의 기본 아키텍처와 렌더링 파이프라인 학습**
+**🔄 핵심 루프 (Core Loop)**
+1. **웨이브 생존** : 제한 시간 동안 몰려오는 적들로부터 생존
+2. **재화 획득** : 적 처치 시 떨어지는 재료 수집
+3. **상점/빌드 강화** : 웨이브 종료 후 상점에서 무기 및 아이템 구매
+4. **다음 웨이브** : 더 강력해진 적들과 전투
 
-1. GDI+ → Direct2D 전환으로 FPS를 20~40 → 60+로 개선
-2. 타일맵 렌더링을 1,296회 DrawCall에서 1회로 최적화.
+**🎯 개발 초점**
+- **수백 개의 몬스터와 투사체**가 난무하는 대규모 난전 상황 구현
+- **프레임 방어 및 최적화**를 위한 렌더링 파이프라인 설계
 
-이 과정에서 게임 엔진의 기본 아키텍처 설계와 성능 최적화의 중요성을 깨닫게 되었습니다.
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
 
+<br>
+<hr>
+<br>
+
+## 📌 학습 목표 및 달성
+
+> **"게임 엔진의 기본 아키텍처와 2D 렌더링 파이프라인 학습"**
+
+이 프로젝트의 목표는 엔진 없이 Win32 API와 Direct2D를 활용하여 게임 엔진의 핵심 구조(Scene 관리, Object 관리)를 직접 설계하고, GDI+에서 Direct2D로의 마이그레이션을 통해 하드웨어 가속의 필요성과 원리를 체득하는 것이었습니다.
+
+### 1️⃣ 계층적 엔진 아키텍처 설계
+- **Manager - Scene - Object 구조** : 게임의 생명주기를 관리하는 `GameManager`, 씬 전환을 담당하는 `SceneManager`, 객체를 관리하는 `ObjectManager` 등 3계층 구조의 싱글톤 패턴 적용
+- **확장성 있는 설계** : 상속과 다형성을 활용하여 유지보수가 용이한 객체 지향적 엔진 아키텍처 구축
+
+### 2️⃣ 렌더링 시스템의 이해 및 고도화
+- **GDI+ → Direct2D 전환** : 초기 GDI+로 구현 시 발생한 성능 저하를 해결하기 위해 Direct2D로 렌더링 파이프라인 전면 교체 (하드웨어 가속 적용)
+- **더블 버퍼링 (Double Buffering)** : 화면 깜빡임(Flickering) 현상을 방지하기 위해 백 버퍼(Back Buffer)에 먼저 그리고 프론트 버퍼(Front Buffer)와 교체하는 기법 적용
+
+### 3️⃣ 성능 중심의 개발 프로세스
+- **병목 지점 식별** : 프로파일링을 통해 대량의 객체 렌더링 시 발생하는 CPU 오버헤드 식별
+- **최적화 기법 적용** : 불필요한 연산을 줄이기 위한 공간 분할 및 렌더링 배칭(Batching) 기법 연구 및 적용
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
+
+<br>
 <br>
 
 ---
 
-## 🔨 주요 개발
-
 <details open>
-<summary><b>🏗️ 아키텍처 설계</b></summary>
+<summary><h3>🎨 렌더링 시스템 및 최적화</h3></summary>
 
 <br>
 
-**Manager-Scene-Object 3계층 구조** 기반 엔진 설계 (싱글톤 패턴)
-- CCore를 중심으로 10개 Manager (Time, Key, Camera, Scene 등)를 싱글톤으로 초기화
-  [[📄매니저 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L88-L100) 
-- 메인 루프에서 매 프레임 각 Manager의 update()를 순차 호출하여 게임 로직 처리
-  [[📄프레임 처리 흐름]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L106-L173) 
-- Scene 추상 클래스 기반 상속으로 Main/Shop/Run_End 등 6개 씬 제작 및 관리
-  [[📄씬 구조]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CSceneMgr.cpp) 
-- 각 씬 내 GROUP_TYPE별로 객체들을 벡터로 관리하고 update/finalupdate/render 순서 보장
+**Direct2D 기반 렌더링 파이프라인**
+- **하드웨어 가속** : GDI+의 CPU 렌더링 방식이 가진 성능 한계를 극복하기 위해, GPU 가속을 지원하는 Direct2D로 렌더링 파이프라인 교체
+- **더블 버퍼링 (Double Buffering)** : 렌더 타겟(Back Buffer)에 모든 오브젝트를 먼저 그린 후, 화면(Front Buffer)과 교체(Present)하여 깜빡임(Flickering) 현상 차단
+- [[📄Direct2D.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/Direct2DMgr.h)
+
+**대규모 리소스 관리 및 최적화**
+- **리소스 매니저** : `unordered_map`을 활용한 텍스처(비트맵) 캐싱 시스템을 구축하여 중복 로딩 방지 및 빠른 리소스 접근 지원
+- **타일맵 렌더링 최적화 (Batching)** : 
+    - 32x32 타일 1,296개(36x36)를 매 프레임 개별 렌더링하던 방식을 개선
+    - 전체 타일을 하나의 오프스크린 비트맵(Off-screen Bitmap)에 미리 병합(Bake)하여 **DrawCall을 1,296회 → 1회로 감소**
+  - [[📄비트맵 병합 및 렌더링]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265)
+
+> **🚀 성능 개선 사례**:
+> 1. GDI+ 대비 20배 이상의 성능 향상을 이뤄낸 **[Direct2D 전환기]**는 하단 **[🛠️ 문제 해결](#direct2d-optimization)**에서 다룹니다.
+> 2. 타일맵 드로우 콜을 99.9% 줄인 **[타일맵 베이킹 기법]**은 하단 **[🛠️ 문제 해결](#tilemap-optimization)**에서 상세히 설명합니다.
 
 </details>
 
+<br>
+<hr>
+<br>
+
 <details open>
-<summary><b>🎨 렌더링 시스템</b></summary>
+<summary><h3>🏗️ 엔진 아키텍처 및 코어 시스템</h3></summary>
 
 <br>
 
-**Direct2D 기반 렌더링 파이프라인 구축** [[📄Direct2D.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/Direct2DMgr.h)
-- GDI/GDI+에서 Direct2D로 전환하여 FPS 20~40에서 60+ FPS로 성능 대폭 개선
-- 자동 더블 버퍼링을 통한 깜박임 없는 부드러운 화면 전환
+**Manager-Scene-Object 3계층 구조**
+- **싱글톤 매니저** : `CCore`를 중심으로 Time, Key, Camera, Scene 등 10여 개의 핵심 기능을 담당하는 Manager 클래스들을 싱글톤 패턴으로 초기화 및 관리
+  - [[📄매니저 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CCore.cpp#L88-L100)
+- **프레임워크 흐름 제어** : 메인 루프에서 매 프레임 `Progress()`를 호출하여 `Update` → `Render` 순서로 게임 로직과 렌더링을 일괄 처리
 
-**비트맵 관리 시스템**
-- `unordered_map`을 활용한 비트맵 캐싱 시스템 구현
-- 타일 분할 기능: 큰 이미지를 32x32 픽셀 단위로 분할하여 타일맵 생성
-  - [[📄비트맵 분할 함수]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L210-L265)
+**지연 처리(Delayed Processing) 이벤트 시스템**
+- **이벤트 큐(Event Queue)** : 객체 생성/삭제, 씬 전환 등의 요청을 즉시 실행하지 않고 큐에 저장하여 프레임 동기화 유지
+- **안전한 생명주기 관리** : 모든 로직 업데이트가 끝난 후 이벤트를 일괄 처리하여, 반복문 순회 중 객체 삭제로 인한 `Iterator Invalidated` 에러 방지
+  - [[📄이벤트 처리 로직]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L44-L92)
+
+> **🚀 구조적 문제 해결**: 반복문 순회 중 객체 삭제로 인한 런타임 에러를 해결한 **[이벤트 큐 시스템 도입]** 과정은 하단 **[🛠️ 문제 해결](#event-queue-system)**에서 자세히 다룹니다.
 
 </details>
 
+<br>
+<hr>
+<br>
+
 <details open>
-<summary><b>🏗️ 아키텍처 및 이벤트 시스템</b></summary>
+<summary><h3>🧩 컴포넌트 기반 객체 시스템</h3></summary>
 
 <br>
 
-**지연 처리(Delayed Processing) 기반 이벤트 시스템**
-- 이벤트 큐(vector): 게임 로직 도중 발생하는 객체 생성/삭제, 씬 전환 요청을 즉시 수행하지 않고 순차적으로 큐에 저장하여 프레임 동기화 유지
-  - [[📄이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L44-L92)
-- 일괄 처리(Execute): 모든 로직 업데이트가 끝난 후 이벤트를 일괄 실행. 특히 객체 삭제 요청은 **중복 방지 컨테이너(unordered_set)** 를 통해 안전하게 처리
-- 생명주기 관리: 전역 함수(Create/DeleteObject)를 제공하여 어디서든 안전하게 객체 생명주기 제어
-  - [[📄이벤트 등록]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/func.cpp#L7-L43)
-
-</details>
-
-
-
-
-<details open>
-<summary><b>🧩 게임 오브젝트 시스템</b></summary>
-
-<br>
-
-**컴포넌트 기반 오브젝트 설계** [[📄CObject.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CObject.h)
-- CObject 추상 클래스를 기반으로 Player, Monster, Weapon, UI 등 다양한 객체 구현
-- Collider, Animator, Rigidbody 등 필요에 따라 동적으로 추가 가능한 컴포넌트
+**확장성 있는 오브젝트 설계**
+- **CObject 추상 클래스** : 모든 게임 객체의 기본이 되는 클래스로, 컴포넌트 컨테이너 역할 수행
+- **컴포넌트 패턴** : `Collider`(충돌), `Animator`(애니메이션), `Rigidbody`(물리), `AI`(인공지능) 등 기능 단위로 컴포넌트를 분리하여 조합형 객체 설계
   - [[📄Collider.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CCollider.h)
   - [[📄Animator.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CAnimator.h)
-  - [[📄Rigidbody.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/CRigidbody.h)
 
-</details>
-
-<details open>
-<summary><b>🖼️ UI 및 사운드 시스템</b></summary>
-
-<br>
-
-- 계층적 UI 컴포넌트 (Panel, Button, Slider, Text)와 콜백 기반 이벤트 처리
-- FMOD 기반 멀티채널 오디오 (BGM/SFX 분리 관리)
+**계층적 UI 시스템**
+- **UI 컴포넌트화** : `Panel`, `Button`, `Text` 등 UI 요소를 객체화하고, 부모-자식 관계(Parent-Child)를 통해 위치와 렌더링 순서를 계층적으로 관리
+- **콜백(Callback) 이벤트** : 버튼 클릭 등의 상호작용을 함수 포인터 기반의 콜백으로 처리하여 로직 결합도 감소
 
 </details>
 
 <br>
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
 
 ---
 
 ## 🛠️ 문제 해결
 
-### 1️⃣ GDI에서 Direct2D로 전환을 통한 성능 개선
+### 1️⃣ GDI에서 Direct2D로 전환을 통한 성능 개선<a name="direct2d-optimization"></a>
 
 > **🚨 문제 상황**
 >
@@ -574,7 +605,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 
 <br><br>
 
-### 2️⃣ 타일맵 렌더링 최적화
+### 2️⃣ 타일맵 렌더링 최적화<a name="tilemap-optimization"></a>
 > **🚨 문제 상황**
 >
 > 36x36 크기의 타일맵을 구현하면서 매 프레임 1,296번의 DrawBitmap을 호출.
@@ -603,7 +634,7 @@ Brotato는 로그라이크 요소가 결합된 탑다운 슈팅 게임으로, �
 <br>
 <br>
 
-### 3️⃣ 이벤트 처리 시 중복 삭제로 인한 메모리 오염 방지
+### 3️⃣ 이벤트 처리 시 중복 삭제로 인한 메모리 오염 방지<a name="event-queue-system"></a>
 > **🚨 문제 상황**
 >
 > 객체 삭제 요청(DELETE_OBJECT)을 지연 처리하기 위해 vector에 담아 관리했습니다.
