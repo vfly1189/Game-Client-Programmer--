@@ -356,9 +356,12 @@
     *   맵 전체를 일정 크기의 **그리드(Grid)** 형태로 분할하고, 각 셀에 포함된 삼각형을 HashMap에 저장
     *   [[📄NavMesh.cpp :: InitializeSpatialGrid]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/NavMesh.cpp#L440)
 
-2.  **검색 알고리즘 최적화 ($O(N) \rightarrow O(1)$)**
+2.  **검색 알고리즘 최적화 ( $O(N) \rightarrow O(1)$ )**
     *   **해시맵(HashMap) 활용** : 입력된 월드 좌표를 키(Key)로 변환하여 $O(1)$ 시간 복잡도로 현재 속한 셀에 즉시 접근
     *   **탐색 범위 축소** : 전체 삼각형을 순회하는 대신, 해당 셀에 등록된 **소수의 삼각형만 검사** 하도록 로직 변경
+      *   | **Grid** |
+          | :---: |
+          | <img width="800" height="300" alt="image" src="https://github.com/user-attachments/assets/23899d6e-6b8f-45d7-a73e-57481c95c8bc" /> |
     *   [[📄NavMesh.cpp :: GetNearestPointOnNavMesh (최적화 로직)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/NavMesh.cpp#L93-L129)
 
 **✅ 결과**
@@ -366,29 +369,46 @@
 *   **확장성 확보** : 맵 크기가 커지거나 삼각형이 늘어나도 탐색 비용이 일정하게 유지됨
 *   | **Linear Search (최적화 전)** | **Spatial Grid (최적화 후)** |
     | :---: | :---: |
-    | ![Linear Search](https://github.com/user-attachments/assets/43d4a9ba-5cbd-43da-bc92-ab82ded95206) | ![Spatial Grid](https://github.com/user-attachments/assets/efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56) |
+    | <img width="600" height="300" alt="image" src="https://github.com/user-attachments/assets/b59f744c-0db7-424f-aa5f-de1a4227bd46" /> | <img width="600" height="300" alt="image" src="https://github.com/user-attachments/assets/1b0dd8aa-b523-4060-91d2-6048b1c60e53" /> |
+*   | **Case 1** | **Case 2** |
+    | :---: | :---: |
+    | <img width="600" height="300" alt="530234536-43d4a9ba-5cbd-43da-bc92-ab82ded95206" src="https://github.com/user-attachments/assets/30f19404-e250-4b92-a0b6-bbe8559085e1" /> | <img width="600" height="300" alt="530234561-efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" src="https://github.com/user-attachments/assets/ad405d09-a50a-4730-8f42-4312e70d70ca" /> |
 
 <br>
 
 ### 3️⃣ 쿼드 트리 기반 공간 분할 최적화<a name="quadtree-optimization"></a>
 
-> **🚨 문제 상황**
+> **🚨 문제 상황: $O(N^2)$의 충돌 검사 및 렌더링 부하**
 > 
-> 넓은 맵에서 모든 오브젝트에 대해 충돌/렌더링 검사를 수행하여 불필요한 연산 발생
+> *   **비효율적 연산** : 1,000개 이상의 오브젝트가 존재하는 넓은 맵에서, 모든 객체 쌍에 대해 충돌 검사를 수행( $N \times N$ )하여 프레임 드랍 발생
+> *   **불필요한 렌더링** : 카메라 시야(Frustum) 밖의 객체까지 렌더링 파이프라인에 포함되어 GPU 자원 낭비
 
 **💡 해결 과정**
-- 쿼드 트리(Quad Tree) 자료구조 도입으로 공간 분할
-- 맵을 4개의 사분면으로 재귀적으로 분할하는 트리 구조 구현 [[📄QuadTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
-- 각 노드에 해당 영역 내 오브젝트 정보 저장 [[📄노드에 객체 삽입]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
-- 카메라 절두체(Frustum) 내 노드만 탐색하여 렌더링 대상 선별 [[📄객체 필터링]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L587-L651)
-- 충돌 처리 [[📄쿼드 트리 충돌 로직]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
+
+1.  **쿼드 트리(Quad Tree) 도입 이유 (Why?)**
+    *   **2D 기반 최적화** : 게임 시점이 **쿼터뷰(Quarter View)** 고정형이므로, 높이(Y축)에 대한 복잡한 분할(Octree) 대신 평면 분할만으로 충분
+    *   **게임 기획 특성** : 근접 전투 중심이며 원거리 투사체가 없어, 화면 내 로직 처리에 집중하는 것이 효율적
+
+2.  **기능 구현 및 최적화 전략**
+    *   **공간 분할**: 맵 전체를 4분면으로 재귀적으로 분할하여 객체를 노드(Node) 단위로 관리
+    *   **계층적 충돌 검사 (Hierarchical Collision Check)**:
+        *   **내부 검사 (Internal)**: 동일한 Leaf Node에 속한 객체끼리만 검사.
+        *   **경계 검사 (Boundary)**: 노드의 경계선에 걸쳐있는 객체(Parent Node 소속)는 하위 노드(Child Node)의 객체들과 교차 검사 수행.
+        *   [[📄QuadTree 충돌 로직]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
+    
+    *   | **충돌 검사 시각화 (빨간색 객체는 초록색 영역만 검사)** |
+        | :---: |
+        | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> |
 
 **✅ 결과**
-- 렌더링/충돌 검사 대상 오브젝트 수 대폭 감소
-- 넓은 맵에서도 안정적인 프레임 유지
-- 공간 쿼리 성능 향상 (O(n) → O(log n))
-- 객체 500개에서의 성능비교
-  - <img width="1048" height="656" alt="객체 500개 성능비교" src="https://github.com/user-attachments/assets/956a6342-f9a2-494a-b33a-128847239bc0" />
+*   **마우스 Picking** : 전체 검사 대비 **4.6배** 속도 향상 (656μs → **142μs**)
+*   **충돌 처리** : $O(N^2)$ 비용을  줄여 **135.8배** 속도 향상 (53,992μs → **397μs**)
+*   | **Picking 최적화 (Ray-Node 검사)** | **결과** |
+    | :---: | :---: |
+    | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/78c17ec1-386d-40a0-a706-64658aa07e40" /> | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/de4cc346-71c3-42ee-a2b9-b4eb4560233f" />|
+*   | **충돌 처리 최적화 (Node 내부 검사)** | **결과** |
+    | :---: | :---: |
+    | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/ad1519df-17e7-412a-a11f-657f5d8e04f8" /> |
 
 ---
 
