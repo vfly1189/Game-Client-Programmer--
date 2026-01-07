@@ -826,7 +826,9 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 
 <br>
 
+
 ## 🔨 주요 개발
+
 
 <details open>
 <summary><b>🗺️ 절차적 맵 생성 알고리즘 (BFS)</b></summary>
