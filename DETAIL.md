@@ -63,6 +63,10 @@
    📌 [학습 목표 및 달성](#-학습-목표-및-달성) <br>
    🔨 [주요 개발](#-주요-개발) <br>
    🛠️ [문제 해결](#troubleshooting-eternal-return) <br>
+     > - [Deferred Rendering 전환](#deferred-rendering) <br>
+     > - [NavMesh 검색 속도 최적화](#navmesh-optimization) <br>
+     > - [쿼드 트리 공간 분할](#quadtree-optimization) <br>
+     > - [FSM → Behavior Tree 리팩토링](#fsm-to-bt) <br>
        </a>
       </td>
       <td valign="top">
@@ -73,6 +77,9 @@
    📌 [학습 목표 및 달성](#-학습-목표-및-달성-1) <br>
    🔨 [주요 개발](#-주요-개발-1) <br>
    🛠️ [문제 해결](#troubleshooting-brotato) <br>
+     > - [Direct2D 전환](#direct2d-optimization) <br>
+     > - [타일맵 렌더링 최적화](#tilemap-optimization) <br>
+     > - [이벤트 큐 시스템](#event-queue-system) <br>
       </a>
       </td>
       <td valign="top">
@@ -83,6 +90,8 @@
    📌 [학습 목표 및 달성](#-학습-목표-및-달성-2) <br>
    🔨 [주요 개발](#-주요-개발-2) <br>
    🛠️ [문제 해결](#troubleshooting-tbi) <br>
+     > - [BFS 기반 맵 생성](#bfs-map-gen) <br>
+     > - [State 패턴 도입](#fsm-pattern) <br>
       </a>
       </td>
     </tr>
@@ -435,6 +444,71 @@
 *   | **충돌 처리 최적화 (Node 내부 검사)** | **결과** |
     | :---: | :---: |
     | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/ad1519df-17e7-412a-a11f-657f5d8e04f8" /> |
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
+### 4️⃣ 몬스터 AI 아키텍처 개선: FSM → Behavior Tree<a name="fsm-to-bt"></a>
+
+> **🚨 문제 상황**
+>
+> **"FSM에서 상태/전이 조건이 증가하면서 유지보수성 급격히 악화"**
+>
+> - **파일 폭증** : Wolf 몬스터 1종에 상태 8개(Appear/Attack/Death/Dying/Run/Trace/Wait)만 구현해도 **클래스 16개** (.cpp + .h)가 생성됨
+> - **전이 로직 분산** : 각 상태 클래스 내부에 "다음 상태로 언제 전환할 것인가"를 결정하는 조건이 흩어져 있어, 전체 흐름을 파악하기 어려움
+> - **확장 비용 증가** : 새로운 행동(예: Skill) 추가 시, 기존의 여러 상태 클래스를 수정해야 하므로 사이드 이펙트 발생 위험 증가
+
+**💡 해결 과정** [[📄BehaviorTree]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/BehaviorTree.h)
+
+**"계층적 우선순위 구조의 Behavior Tree 도입"**
+
+- **Selector 기반 우선순위 판단** :
+  - 루트 노드를 `Selector`로 설정하여 왼쪽(상위)에서 오른쪽(하위)으로 조건을 검사하며, 가장 먼저 성공하는 행동만 수행하도록 설계
+  - 우선순위: **생존(사망 체크) > 전투(공격) > 추적(이동) > 대기(Idle)**
+
+- **Sequence 노드로 조건-행동 묶음 구성** :
+  - 각 행동을 `Sequence`로 구성하여 "조건 체크 → 행동 실행"을 하나의 논리 단위로 캡슐화
+  - 예: `[HP <= 0 체크] → [Die()]` / `[사거리 내 체크] → [Attack()]`
+
+- **상태 간 결합도 제거** :
+  - 기존 FSM에서는 `TraceState` 내부에 "거리가 가까우면 AttackState로 전환" 코드가 있었으나, BT에서는 각 노드가 독립적으로 조건만 체크
+  - 전환 로직은 부모 노드(Selector)가 자동으로 처리하므로, 노드 간 의존성 사라짐
+
+**🤔 기술적 의사결정: 왜 Behavior Tree인가?**
+
+**1. 우선순위의 구조화**
+  - FSM에서는 "어떤 상태가 우선인가?"를 코드 곳곳에 숨겨진 `if`문으로 결정했으나, BT는 **트리 구조 자체**가 우선순위를 명시함
+  - 면접관이나 후임 개발자가 코드를 보지 않고도 다이어그램만으로 AI 로직의 우선순위를 직관적으로 파악 가능
+
+**2. 모듈화와 재사용성**
+  - `CheckHP`, `CheckAttackRange` 같은 조건 노드는 다른 몬스터에도 재사용 가능
+  - 새로운 행동(예: Skill) 추가 시, 기존 노드를 수정할 필요 없이 새로운 Sequence 노드를 트리의 적절한 위치에 삽입만 하면 됨
+
+**3. 디버깅 용이성**
+  - 각 노드가 `SUCCESS`, `FAILURE`, `RUNNING` 상태를 명확히 반환하므로, 런타임에 어느 노드에서 실패했는지 추적 가능
+  - FSM의 "상태 A에서 상태 B로 전환이 안 됨" 같은 모호한 디버깅 상황 감소
+
+**✅ 결과**
+
+| 비교 항목 | 기존 (FSM) | 개선 (Behavior Tree) |
+| :---: | :---: | :---: |
+| **핵심 구조** | 상태 (State) + 전이 (Transition) | 행동 (Action) + 우선순위 (Selector) |
+| **흐름 제어** | 각 상태가 다음 상태를 직접 결정 | 부모 노드가 자식의 실행 여부 결정 |
+| **결합도** | 상태끼리 서로 참조 (강한 결합) | 노드끼리 서로 모름 (독립적) |
+| **확장성** | 상태 추가 시 기존 코드 수정 필수 | 노드만 추가하면 됨 (수정 불필요) |
+| **우선순위** | 코드 로직에 숨겨져 파악 힘듦 | 트리 구조(왼쪽→오른쪽)로 직관적 |
+
+**📊 구조 비교**
+
+| **FSM 구조 (상태 전이 다이어그램)** | **Behavior Tree 구조** |
+| :---: | :---: |
+| <img width="795" height="808" alt="image" src="https://github.com/user-attachments/assets/a45edf80-a4be-4046-994f-9d9fc2b5d645" /> | <img width="1471" height="709" alt="image" src="https://github.com/user-attachments/assets/b9cb3150-afb2-494a-b3ef-224d4cb2fd75" /> |
+| *복잡하게 얽힌 상태 간 화살표* | *계층적으로 정리된 우선순위 구조* |
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
