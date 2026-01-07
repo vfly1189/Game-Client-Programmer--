@@ -218,7 +218,7 @@
 
 
 <details open>
-<summary><h3>🎭 인스턴싱 기반 렌더링 (GPU Instancing)</h3></summary>
+<summary><h3>🧬 인스턴싱 기반 렌더링 (GPU Instancing)</h3></summary>
 
 <br>
 
@@ -251,7 +251,7 @@
 <br>
 
 <details open>
-<summary><h3>🌑 쿼드 트리 (공간 분할 자료구조)</h3></summary>
+<summary><h3>🧱 쿼드 트리 (공간 분할 자료구조)</h3></summary>
 
 <br>
 
@@ -902,7 +902,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 <br>
 
 <details open>
-<summary><h3>🎁 확장성 있는 오브젝트 설계</h3></summary>
+<summary><h3>🧱 확장성 있는 오브젝트 설계</h3></summary>
 
 <br>
 
