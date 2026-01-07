@@ -829,9 +829,8 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 
 ## 🔨 주요 개발
 
-
 <details open>
-<summary><b>🗺️ 절차적 맵 생성 알고리즘 (BFS)</b></summary>
+<summary><h3>🗺️ 절차적 맵 생성 알고리즘 (BFS)</h3></summary>
 
 <br>
 
@@ -855,7 +854,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 <br>
 
 <details open> 
-<summary><b>🧠 FSM 기반 몬스터 AI 시스템</b></summary>
+<summary><h3>🧠 FSM 기반 몬스터 AI 시스템</h3></summary>
 
 <br>
   
@@ -882,7 +881,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 <br>
 
 <details open>
-<summary><b>💥 물리 엔진 및 인터랙션 구현</b></summary>
+<summary><h3>💥 물리 엔진 및 인터랙션 구현</h3></summary>
 
 <br>
 
@@ -903,7 +902,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 <br>
 
 <details open>
-<summary><b>🎁 확장성 있는 오브젝트 설계</b></summary>
+<summary><h3>🎁 확장성 있는 오브젝트 설계</h3></summary>
 
 <br>
 
@@ -925,7 +924,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 <br>
 
 <details open>
-<summary><b>🎨 스프라이트 애니메이션 시스템</b></summary>
+<summary><h3>🎨 스프라이트 애니메이션 시스템</h3></summary>
 
 <br>
 
