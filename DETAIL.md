@@ -52,47 +52,44 @@
 ## 목차<a name="table-of-contents"></a>
 
 <table>
+  <thead>
+    <tr>
+      <th>🎮 이터널 리턴 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+      <th>🎮 Brotato 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+      <th>🎮 TBI 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
       <td valign="top">
-       <a>
-        
- 🎮 [이터널리턴 모작](#-이터널-리턴-모작) <br>
- 
- > 📖 [게임 개요](#-게임-개요) <br>
-   📌 [학습 목표 및 달성](#-학습-목표-및-달성) <br>
-   🔨 [주요 개발](#-주요-개발) <br>
-   🛠️ [문제 해결](#troubleshooting-eternal-return) <br>
-     > - [Deferred Rendering 전환](#deferred-rendering) <br>
-     > - [NavMesh 검색 속도 최적화](#navmesh-optimization) <br>
-     > - [쿼드 트리 공간 분할](#quadtree-optimization) <br>
-     > - [FSM → Behavior Tree 리팩토링](#fsm-to-bt) <br>
-       </a>
+        <br>
+        <b><a href="#-이터널-리턴-모작">📖 게임 개요</a></b><br>
+        <b><a href="#-학습-목표-및-달성">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#-주요-개발">🔨 주요 개발</a></b><br>
+        <b><a href="#troubleshooting-eternal-return">🛠️ 문제 해결</a></b><br>
+        &nbsp;&nbsp; └ <a href="#deferred-rendering">Deferred Rendering 전환</a><br>
+        &nbsp;&nbsp; └ <a href="#navmesh-optimization">NavMesh 검색 최적화</a><br>
+        &nbsp;&nbsp; └ <a href="#quadtree-optimization">쿼드 트리 공간 분할</a><br>
+        &nbsp;&nbsp; └ <a href="#fsm-to-bt">FSM → BT 리팩토링</a>
       </td>
       <td valign="top">
-      <a>
- 🎮 [Brotato 모작](#-brotato-모작) <br>
- 
- > 📖 [게임 개요](#-게임-개요-1) <br>
-   📌 [학습 목표 및 달성](#-학습-목표-및-달성-1) <br>
-   🔨 [주요 개발](#-주요-개발-1) <br>
-   🛠️ [문제 해결](#troubleshooting-brotato) <br>
-     > - [Direct2D 전환](#direct2d-optimization) <br>
-     > - [타일맵 렌더링 최적화](#tilemap-optimization) <br>
-     > - [이벤트 큐 시스템](#event-queue-system) <br>
-      </a>
+        <br>
+        <b><a href="#-brotato-모작">📖 게임 개요</a></b><br>
+        <b><a href="#-학습-목표-및-달성-1">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#-주요-개발-1">🔨 주요 개발</a></b><br>
+        <b><a href="#troubleshooting-brotato">🛠️ 문제 해결</a></b><br>
+        &nbsp;&nbsp; └ <a href="#direct2d-optimization">Direct2D 전환</a><br>
+        &nbsp;&nbsp; └ <a href="#tilemap-optimization">타일맵 렌더링 최적화</a><br>
+        &nbsp;&nbsp; └ <a href="#event-queue-system">이벤트 큐 시스템</a>
       </td>
       <td valign="top">
-      <a>
- 🎮  [TBI 모작](#-tbi-모작) <br>
- 
- > 📖 [게임 개요](#-게임-개요-2) <br>
-   📌 [학습 목표 및 달성](#-학습-목표-및-달성-2) <br>
-   🔨 [주요 개발](#-주요-개발-2) <br>
-   🛠️ [문제 해결](#troubleshooting-tbi) <br>
-     > - [BFS 기반 맵 생성](#bfs-map-gen) <br>
-     > - [State 패턴 도입](#fsm-pattern) <br>
-      </a>
+        <br>
+        <b><a href="#-tbi-모작">📖 게임 개요</a></b><br>
+        <b><a href="#-학습-목표-및-달성-2">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#-주요-개발-2">🔨 주요 개발</a></b><br>
+        <b><a href="#troubleshooting-tbi">🛠️ 문제 해결</a></b><br>
+        &nbsp;&nbsp; └ <a href="#bfs-map-gen">BFS 기반 맵 생성</a><br>
+        &nbsp;&nbsp; └ <a href="#fsm-pattern">State 패턴 도입</a>
       </td>
     </tr>
   </tbody>
