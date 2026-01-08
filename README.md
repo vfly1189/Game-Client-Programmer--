@@ -21,7 +21,8 @@
 - **Environment** : Visual Studio 2022
 - **Language** : C++, HLSL
 - **Library** : DirectX11, Win32API
-  
+
+
 ### 📌 담당 업무 및 경험
 > **게임의 핵심 코어 시스템부터 콘텐츠 구현까지 전반적인 클라이언트 개발을 담당했습니다.**
 
@@ -43,23 +44,27 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 [주요 개발 기능](DETAIL.md#주요개발-eternal-return)** <br>
-&nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](DETAIL.md#-deferred-rendering-파이프라인-hybrid)<br>
-&nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#-인스턴싱-기반-렌더링-gpu-instancing)<br>
-&nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#-쿼드-트리-공간-분할-자료구조)<br>
+&nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](DETAIL.md#-deferred-rendering-파이프라인-hybrid) <br>
+&nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#-인스턴싱-기반-렌더링-gpu-instancing) <br>
+&nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#-쿼드-트리-공간-분할-자료구조) <br>
 &nbsp;&nbsp; └ [NavMesh 길찾기](DETAIL.md#-navmesh-길찾기-시스템)
 
-**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#-문제-해결)** <br>
-&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#1️⃣-forward에서-deferred-rendering으로-전환-hybrid)**<br>
+<br>
+
+**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#-문제-해결)** <br> 
+&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#1️⃣-forward에서-deferred-rendering으로-전환-hybrid)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원과 반투명 객체를 동시 처리하는 Hybrid 파이프라인 구축
 
-&nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#2️⃣-navmesh-검색-속도-최적화-spatial-grid)**<br>
+&nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#2️⃣-navmesh-검색-속도-최적화-spatial-grid)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
 
-&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#3️⃣-쿼드-트리-기반-공간-분할-최적화)**<br>
+&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#3️⃣-쿼드-트리-기반-공간-분할-최적화)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
 
-&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#4️⃣-몬스터-ai-아키텍처-개선-fsm--behavior-tree)**<br>
+&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#4️⃣-몬스터-ai-아키텍처-개선-fsm--behavior-tree)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 Behavior Tree 도입으로 복잡한 AI 로직의 유지보수성 확보
+
+<br>
 
 ### [🎥 시연 영상 보러가기](https://youtu.be/b6XVkd0xc-E?si=vMBVltpWKHP4UM11)
 
@@ -73,27 +78,51 @@
 
 <img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/707d63de-187c-40e8-a571-43c336de358f" />
 
-### 🔧사용 기술 및 언어
-- Visual Studio 2022, Win32API, DirectWrite, Direct2D, GDI+, FMOD
+### 🔧 사용 기술 및 언어
+- **Environment**: Visual Studio 2022
+- **Language**: C++
+- **Library**: Win32API, Direct2D, DirectWrite, GDI+, FMOD
 
 
 ### 📌 담당 업무 및 경험
-  - 2인
-  - UI 시스템 개발 ( 이미지, 텍스트, 계층 구조 )
-  - 게임 프레임 워크 구현(오브젝트 관리, 이벤트 후처리 시스템, 오브젝트 렌더링, 충돌, 물리)
-  - GDI / GDI+ -> Direct2D 마이그레이션
-  - 매니저 시스템(Direct2D, 캐릭터, UI, 오브젝트 관리, 이벤트) 구현
-  - 타일맵 작업
-  - 컴포넌트 기능(Transform, Collider, Animator, Image, Text) 구현
+> **2D 게임 엔진의 핵심 시스템 구현 및 렌더링 최적화를 담당했습니다.**
 
+*   **System & Framework**
+    *   게임 프레임워크 설계 (오브젝트 관리, 씬 전환, 생명주기 관리)
+    *   매니저 시스템 구현 (RenderManager, UIManager, EventManager ... )
+    *   이벤트 기반 지연 처리(Event Queue) 시스템 구축
+    *   컴포넌트 시스템 구현 (Transform, Collider, Animator, Image, Text)
+*   **Rendering & Optimization**
+    *   GDI+ → Direct2D 마이그레이션 (하드웨어 가속 전환)
+    *   타일맵 시스템 및 오프스크린 렌더링 최적화
+    *   충돌 처리 및 물리 시스템 구현
+*   **UI & Content**
+    *   UI 시스템 개발 (이미지, 텍스트, 계층 구조 관리)
+    *   캐릭터/몬스터 애니메이션 시스템 구현
 
-### 🚀 Highlights
-- 타일맵 DrawCall 최적화: 1,296회 DrawBitmap → 1회(오프스크린 렌더링으로 통합 비트맵 생성)
-- 성능 개선: 평균 FPS 650 → 1400 (약 2.15배)
-- 프레임 타임: 1.54ms → 0.71ms (약 0.83ms 단축)
-- 이벤트 처리 안정화: 중복 삭제(Double Free) 이슈를 자료구조 변경으로 해결(vector → unordered_set)
+### 🚀 Highlights & 목차
+> **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
-### [시연 영상](https://youtu.be/d-VZS1AdvtA?si=LsgWayJvOPfWndK6)
+**1. 🔨 [주요 개발 기능](DETAIL.md#주요개발-brotato)** <br>
+&nbsp;&nbsp; └ [Direct2D 렌더링 시스템](DETAIL.md#-렌더링-시스템-및-최적화)  <br>
+&nbsp;&nbsp; └ [엔진 아키텍처 (Manager-Scene-Object)](DETAIL.md#-엔진-아키텍처-및-코어-시스템)  <br>
+&nbsp;&nbsp; └ [컴포넌트 기반 객체 설계](DETAIL.md#-컴포넌트-기반-객체-시스템)
+
+<br>
+
+**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#-문제-해결-1)** <br>
+&nbsp;&nbsp; └ **[Direct2D 하드웨어 가속 전환](DETAIL.md#1️⃣-gdi에서-direct2d-전환을-통한-렌더링-최적화)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 GDI+ 대비 렌더링 성능 **10배 향상 (20 FPS → 200+ FPS, GPU 가속)**
+
+&nbsp;&nbsp; └ **[타일맵 렌더링 최적화](DETAIL.md#2️⃣-타일맵-렌더링-최적화-draw-call-병목-해결)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 오프스크린 베이킹으로 DrawCall **99.9% 절감 (1,296회 → 1회)**
+
+&nbsp;&nbsp; └ **[이벤트 큐 메모리 관리](DETAIL.md#3️⃣-이벤트-처리-시-중복-삭제로-인한-메모리-오염-방지)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🛡️ 지연 삭제 도입으로 객체 중복 삭제(Double Free) 이슈 해결 및 안정성 확보
+
+<br>
+
+### [🎥 시연 영상 보러가기](https://youtu.be/d-VZS1AdvtA?si=LsgWayJvOPfWndK6)
 
 
 
