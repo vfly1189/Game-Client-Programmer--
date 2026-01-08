@@ -619,7 +619,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 <br>
 
-## 🔨 주요 개발
+## 🔨 주요 개발<a name="주요개발-brotato"></a>
 
 <details open>
 <summary><h3>🎨 렌더링 시스템 및 최적화</h3></summary>
