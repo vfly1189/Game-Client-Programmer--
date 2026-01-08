@@ -51,17 +51,17 @@
 
 <br>
 
-**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#-문제-해결)** <br> 
-&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#1️⃣-forward에서-deferred-rendering으로-전환-hybrid)** <br>
+**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#troubleshooting-eternal-return)** <br> 
+&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#deferred-rendering)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원과 반투명 객체를 동시 처리하는 Hybrid 파이프라인 구축
 
-&nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#2️⃣-navmesh-검색-속도-최적화-spatial-grid)** <br>
+&nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#navmesh-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
 
-&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#3️⃣-쿼드-트리-기반-공간-분할-최적화)** <br>
+&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#quadtree-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
 
-&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#4️⃣-몬스터-ai-아키텍처-개선-fsm--behavior-tree)** <br>
+&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#fsm-to-bt)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 Behavior Tree 도입으로 복잡한 AI 로직의 유지보수성 확보
 
 <br>
@@ -110,22 +110,22 @@
 
 <br>
 
-**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#-문제-해결-1)** <br>
+**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#troubleshooting-brotato)** <br>
 &nbsp;&nbsp; └ **[Direct2D 하드웨어 가속 전환](DETAIL.md#direct2d-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 GDI+ 대비 렌더링 성능 **10배 향상 (20 FPS → 200+ FPS, GPU 가속)**
 
-&nbsp;&nbsp; └ **[타일맵 렌더링 최적화](DETAIL.md#2️⃣tilemap-optimization)** <br>
+&nbsp;&nbsp; └ **[타일맵 렌더링 최적화](DETAIL.md#tilemap-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 오프스크린 베이킹으로 DrawCall **99.9% 절감 (1,296회 → 1회)**
 
-&nbsp;&nbsp; └ **[이벤트 큐 메모리 관리](DETAIL.md#3️⃣event-queue-system)** <br>
+&nbsp;&nbsp; └ **[이벤트 큐 메모리 관리](DETAIL.md#event-queue-system)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🛡️ 지연 삭제 도입으로 객체 중복 삭제(Double Free) 이슈 해결 및 안정성 확보
 
 <br>
 
 ### [🎥 시연 영상 보러가기](https://youtu.be/d-VZS1AdvtA?si=LsgWayJvOPfWndK6)
 
-
-
+<br>
+<hr>
 <br>
 
 ## 🎮 TBI : The Binding Of Isaac ([상세내용](DETAIL.md#-tbi-모작))
@@ -134,23 +134,25 @@
 
 <img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/cc18a536-58fd-4679-8d4b-b7c3e95af758" />
 
+### 🔧 사용 기술 및 언어
+- **Environment**: Visual Studio 2022
+- **Language**: C++
+- **Library**: Win32API, Direct2D, FMOD
 
-### 🔧사용 기술 및 언어
-- Visual Studio 2022, Win32API, DirectWrite, Direct2D, GDI+, FMOD
+### 🚀 Highlights & 목차
+> **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
-### 📌 담당 업무 및 경험
-  - 1인 개발
-  - UI 시스템 개발 ( 이미지, 텍스트, 계층 구조 )
-  - 게임 프레임 워크 구현(오브젝트 관리, 이벤트 후처리 시스템, 오브젝트 렌더링, 충돌, 물리, 몬스터 생성 및 AI 패턴)
-  - 캐릭터 구현 ( 아이작 , 케인 , 막달레나 , 유다 )
-  - 매니저 시스템(Direct2D, 캐릭터, UI, 오브젝트 관리, 이벤트) 구현
-  - 절차적 맵 생성 ( BFS 알고리즘기반 던전 생성 )
-  - 애니메이션 시스템 ( 프레임기반 스프라이트 애니메이션 )
-  - 컴포넌트 기능(Transform, Collider, Animator, Image, Text) 구현
+**1. 🔨 [주요 개발 기능](DETAIL.md#주요개발-tbi)** <br>
+&nbsp;&nbsp; └ [절차적 맵 생성 (BFS)](DETAIL.md#bfs-tbi) <br>
+&nbsp;&nbsp; └ [FSM 기반 몬스터 AI](DETAIL.md#fsm-tbi) <br>
+&nbsp;&nbsp; └ [물리 엔진 및 인터랙션 구현](DETAIL.md#physical-tbi) <br>
+&nbsp;&nbsp; └ [스프라이트 애니메이션 시스템](DETAIL.md#animation-tbi) <br>
 
-### 🚀 Highlights
-- 절차적 맵 생성: DFS 기반 생성의 선형화 문제를 BFS 기반 생성으로 개선(방사형 구조 유도)
-- 몬스터 AI 구조화: if-else 중첩 로직을 State Pattern으로 분리(Idle/Trace/Attack)
+**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#troubleshooting-tbi)** <br>
+&nbsp;&nbsp; └ **[절차적 맵 생성 개선 (BFS)](DETAIL.md#bfs-map-gen)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🗺️ DFS의 선형적 구조 문제를 BFS 도입으로 해결하여 **유기적인 방사형 던전 생성**
 
-### [시연 영상](https://tobrother.tistory.com/144)
-<br>
+&nbsp;&nbsp; └ **[AI 아키텍처 재설계 (State Pattern)](DETAIL.md#fsm-pattern)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 중첩 If-Else 로직을 State 패턴으로 분리하여 **코드 복잡도 해소 및 확장성 확보**
+
+### [🎥 시연 영상 보러가기](https://tobrother.tistory.com/144)
