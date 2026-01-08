@@ -624,6 +624,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 ## 🔨 주요 개발<a name="주요개발-brotato"></a>
 
+<a name="rendering-system-brotato"></a>
 <details open>
 <summary><h3>🎨 렌더링 시스템 및 최적화</h3></summary>
 
@@ -655,6 +656,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 <hr>
 <br>
 
+<a name="engine-brotato"></a>
 <details open>
 <summary><h3>🏗️ 엔진 아키텍처 및 코어 시스템</h3></summary>
 
@@ -682,6 +684,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 <hr>
 <br>
 
+<a name="component-brotato"></a>
 <details open>
 <summary><h3>🧩 컴포넌트 기반 객체 시스템</h3></summary>
 
