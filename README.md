@@ -17,32 +17,55 @@
 
 <img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/b5edd5af-9ce7-4f17-bc8a-84f8bb745edd" />
 
-### 🔧사용 기술 및 언어
-- Visual Studio 2022, C++ , DirectX11 , HLSL , Win32API
+### 🔧 사용 기술 및 언어
+- **Environment** : Visual Studio 2022
+- **Language** : C++, HLSL
+- **Library** : DirectX11, Win32API
   
 ### 📌 담당 업무 및 경험
-  - 2인 개발
-  - UI 시스템 개발 ( 이미지, 텍스트, 계층 구조, 스크롤러블 패널 )
-  - 게임 프레임 워크 구현(오브젝트 관리, 충돌, 몬스터 생성 및 AI 패턴)
-  - GPU Instancing
-  - 렌더링 파이프라인 구축 ( Forward + Deferred )
-  - 쿼드 트리(공간 분할)를 사용한 렌더링 및 피킹 최적화
-  - NavMesh & NavMeshAgent 구현 및 최적화
-  - 니키 캐릭터 구현 ( 스킬 및 기본 공격 )
-  - 컴포넌트 기능(Image, Text) 구현
-  - 아이템 기능 구현 ( 아이템 기본 클래스 , 아이템 제작, 아이템 등급, 아이템 레시피, 아이템 적용 )
+> **게임의 핵심 코어 시스템부터 콘텐츠 구현까지 전반적인 클라이언트 개발을 담당했습니다.**
 
-### 🚀 Highlights
-- Quad Tree 충돌 최적화: 53,992μs → 397μs (135.8배)
-- NavMesh 검색 최적화(Spatial Grid): 301μs → 14μs (약 20배+)
-- Mouse Picking 최적화(Quad Tree): 656μs → 142μs (4.6배)
-- Deferred + Forward Hybrid Rendering 파이프라인 설계(반투명/UI 처리)
+*   **System & Framework**
+    *   게임 프레임워크 설계 (씬 관리, 오브젝트 생명주기 관리)
+    *   컴포넌트 시스템 구현 (Image, Text, Script 등)
+    *   UI 시스템 개발 (계층 구조, 스크롤러블 패널, 텍스트 렌더링)
+*   **Rendering & Optimization**
+    *   렌더링 파이프라인 구축 (Forward + Deferred Hybrid)
+    *   GPU Instancing 기반 대규모 환경 오브젝트 렌더링
+    *   Quad Tree 공간 분할을 이용한 렌더링(Culling) 및 피킹 최적화
+*   **Gameplay & AI**
+    *   NavMesh & NavMeshAgent 길찾기 시스템 구현 및 최적화
+    *   몬스터 생성 및 AI 패턴 로직 구현
+    *   플레이어 캐릭터(니키) 스킬 및 기본 공격 로직 구현
+    *   아이템 시스템 (제작, 등급, 레시피, 스탯 적용) 구현
 
-### [시연 영상](https://youtu.be/b6XVkd0xc-E?si=vMBVltpWKHP4UM11)
+### 🚀 Highlights & 목차
+> **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
+**1. 🔨 [주요 개발 기능](#)** <br>
+&nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](DETAIL.md#-deferred-rendering-파이프라인-hybrid)<br>
+&nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#-인스턴싱-기반-렌더링-gpu-instancing)<br>
+&nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#-쿼드-트리-공간-분할-자료구조)<br>
+&nbsp;&nbsp; └ [NavMesh 길찾기](DETAIL.md#-navmesh-길찾기-시스템)
 
+**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#-문제-해결)** <br>
+&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#1️⃣-forward에서-deferred-rendering으로-전환-hybrid)**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원과 반투명 객체를 동시 처리하는 Hybrid 파이프라인 구축
 
+&nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#2️⃣-navmesh-검색-속도-최적화-spatial-grid)**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
 
+&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#3️⃣-쿼드-트리-기반-공간-분할-최적화)**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
+
+&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#4️⃣-몬스터-ai-아키텍처-개선-fsm--behavior-tree)**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 Behavior Tree 도입으로 복잡한 AI 로직의 유지보수성 확보
+
+### [🎥 시연 영상 보러가기](https://youtu.be/b6XVkd0xc-E?si=vMBVltpWKHP4UM11)
+
+<br>
+<hr>
+<br>
 
 ## 🎮 Brotato ([상세내용](DETAIL.md#-brotato-모작))
 
