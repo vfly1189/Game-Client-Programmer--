@@ -139,6 +139,20 @@
 - **Language**: C++
 - **Library**: Win32API, Direct2D, FMOD
 
+### 📌 담당 업무 및 경험
+> **1인 개발로 기획부터 엔진 구현, 콘텐츠 제작까지 전 과정을 수행했습니다.**
+
+*   **System & Framework**
+    *   자체 게임 프레임워크 구축 (Scene, Object, Component 구조)
+    *   이벤트 시스템 및 매니저(Render, UI, Sound, Key) 구현
+    *   물리 엔진 직접 구현 (AABB/OBB 충돌 처리, 반사 벡터, 마찰력)
+*   **Gameplay & AI**
+    *   절차적 맵 생성 알고리즘 구현 (BFS 기반 랜덤 던전 생성)
+    *   몬스터/보스 AI 패턴 설계 (FSM, State Pattern 적용)
+    *   캐릭터(아이작, 케인 등) 및 다양한 아이템 효과 구현
+    *   프레임 기반 스프라이트 애니메이션 시스템 개발
+
+
 ### 🚀 Highlights & 목차
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
