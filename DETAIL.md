@@ -346,7 +346,46 @@
 </div>
 
 <br>
+<hr>
 <br>
+
+<a name="fsm-to-bt-feature"></a>
+<a name="ai-system"></a>
+<details open>
+<summary><h3>🤖 몬스터 AI 시스템 (Behavior Tree)</h3></summary>
+
+<br>
+
+**시스템 개요**
+- **Behavior Tree (BT) 아키텍처**: 몬스터의 행동을 계층적 트리 구조로 설계하여 복잡한 의사결정 로직을 체계화
+- **노드 구성**:
+    - **Composite**: `Selector`(우선순위 선택), `Sequence`(순차 실행)
+    - **Decorator**: 조건 검사 (`CheckHP`, `CheckRange` 등)
+    - **Leaf**: 실제 행동 수행 (`Move`, `Attack`, `Die` 등)
+
+**AI 행동 패턴 (우선순위)**
+- **Selector 노드**를 통해 왼쪽부터 실행 가능성을 판단하여 가장 높은 우선순위 행동을 수행하도록 설계
+1.  **생존 본능 (최우선)**: HP가 0 이하일 경우 즉시 `Die` 상태로 전이
+2.  **전투 (Combat)**: 공격 사거리 내에 타겟이 있으면 `Attack` 수행
+3.  **추적 (Trace)**: 타겟이 감지 범위 내에 있으면 NavMesh 경로를 따라 이동
+4.  **대기 (Idle)**: 위 조건이 모두 해당하지 않을 경우 대기 상태 유지
+
+**관련 이미지**
+| **AI 행동 트리 구조 (시각화)** | **인게임 AI 동작 (추적 → 공격 → 사망)** |
+| :---: | :---: |
+| <img width="800" height="400" alt="bt-structure" src="https://github.com/user-attachments/assets/b9cb3150-afb2-494a-b3ef-224d4cb2fd75" /> | ![늑대 모션들](https://github.com/user-attachments/assets/ffdf45cc-240b-4467-abb6-840257999799) |
+
+**관련 코드**
+- [[📄BehaviorTree.h (트리 노드 설계)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/BehaviorTree.h)
+- [[📄WolfAI.cpp (몬스터 트리 구성)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/5d9aa0d9b421b32bf8004703d286ba5dbfd8bac5/Client/Wolf.cpp#L281-L319)
+
+> **🚀 아키텍처 개선 사례**: 기존 FSM 구조의 한계(유지보수성 저하)를 극복하기 위해 Behavior Tree로 전환한 과정과 기술적 의사결정 내용은 하단 **[🛠️ 문제 해결](#fsm-to-bt)** 파트에서 상세히 다룹니다.
+
+</details>
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+</div>
 
 ---
 
