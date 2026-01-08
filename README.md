@@ -104,20 +104,20 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 [주요 개발 기능](DETAIL.md#주요개발-brotato)** <br>
-&nbsp;&nbsp; └ [Direct2D 렌더링 시스템](DETAIL.md#-렌더링-시스템-및-최적화)  <br>
-&nbsp;&nbsp; └ [엔진 아키텍처 (Manager-Scene-Object)](DETAIL.md#-엔진-아키텍처-및-코어-시스템)  <br>
-&nbsp;&nbsp; └ [컴포넌트 기반 객체 설계](DETAIL.md#-컴포넌트-기반-객체-시스템)
+&nbsp;&nbsp; └ [Direct2D 렌더링 시스템](DETAIL.md#rendering-system-brotato)  <br>
+&nbsp;&nbsp; └ [엔진 아키텍처 (Manager-Scene-Object)](DETAIL.md#engine-brotato)  <br>
+&nbsp;&nbsp; └ [컴포넌트 기반 객체 설계](DETAIL.md#component-brotato)
 
 <br>
 
 **2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#-문제-해결-1)** <br>
-&nbsp;&nbsp; └ **[Direct2D 하드웨어 가속 전환](DETAIL.md#1️⃣-gdi에서-direct2d-전환을-통한-렌더링-최적화)** <br>
+&nbsp;&nbsp; └ **[Direct2D 하드웨어 가속 전환](DETAIL.md#direct2d-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 GDI+ 대비 렌더링 성능 **10배 향상 (20 FPS → 200+ FPS, GPU 가속)**
 
-&nbsp;&nbsp; └ **[타일맵 렌더링 최적화](DETAIL.md#2️⃣-타일맵-렌더링-최적화-draw-call-병목-해결)** <br>
+&nbsp;&nbsp; └ **[타일맵 렌더링 최적화](DETAIL.md#2️⃣tilemap-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 오프스크린 베이킹으로 DrawCall **99.9% 절감 (1,296회 → 1회)**
 
-&nbsp;&nbsp; └ **[이벤트 큐 메모리 관리](DETAIL.md#3️⃣-이벤트-처리-시-중복-삭제로-인한-메모리-오염-방지)** <br>
+&nbsp;&nbsp; └ **[이벤트 큐 메모리 관리](DETAIL.md#3️⃣event-queue-system)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🛡️ 지연 삭제 도입으로 객체 중복 삭제(Double Free) 이슈 해결 및 안정성 확보
 
 <br>
