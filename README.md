@@ -44,10 +44,10 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 [주요 개발 기능](DETAIL.md#주요개발-eternal-return)** <br>
-&nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](DETAIL.md#-deferred-rendering-파이프라인-hybrid) <br>
-&nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#-인스턴싱-기반-렌더링-gpu-instancing) <br>
-&nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#-쿼드-트리-공간-분할-자료구조) <br>
-&nbsp;&nbsp; └ [NavMesh 길찾기](DETAIL.md#-navmesh-길찾기-시스템)
+&nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](DETAIL.md#deferred-rendering) <br>
+&nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#gpu-instancing) <br>
+&nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#quad-tree) <br>
+&nbsp;&nbsp; └ [NavMesh 길찾기](DETAIL.md#navmesh)
 
 <br>
 
