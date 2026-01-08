@@ -203,7 +203,7 @@
 
 <br>
 
-## 🔨 주요 개발<a name="main-develop-eternal-return"></a>
+## 🔨 주요 개발<a name="주요개발-eternal-return"></a>
 
 <details open>
 <summary><h3>🎨 Deferred Rendering 파이프라인 (Hybrid)</h3></summary>
