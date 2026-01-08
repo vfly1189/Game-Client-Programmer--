@@ -354,7 +354,7 @@
 
 ## 🛠️ 문제 해결<a name="troubleshooting-eternal-return"></a>
 
-### 1️⃣ Forward에서 Deferred Rendering으로 전환 (Hybrid)<a name="deferred-rendering"></a>
+### 1️⃣ Forward에서 Deferred Rendering으로 전환 (Hybrid)<a name="deferred-rendering-trouble"></a>
 
 > **🚨 문제 상황: Forward Rendering의 구조적 한계**
 > 
