@@ -52,7 +52,7 @@
 <br>
 
 **2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#troubleshooting-eternal-return)** <br> 
-&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#deferred-rendering)** <br>
+&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#deferred-rendering-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원과 반투명 객체를 동시 처리하는 Hybrid 파이프라인 구축
 
 &nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#navmesh-optimization)** <br>
