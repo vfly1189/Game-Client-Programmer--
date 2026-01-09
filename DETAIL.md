@@ -75,6 +75,7 @@
       </td>
       <td valign="top">
         <br>
+        <b><a href="#brotato-main">🎮 프로젝트 메인</a></b><br>
         <b><a href="#-brotato-모작">📖 게임 개요</a></b><br>
         <b><a href="#-학습-목표-및-달성-1">📌 학습 목표 및 달성</a></b><br>
         <b><a href="#-주요-개발-1">🔨 주요 개발</a></b><br>
@@ -85,6 +86,7 @@
       </td>
       <td valign="top">
         <br>
+        <b><a href="#tbi-main">🎮 프로젝트 메인</a></b><br>
         <b><a href="#-tbi-모작">📖 게임 개요</a></b><br>
         <b><a href="#-학습-목표-및-달성-2">📌 학습 목표 및 달성</a></b><br>
         <b><a href="#-주요-개발-2">🔨 주요 개발</a></b><br>
@@ -586,7 +588,7 @@
 
 <br>
 
-# 🎮 Brotato 모작
+# 🎮 Brotato 모작<a name="brotato-main"></a>
 
 <p align="left">
   <img src="https://github.com/user-attachments/assets/0fa0932b-be02-4008-a29b-4711adab14db" width="800"/>
@@ -870,7 +872,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 <br>
 
-# 🎮 TBI 모작
+# 🎮 TBI 모작<a name="tbi-main"></a>
 
 <p align="left">
   <img src="https://github.com/user-attachments/assets/68e566af-bb56-4afb-9842-1002208e6540" width="800"/>
