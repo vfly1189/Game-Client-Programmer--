@@ -121,7 +121,7 @@
 | 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/DirectX11/Eternal%20Return%20%EB%AA%A8%EC%9E%91) |
 | 💾 **GitHub** | [소스코드](https://github.com/HyangRim/DirectX11-Engine-Client) |
 
-## 📑 프로젝트 목차
+## 📑 프로젝트 목차<a name="toc-eternal"></a>
 
 **1. 📖 [게임 개요](#-게임-개요)**
 
@@ -147,6 +147,10 @@
 &nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](#fsm-to-bt)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 Behavior Tree 도입으로 **복잡한 AI 로직의 유지보수성 확보**
 
+<div align="right">
+  <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
+</div>
+
 </div>
 
 <br>
@@ -170,7 +174,7 @@
 - **엔진 레벨의 성능 최적화** 및 아키텍처 설계
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -197,7 +201,7 @@
 <br>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -245,7 +249,7 @@
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -279,7 +283,7 @@
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -315,7 +319,7 @@
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -346,7 +350,7 @@
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -387,7 +391,7 @@
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 ---
@@ -430,7 +434,7 @@
 *   **G-Buffer 시각화**: 각 Render Target이 정상적으로 출력됨을 디버깅 모드로 확인
   
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -470,7 +474,7 @@
     | <img width="600" height="300" alt="530234536-43d4a9ba-5cbd-43da-bc92-ab82ded95206" src="https://github.com/user-attachments/assets/30f19404-e250-4b92-a0b6-bbe8559085e1" /> | <img width="600" height="300" alt="530234561-efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" src="https://github.com/user-attachments/assets/ad405d09-a50a-4730-8f42-4312e70d70ca" /> |
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -513,7 +517,7 @@
     | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/ad1519df-17e7-412a-a11f-657f5d8e04f8" /> |
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -578,7 +582,7 @@
 | *복잡하게 얽힌 상태 간 화살표* | *계층적으로 정리된 우선순위 구조* |
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -609,7 +613,7 @@
 
 </div>
 
-## 📑 프로젝트 목차
+## 📑 프로젝트 목차<a name="toc-brotato"></a>
 
 **1. 📖 [게임 개요](#-brotato-모작)**
 
@@ -630,6 +634,9 @@
 &nbsp;&nbsp; └ **[이벤트 시스템 자료구조 개선](#event-queue-system)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔄 `unordered_set` 도입으로 **삭제 중복 요청(Double Free) 및 순환 참조 해결**
 
+<div align="right">
+  <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
+</div>
 
 <br>
 
@@ -650,7 +657,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 - **프레임 방어 및 최적화**를 위한 렌더링 파이프라인 설계
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -676,7 +683,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 - **최적화 기법 적용** : 불필요한 연산을 줄이기 위한 공간 분할 및 렌더링 배칭(Batching) 기법 연구 및 적용
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -713,7 +720,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -741,7 +748,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -767,7 +774,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -800,7 +807,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -842,7 +849,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -884,7 +891,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 | **구조 개선** | 삭제 요청(Logic)과 실제 메모리 해제 시점을 명확히 분리하여 코드의 유지보수성 향상. |
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -916,7 +923,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 </div>
 
-## 📑 프로젝트 목차
+## 📑 프로젝트 목차<a name="toc-tbi"></a>
 
 **1. 📖 [게임 개요](#게임개요-tbi)**
 
@@ -934,6 +941,10 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 &nbsp;&nbsp; └ **[AI 설계 패턴 리팩토링](#fsm-pattern)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 거대 Switch-Case문 → **State 패턴(클래스)** 전환으로 확장성 확보
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
+</div>
 
 <br>
 
@@ -953,7 +964,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 - **자료구조 기반 시스템 설계**를 통한 유기적인 게임 월드 구축
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -976,7 +987,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 - 이 프로젝트에서 익힌 **State 패턴**과 **컴포넌트 기반 설계** 경험은, 이후 **이터널 리턴 모작(DirectX 11)** 프로젝트에서 플레이어와 몬스터의 복잡한 상태를 관리하는 핵심 기반이 되었습니다.
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1001,7 +1012,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 - **독자적인 RigidBody 구축** : 가속도, 마찰력, 충돌 반사 벡터 등을 직접 계산하여 발사체의 궤적이나 피격 시 넉백(Knock-back) 효과 등 물리적 상호작용 구현
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1032,7 +1043,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1060,7 +1071,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1082,7 +1093,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1105,7 +1116,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1127,7 +1138,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 </details>
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1184,7 +1195,7 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
 
 
 <div align="right">
-  <a href="#table-of-contents">⬆️ 목차로 돌아가기</a>
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -1227,6 +1238,10 @@ TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작�
   | :---: | :---: |
   | <img width="1197" height="922" alt="image" src="https://github.com/user-attachments/assets/4b7b7f5b-d2bc-4f88-b9e7-2571be42e00f" /> | <img width="873" height="282" alt="image" src="https://github.com/user-attachments/assets/b22c68c9-2914-4d24-b141-5c85cd96898d" />|
   | *중첩된 조건문으로 읽기 힘든 로직* | *간단해진 구조* |
+
+<div align="right">
+  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
 
 ---
 
