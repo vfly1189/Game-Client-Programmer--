@@ -609,6 +609,28 @@
 
 </div>
 
+## 📑 프로젝트 목차
+
+**1. 📖 [게임 개요](#-brotato-모작)**
+
+**2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성-1)**
+
+**3. 🔨 [주요 개발 기능](#-주요-개발-1)** <br>
+&nbsp;&nbsp; └ [렌더링 시스템](#rendering-system-brotato)<br>
+&nbsp;&nbsp; └ [엔진 아키텍처 (Manager-Scene-Object)](#engine-brotato)<br>
+&nbsp;&nbsp; └ [컴포넌트 기반 객체 설계](#component-brotato)<br>
+
+**4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-brotato)** <br>
+&nbsp;&nbsp; └ **[GDI+ → Direct2D 전환](#direct2d-optimization)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ 하드웨어 가속 도입으로 대규모 웨이브 시 **FPS 10배 향상 (20 → 200+)**
+
+&nbsp;&nbsp; └ **[타일맵 렌더링 최적화](#tilemap-optimization)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 비트맵 베이킹(Baking) 기법으로 **Draw Call 99.9% 감소 (1,296회 → 1회)**
+
+&nbsp;&nbsp; └ **[이벤트 시스템 자료구조 개선](#event-queue-system)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔄 `unordered_set` 도입으로 **삭제 중복 요청(Double Free) 및 순환 참조 해결**
+
+
 <br>
 
 ## 📖 게임 개요
@@ -668,7 +690,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 <a name="rendering-system-brotato"></a>
 <details open>
-<summary><h3>🎨 렌더링 시스템 및 최적화</h3></summary>
+<summary><h3>🎨 렌더링 시스템</h3></summary>
 
 <br>
 
@@ -893,6 +915,25 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 | 💾 **GitHub** | [소스코드](https://github.com/vfly1189/TBI) |
 
 </div>
+
+## 📑 프로젝트 목차
+
+**1. 📖 [게임 개요](#-tbi-모작)**
+
+**2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성-2)**
+
+**3. 🔨 [주요 개발 기능](#-주요-개발-2)** <br>
+&nbsp;&nbsp; └ [절차적 맵 생성 (BFS Algorithm)](#bfs-tbi) <br>
+&nbsp;&nbsp; └ [FSM 기반 몬스터 AI](#fsm-tbi) <br>
+&nbsp;&nbsp; └ [물리 엔진 및 충돌 처리](#physical-tbi) <br>
+&nbsp;&nbsp; └ [컴포넌트 & 애니메이션 시스템](#animation-tbi)
+
+**4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-tbi)** <br>
+&nbsp;&nbsp; └ **[절차적 맵 생성 알고리즘 개선](#bfs-map-gen)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧩 DFS(선형적) → **BFS(방사형) 전환**으로 유기적인 던전 구조 구현
+
+&nbsp;&nbsp; └ **[AI 설계 패턴 리팩토링](#fsm-pattern)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 거대 Switch-Case문 → **State 패턴(클래스)** 전환으로 확장성 확보
 
 <br>
 
