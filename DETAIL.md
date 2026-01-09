@@ -54,7 +54,7 @@
 <table>
   <thead>
     <tr>
-      <th><b><a href="#eternal-return-main">🎮 이터널 리턴 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+      <th>🎮 이터널 리턴 모작 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
       <th>🎮 Brotato 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
       <th>🎮 TBI 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
     </tr>
@@ -63,6 +63,7 @@
     <tr>
       <td valign="top">
         <br>
+        <b><a href="#eternal-return-main">🎮 프로젝트 메인</a></b><br>
         <b><a href="#-게임-개요">📖 게임 개요</a></b><br>
         <b><a href="#-학습-목표-및-달성">📌 학습 목표 및 달성</a></b><br>
         <b><a href="#-주요-개발">🔨 주요 개발</a></b><br>
