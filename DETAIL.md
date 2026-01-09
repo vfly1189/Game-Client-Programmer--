@@ -124,23 +124,24 @@
 
 **2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성)**
 
-**3. 🔨 [주요 개발 기능](#-주요-개발)** <br>
-&nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#-deferred-rendering-파이프라인-hybrid)<br>
-&nbsp;&nbsp; └ [GPU Instancing](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#-인스턴싱-기반-렌더링-gpu-instancing)<br>
-&nbsp;&nbsp; └ [Quad Tree 공간 분할](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#-쿼드-트리-공간-분할-자료구조)<br>
-&nbsp;&nbsp; └ [NavMesh 길찾기](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#-navmesh-길찾기-시스템)
+**3. 🔨 [주요 개발 기능](#주요개발-eternal-return)** <br>
+&nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](#deferred-rendering)<br>
+&nbsp;&nbsp; └ [GPU Instancing](#gpu-instancing)<br>
+&nbsp;&nbsp; └ [Quad Tree 공간 분할](#quad-tree)<br>
+&nbsp;&nbsp; └ [NavMesh 길찾기](#navmesh)
+&nbsp;&nbsp; └ [몬스터 AI 시스템](#fsm-to-bt-feature)
 
-**3. 🛠️ [문제 해결 (Troubleshooting)](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#-문제-해결)** <br>
-&nbsp;&nbsp; └ **[Forward → Deferred 전환](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#1️⃣-forward에서-deferred-rendering으로-전환-hybrid)**<br>
+**3. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-eternal-return)** <br>
+&nbsp;&nbsp; └ **[Forward → Deferred 전환](#deferred-rendering-trouble)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원 처리와 반투명 객체를 혼합한 **Hybrid 파이프라인 구축**
 
-&nbsp;&nbsp; └ **[NavMesh 검색 최적화](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#2️⃣-navmesh-검색-속도-최적화-spatial-grid)**<br>
+&nbsp;&nbsp; └ **[NavMesh 검색 최적화](#navmesh-optimization)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
 
-&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#3️⃣-쿼드-트리-기반-공간-분할-최적화)**<br>
+&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](#quadtree-optimization)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
 
-&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/DETAIL.md#4️⃣-몬스터-ai-아키텍처-개선-fsm--behavior-tree)**<br>
+&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](#fsm-to-bt)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 Behavior Tree 도입으로 **복잡한 AI 로직의 유지보수성 확보**
 
 </div>
@@ -350,7 +351,6 @@
 <br>
 
 <a name="fsm-to-bt-feature"></a>
-<a name="ai-system"></a>
 <details open>
 <summary><h3>🤖 몬스터 AI 시스템 (Behavior Tree)</h3></summary>
 
