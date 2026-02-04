@@ -13,14 +13,14 @@
 
 ## 🎮 Eternal Return ( 이터널리턴 )  ([상세내용](DETAIL.md#-이터널-리턴-모작))
 
-> ( 2025.07 ~ 2025.09 ) ( 2개월 )
+> ( 2025.07 ~ 2025.09 ) ( 3개월 )
 
 <img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/b5edd5af-9ce7-4f17-bc8a-84f8bb745edd" />
 
 ### 🔧 사용 기술 및 언어
 - **Environment** : Visual Studio 2022
 - **Language** : C++, HLSL
-- **Library** : DirectX11, Win32API
+- **Environment** : DirectX11, Win32API
 
 
 ### 📌 담당 업무 및 경험
@@ -45,44 +45,14 @@
 
 **1. 🔨 [주요 개발 기능](DETAIL.md#주요개발-eternal-return)** <br>
 &nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](DETAIL.md#deferred-rendering) <br>
-&nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#gpu-instancing) <br>
-&nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#quad-tree) <br>
-&nbsp;&nbsp; └ [NavMesh 길찾기](DETAIL.md#navmesh) <br>
-&nbsp;&nbsp; └ [몬스터 AI 시스템](DETAIL.md#fsm-to-bt-feature) 
-
-<br>
-
-**2. 🛠️ [문제 해결 (Troubleshooting)](DETAIL.md#troubleshooting-eternal-return)** <br> 
-&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#deferred-rendering-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원과 반투명 객체를 동시 처리하는 Hybrid 파이프라인 구축
-
-&nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#navmesh-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
-
-&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#quadtree-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
-
-&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#fsm-to-bt)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 Behavior Tree 도입으로 복잡한 AI 로직의 유지보수성 확보
-
-<br>
-
-### [🎥 시연 영상 보러가기](https://youtu.be/b6XVkd0xc-E?si=vMBVltpWKHP4UM11)
-
-<br>
-<hr>
-<br>
-
-## 🎮 Brotato ([상세내용](DETAIL.md#-brotato-모작))
-
-> ( 2025.02 ~ 2025.03 ) ( 3주 )
+&nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#gpu-in월 )
 
 <img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/707d63de-187c-40e8-a571-43c336de358f" />
 
 ### 🔧 사용 기술 및 언어
 - **Environment**: Visual Studio 2022
 - **Language**: C++
-- **Library**: Win32API, Direct2D, DirectWrite, GDI+, FMOD
+- **Environment**: Win32API, Direct2D, DirectWrite, GDI+, FMOD
 
 
 ### 📌 담당 업무 및 경험
@@ -138,7 +108,7 @@
 ### 🔧 사용 기술 및 언어
 - **Environment**: Visual Studio 2022
 - **Language**: C++
-- **Library**: Win32API, Direct2D, FMOD
+- **Environment**: Win32API, Direct2D, FMOD
 
 ### 📌 담당 업무 및 경험
 > **1인 개발로 기획부터 엔진 구현, 콘텐츠 제작까지 전 과정을 수행했습니다.**
