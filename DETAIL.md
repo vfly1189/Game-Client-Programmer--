@@ -54,17 +54,29 @@
 <table>
   <thead>
     <tr>
+      <th>🎮 블루아카이브 팬메이드 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
       <th>🎮 이터널 리턴 모작 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
       <th>🎮 Brotato 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-      <th>🎮 TBI 모작&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td valign="top">
         <br>
-        <b><a href="#eternal-return-main">🎮 프로젝트 메인</a></b><br>
+        <b><a href="#bluearchive-main">🎮 프로젝트 메인</a></b><br>
         <b><a href="#-게임-개요">📖 게임 개요</a></b><br>
+        <b><a href="#-학습-목표-및-달성">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#-주요-개발">🔨 주요 개발</a></b><br>
+        <b><a href="#troubleshooting-eternal-return">🛠️ 문제 해결</a></b><br>
+        &nbsp;&nbsp; └ <a href="#deferred-rendering">Deferred Rendering 전환</a><br>
+        &nbsp;&nbsp; └ <a href="#navmesh-optimization">NavMesh 검색 최적화</a><br>
+        &nbsp;&nbsp; └ <a href="#quadtree-optimization">쿼드 트리 공간 분할</a><br>
+        &nbsp;&nbsp; └ <a href="#fsm-to-bt">FSM → BT 리팩토링</a>
+      </td>
+      <td valign="top">
+        <br>
+        <b><a href="#eternal-return-main">🎮 프로젝트 메인</a></b><br>
+        <b><a href="#-게임-개요-1">📖 게임 개요</a></b><br>
         <b><a href="#-학습-목표-및-달성">📌 학습 목표 및 달성</a></b><br>
         <b><a href="#-주요-개발">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-eternal-return">🛠️ 문제 해결</a></b><br>
@@ -84,22 +96,60 @@
         &nbsp;&nbsp; └ <a href="#tilemap-optimization">타일맵 렌더링 최적화</a><br>
         &nbsp;&nbsp; └ <a href="#event-queue-system">이벤트 큐 시스템</a>
       </td>
-      <td valign="top">
-        <br>
-        <b><a href="#tbi-main">🎮 프로젝트 메인</a></b><br>
-        <b><a href="#-tbi-모작">📖 게임 개요</a></b><br>
-        <b><a href="#-학습-목표-및-달성-2">📌 학습 목표 및 달성</a></b><br>
-        <b><a href="#-주요-개발-2">🔨 주요 개발</a></b><br>
-        <b><a href="#troubleshooting-tbi">🛠️ 문제 해결</a></b><br>
-        &nbsp;&nbsp; └ <a href="#bfs-map-gen">BFS 기반 맵 생성</a><br>
-        &nbsp;&nbsp; └ <a href="#fsm-pattern">State 패턴 도입</a>
-      </td>
     </tr>
   </tbody>
 </table>
 
 <br>
 <br>
+
+---
+
+# 🎮 블루아카이브 팬 메이드<a name="bluearchive-main"></a>
+
+<img width="1000" height="800" alt="image" src="https://github.com/user-attachments/assets/75321802-c496-4e3b-9ab9-5a32846b287f" />
+
+### 📌 프로젝트 정보
+
+| 항목 | 내용 |
+|:---:|:---:|
+| 🎯 **장르** | 수집형 액션 RPG, 서브컬처 |
+| ⏱️ **개발 기간** | 2026.01 ~ 진행 중 |
+| 👥 **개발 인원** | 1인 (개인 프로젝트) |
+| 🛠️ **개발 환경** | Unity, C#, `Addressables`, `UniTask`, `NPOI` |
+| 🎬 **시연 영상** | [YouTube 바로가기]() |
+| 📝 **개발 블로그** | [Velog 바로가기](https://velog.io/@vfly1189/series/Unity-%EB%B8%94%EB%A3%A8%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B8%8C-%EC%B0%BD%EC%9E%91-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8) |
+| 💾 **GitHub** | [소스코드]() |
+
+## 📑 프로젝트 목차<a name="toc-bluearchive"></a>
+
+**1. 📖 [게임 개요](#-게임-개요)**
+
+**2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성)**
+
+**3. 🔨 [주요 개발 기능](#주요개발-bluearchive)** <br>
+&nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인]()<br>
+&nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 자동화]()<br>
+&nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계]()<br>
+&nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인]()<br>
+&nbsp;&nbsp; └ [호요버스식 장비 파이프라인 및 스탯 모디파이어 시스템]()
+
+**4. 🛠️ 문제 해결 (Troubleshooting)** <br>
+&nbsp;&nbsp; └ **[몬스터 God Class 리팩토링 및 상속 구조 세분화](DETAIL.md#ai-refactoring-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `MonsterController`에 집중된 로직을 상속 구조 분리와 `Behavior Tree`로 개편하여 **유연한 AI 확장성 확보**
+
+&nbsp;&nbsp; └ **[동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축](DETAIL.md#async-unitask-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `AssetBundle.Unload` 충돌을 `UniTask` 생명주기 동기화로 해결하여 **안전한 비동기 제어 달성**
+
+&nbsp;&nbsp; └ **[대규모 JSON 데이터 관리의 한계 극복 및 NPOI 엑셀 자동화](DETAIL.md#data-driven-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  방대한 JSON 관리의 비효율을 엑셀(NPOI) 기반 `ScriptableObject` 베이킹으로 해결하여 **데이터 조회 속도 최적화 (`O(N)` → `O(1)`)**
+
+&nbsp;&nbsp; └ **[파편화된 UI 시스템 통합 및 Canvas 분할 최적화](DETAIL.md#ui-canvas-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `UIManager` 통합 및 용도별 4개의 Canvas 분할을 통해 **Draw Call 및 Canvas Rebuild 부하 최소화**
+
+<div align="right">
+  <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
+</div>
 
 ---
 
@@ -898,351 +948,4 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 <br>
 
 ---
-
-<br>
-
-# 🎮 TBI 모작<a name="tbi-main"></a>
-
-<p align="left">
-  <img src="https://github.com/user-attachments/assets/68e566af-bb56-4afb-9842-1002208e6540" width="800"/>
-</p>
-
-<div align="left">
-
-### 📌 프로젝트 정보
-
-| 항목 | 내용 |
-|:---:|:---|
-| 🎯 **장르** | 로그라이크, 던전 크롤러, 탑다운 슈팅 |
-| ⏱️ **개발 기간** | 2개월 |
-| 👥 **개발 인원** | 1인 (개인 프로젝트) |
-| 🛠️ **개발 환경** | C++, Win32 API, Direct2D, FMOD |
-| 🎬 **시연 영상** | [바로가기](https://www.youtube.com/watch?v=cJonBlrMy0Y) |
-| 📝 **개발 블로그** | [상세 개발 과정](https://tobrother.tistory.com/category/WinApi/TBI%28%EB%8D%94%20%EB%B0%94%EC%9D%B8%EB%94%A9%20%EC%98%A4%EB%B8%8C%20%EC%95%84%EC%9D%B4%EC%9E%91%29%20%EB%AA%A8%EC%9E%91) |
-| 💾 **GitHub** | [소스코드](https://github.com/vfly1189/TBI) |
-
-</div>
-
-## 📑 프로젝트 목차<a name="toc-tbi"></a>
-
-**1. 📖 [게임 개요](#게임개요-tbi)**
-
-**2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성-2)**
-
-**3. 🔨 [주요 개발 기능](#-주요-개발-2)** <br>
-&nbsp;&nbsp; └ [절차적 맵 생성 (BFS Algorithm)](#bfs-tbi) <br>
-&nbsp;&nbsp; └ [FSM 기반 몬스터 AI](#fsm-tbi) <br>
-&nbsp;&nbsp; └ [물리 엔진 및 충돌 처리](#physical-tbi) <br>
-&nbsp;&nbsp; └ [컴포넌트 & 애니메이션 시스템](#animation-tbi)
-
-**4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-tbi)** <br>
-&nbsp;&nbsp; └ **[절차적 맵 생성 알고리즘 개선](#bfs-map-gen)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧩 DFS(선형적) → **BFS(방사형) 전환**으로 유기적인 던전 구조 구현
-
-&nbsp;&nbsp; └ **[AI 설계 패턴 리팩토링](#fsm-pattern)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 거대 Switch-Case문 → **State 패턴(클래스)** 전환으로 확장성 확보
-
-<div align="right">
-  <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
-</div>
-
-<br>
-
-## 📖 게임 개요<a name="게임개요-tbi"></a>
-
-**장르**: 탑다운 슈팅 / 로그라이크 던전 크롤러
-
-TBI는 로그라이크 던전 크롤러 게임으로, 플레이어는 아이작이 되어 무작위로 생성되는 던전을 탐험하며 다양한 몬스터와 보스를 상대합니다. 눈물(탄환)을 발사하여 적을 처치하고, 방마다 등장하는 아이템을 수집하여 능력을 강화하는 것이 핵심입니다.
-
-**🔄 핵심 루프 (Core Loop)**
-1. **랜덤 던전 탐험** : 매 판 다르게 생성되는 방 구조 탐색
-2. **전투 및 성장** : 몬스터/보스 처치 후 아이템 수집으로 능력치 강화
-3. **다음 스테이지** : 보스 격파 후 더 깊은 던전으로 이동
-
-**🎯 개발 초점**
-- **절차적 맵 생성 알고리즘**과 FSM 기반의 다양한 몬스터 패턴 구현을 통한 게임성 강화
-- **자료구조 기반 시스템 설계**를 통한 유기적인 게임 월드 구축
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-## 🤔 왜 TBI를 만들었는가?
-
-이 프로젝트는 Brotato 모작을 통해 확립한 게임 엔진 아키텍처를 검증하고, 자료구조와 알고리즘을 실제 게임 로직에 심도 있게 적용해보기 위해 시작했습니다.
-
-**1. 아키텍처의 재사용성과 확장성 검증**
-- **질문** : "Brotato에서 설계한 엔진 구조가 다른 장르에도 통하는가?"
-- **검증** : 동일한 Manager-Scene-Object 구조를 로그라이크 장르에 성공적으로 이식하며, 엔진 아키텍처의 범용성을 확인했습니다.
-
-**2. 기술적 도전: 알고리즘의 실전 적용**
-- **BFS 기반 맵 생성** : 단순 배치가 아닌, 맵 구조가 게임 난이도와 탐험 재미에 직접적인 영향을 미치도록 설계했습니다.
-- **State 패턴의 고도화** : 복잡한 보스 몬스터 AI를 FSM으로 체계적으로 관리하며, 코드의 유지보수성을 높였습니다.
-
-**3. 다음 단계로의 연결 고리**
-- 이 프로젝트에서 익힌 **State 패턴**과 **컴포넌트 기반 설계** 경험은, 이후 **이터널 리턴 모작(DirectX 11)** 프로젝트에서 플레이어와 몬스터의 복잡한 상태를 관리하는 핵심 기반이 되었습니다.
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-## 📌 학습 목표 및 달성
-
-> **"알고리즘과 설계 패턴을 활용한 게임 아키텍처 심화"**
-
-단순한 기능 구현을 넘어, 자료구조(Queue, Set)와 디자인 패턴(State, Singleton)을 적재적소에 활용하여 견고한 시스템을 구축하는 것을 목표로 했습니다.
-
-### 1️⃣ 자료구조 기반 시스템 설계
-- **절차적 맵 생성 (Procedural Map Generation)** : BFS 알고리즘과 큐(Queue)를 활용하여 시작 방에서 보스 방까지의 거리를 계산하고, 유기적으로 연결된 던전 구조를 생성
-- **FSM (Finite State Machine) 설계** : 몬스터의 다양한 행동(대기, 추적, 공격, 패턴 변화)을 상태(State) 클래스로 분리하여 관리, AI 로직의 복잡도 해소
-
-### 2️⃣ 확장성 있는 오브젝트 구조
-- **다형성 기반 오브젝트 관리** : 몬스터, 아이템, 발사체 등을 공통 부모 클래스로 추상화하여 일관된 인터페이스로 관리
-- **컴포넌트 응용** : 각 오브젝트의 역할에 따라 필요한 기능(물리, 렌더링, 충돌)을 모듈화하여 재사용성 증대
-
-### 3️⃣ 물리 엔진의 기초 구현
-- **독자적인 RigidBody 구축** : 가속도, 마찰력, 충돌 반사 벡터 등을 직접 계산하여 발사체의 궤적이나 피격 시 넉백(Knock-back) 효과 등 물리적 상호작용 구현
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<br>
-
----
-
-<br>
-
-
-## 🔨 주요 개발<a name="주요개발-tbi"></a>
-
-<a name="bfs-tbi"></a>
-<details open>
-<summary><h3>🗺️ 절차적 맵 생성 알고리즘 (BFS)</h3></summary>
-
-<br>
-
-**"단순 랜덤이 아닌, '플레이 가능한' 던전 구조 생성"**
-
-- **BFS 기반 방 배치** : 큐(Queue) 자료구조를 활용해 시작 방을 기준으로 상하좌우로 뻗어나가는 **Breadth-First Search** 알고리즘을 구현하여, 끊김 없는 유기적인 맵 구조를 생성했습니다. [[📄방 생성 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135)
-- **거리 기반 특수 방 배치** : 시작 지점으로부터의 '깊이(Depth)'를 계산하여, 가장 먼 방에 **보스방** 을 배치하고 적절한 거리에 **보물방** 을 배치하는 등 게임 밸런스를 고려한 로직을 적용했습니다.
-- **자동 통로 연결** : 인접한 방의 유무를 비트마스크(Bitmask) 등으로 판별하여 문(Door)과 통로를 자동으로 생성하고 연결했습니다.
-- <img width="700" height="350" alt="image" src="https://github.com/user-attachments/assets/e864f3c1-00dd-4c54-b5fb-3b30c0b1fcb3" />
-
-> **🚀 알고리즘 이슈 해결**: 단순 랜덤 배치가 아닌, **[BFS 기반의 유기적인 던전 생성]** 과정과 맵 구조 밸런싱 최적화 내용은 하단 **[🛠️ 문제 해결](#bfs-map-gen)**에서 자세히 다룹니다.
-
-</details>
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-<a name="fsm-tbi"></a>
-<details open> 
-<summary><h3>🧠 FSM 기반 몬스터 AI 시스템</h3></summary>
-
-<br>
-  
-**"복잡한 패턴을 체계적으로 관리하는 상태(State) 패턴 도입"**
-
-- **유한 상태 머신 (FSM) 설계** : 몬스터의 행동을 `Idle`, `Trace`, `Attack`, `Dead` 등의 상태 클래스로 분리하여 관리함으로써, 조건문(if-else) 도배를 방지하고 유지보수성을 높였습니다. [[📄CState.h]](https://github.com/vfly1189/TBI/blob/e32ef1e500817b39cec13dc5ce6077ed149d3487/TBI/CState.h#L1-L30)
-- **다양한 패턴 구현** :
-    - **Trace State** : 벡터 연산을 통해 플레이어를 자연스럽게 추적 [[📄추적 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CFlyTraceState.cpp#L24-L63)
-    - **Attack State** : 보스 몬스터의 탄막 발사, 돌진 등 복잡한 공격 패턴을 독립된 클래스로 구현 [[📄보스 공격]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CBabyPlumAttackState.cpp#L32-L118)
-- | **보스 몬스터 패턴** |
-  | :---: |
-  | ![보스공격패턴](https://github.com/user-attachments/assets/a38557c8-7436-4120-83a2-5eb71f5fc734) |
-
-> **🚀 구조적 문제 해결**: 복잡한 몬스터 패턴을 체계적으로 관리하기 위해 도입한 **[State 패턴(FSM) 설계]**와 이를 통한 AI 로직 개선 과정은 하단 **[🛠️ 문제 해결](#fsm-pattern)**에서 자세히 다룹니다.
-
-</details>
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-<a name="physical-tbi"></a>
-<details open>
-<summary><h3>💥 물리 엔진 및 인터랙션 구현</h3></summary>
-
-<br>
-
-**"직접 구현한 물리 연산으로 타격감과 상호작용 극대화"**
-
-- **RigidBody 컴포넌트** : `가속도`, `속도`, `마찰력`을 직접 연산하여 미끄러지는 듯한 이동 구현. [[📄물리 연산]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CRigidBody.cpp#L23-L82)
-- **반사 벡터 처리** : 투사체가 벽이나 장애물에 충돌할 때 입사각과 반사각을 계산하여 튕겨 나가는 물리적 상호작용을 적용. (보스 패턴 등 활용)
-- **정밀한 충돌 처리** : `CCollisionMgr`를 통해 레이어(Layer)별 충돌 필터링을 적용, 아군/적군/지형 간의 불필요한 연산을 배제하고 정확한 충돌 이벤트를 처리.
-
-</details>
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-<a name="object-tbi"></a>
-<details open>
-<summary><h3>🧱 확장성 있는 오브젝트 설계</h3></summary>
-
-<br>
-
-**"객체 지향적 설계를 통한 코드 재사용성 증대"**
-
-- **계층적 상속 구조**: `CObject` → `CMonster` / `CProjectile` / `CItem` 으로 이어지는 상속 구조를 설계하여 렌더링, 충돌 처리 등 공통 기능을 부모 클래스에서 일괄 처리.
-- **아이템 시스템 분리** : 
-    - **수집형(PickUp)** : 획득 즉시 소모되는 아이템 (하트, 동전 등)
-    - **장식형(Collectibles)** : 획득 시 플레이어의 스탯을 영구적으로 변경하거나 특수 효과를 부여하는 아이템 (받침대 + 본체 + 그림자 렌더링 구조 적용)
-
-</details>
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-<a name="animation-tbi"></a>
-<details open>
-<summary><h3>🎨 스프라이트 애니메이션 시스템</h3></summary>
-
-<br>
-
-**"컴포넌트 기반 설계를 통한 유연한 애니메이션 제어"**
-
-- **CAnimator 컴포넌트** : 모든 오브젝트(플레이어, 몬스터, 이펙트)에 부착 가능한 독립 컴포넌트로 설계하여, 애니메이션 로직과 객체 로직을 분리.
-- **프레임 단위 정밀 제어** : `DeltaTime`을 누적하여 프레임 전환 속도를 조절하고, `Repeat`, `Stop`, `Reverse` 등 다양한 재생 모드를 지원하여 상황에 맞는 연출을 구현. [[📄애니메이션 로직]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/CAnimator.cpp#L109-L154)
-- **상태 동기화** : FSM의 상태 변화(Idle → Run → Attack)에 따라 자동으로 적절한 애니메이션 클립을 교체(Switching)하도록 설계하여, 시각적 표현과 내부 로직의 일체감을 확보.
-
-</details>
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<br>
-
----
-
-<br>
-
-## 🛠️ 문제 해결<a name="troubleshooting-tbi"></a>
-
-### 1️⃣ 절차적 맵 생성 이슈: DFS vs BFS 비교 분석<a name="bfs-map-gen"></a>
-
-> **🚨 문제 상황**
->
-> **"DFS 기반 생성 시, 맵이 지나치게 선형적(뱀 모양)으로 배치되는 현상 발생"**
->
-> - **구조의 단순성** : Stack을 활용한 DFS(깊이 우선 탐색) 알고리즘 적용 시, 한 방향으로만 계속 뻗어나가는 '외길형' 맵이 자주 생성됨.
-> - **플레이 경험 저하** : 갈래길이나 분기점이 부족하여 플레이어가 "탐험한다"는 느낌보다는 "정해진 길을 따라간다"는 강제된 느낌을 받음.
-> - **개발 효율성 저하** : 방사형 구조를 만들기 위해 인위적인 백트래킹(Backtracking) 로직을 추가해야 했으나, 이는 코드 복잡도를 높이고 유지보수를 어렵게 만듦.
-
-
-**💡 해결 과정** [[📄방 생성 알고리즘]](https://github.com/vfly1189/TBI/blob/6fbbe9197ad6d2709ceb42d302f4829158b9958d/TBI/MapMgr.cpp#L27-L135)
-
-**"BFS(너비 우선 탐색) 도입을 통한 유기적인 던전 생성"**
-
-- **Queue 기반의 방사형 확장** : 시작 방(Start Room)을 큐에 넣고 상하좌우 인접 방향으로 동시에 확장해 나가는 로직으로 변경했습니다.
-- **연결성 보장 로직** : `std::shuffle`을 사용하여 확장 방향을 무작위로 섞되, `countNeighbors()` 함수로 인접 방의 개수를 제어하여 과도하게 뭉치거나 끊어지는 현상을 방지했습니다.
-- **동적 난이도 조절** : 스테이지가 진행될수록 생성해야 할 최소/최대 방 개수를 증가시켜, 자연스러운 난이도 상승 곡선을 설계했습니다.
-
-
-**🤔 기술적 의사결정: 왜 BFS 알고리즘인가?**
-
-- **1. 백트래킹(Backtracking) 피로도 최소화**
-  - DFS의 선형적 구조는 맵 이동 동선이 지나치게 길어지는 단점이 존재했습니다.
-  - BFS를 통해 시작점 중심의 **방사형 클러스터**를 형성함으로써, 플레이어가 상점이나 보물방을 이용하기 위해 이동하는 불필요한 시간을 줄이고 전투 밀도를 높였습니다.
-
-- **2. 확장성을 고려한 공간 스캔**
-  - 순차적으로 인접 공간을 탐색하는 구조 덕분에, 추후 **'2x2 대형 방'** 이나 **'L자형 특수 방'** 을 추가할 때 주변 빈 공간을 체크하고 할당하는 알고리즘으로 확장하기 유리하다고 판단했습니다.
-
-
-**✅ 결과**
-- | 구분 | DFS (Before) | BFS (After) |
-  | :---: | :---: | :---: |
-  | **맵 구조** | **선형적 (Linear)** <br> 뱀처럼 길게 늘어진 형태 | **방사형 (Radial)** <br> 중앙 집중형 클러스터 형태 |
-  | **탐험 경험** | 왔던 길을 되돌아가는 **백트래킹 빈번** | 분기점이 많아 **자유로운 탐험 가능** |
-  | **특수 방 배치** | 끝점에 배치하기 모호함 | **거리(Depth) 계산**을 통해 보스/보물방 전략적 배치 용이 |
-
- **📉 생성 결과 비교**
- - | **DFS (선형적 구조)** | **BFS (방사형 구조)** |
-   | :---: | :---: |
-   | <img width="1323" height="356" alt="image" src="https://github.com/user-attachments/assets/1e306575-30a7-4e01-9ced-034f47b57052" />| <img width="1317" height="356" alt="image" src="https://github.com/user-attachments/assets/bae38606-a6ab-4b75-ae65-9d1da2673cd3" /> |
-   | *한 줄로 길게 늘어짐* | *중심에서 고르게 퍼져나감* |
-
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-### 2️⃣ State 패턴을 통한 몬스터 AI 관리: 복잡도 해소 <a name="fsm-pattern"></a>
-
-> **🚨 문제 상황**
->
-> **"복잡한 조건문(Nested If-Else)으로 인한 '스파게티 코드' 발생"**
->
-> - **상황** : 초기에는 `if (거리 < 100) 공격 else 추적` 형태의 단순한 로직으로 충분했으나, 보스 몬스터의 다양한 패턴(돌진, 탄막, 소환 등)이 추가되면서 `Update` 함수가 수백 줄로 비대해짐.
-> - **문제**
->   - **가독성 저하** : 다중 중첩된 조건문으로 인해 로직의 흐름을 한눈에 파악하기 어려움.
->   - **확장성 부족** : 새로운 공격 패턴 하나를 추가하려면 기존 코드를 뜯어고쳐야 해서 사이드 이펙트(Side Effect) 발생 위험이 큼.
->   - **디버깅 난해** : 버그 발생 시 특정 상태에서의 문제인지 판별하기 어려움.
-
-**💡 해결 과정** [[📄CState.h]](https://github.com/vfly1189/TBI/blob/master/TBI/CState.h)
-
-**"상태(State) 패턴 도입을 통한 FSM(Finite State Machine) 설계"**
-
-- **상태의 클래스화** :
-  - 몬스터의 행동을 `CState` 추상 클래스를 상속받는 독립적인 클래스(`IdleState`, `TraceState`, `AttackState` 등)로 분리하여 캡슐화했습니다.
-- **FSM 구조 적용** :
-  - `Monster` 클래스는 현재 상태(`m_pCurrentState`) 포인터만 유지하며, 매 프레임 해당 상태의 `Update()`를 호출하도록 위임(Delegation)했습니다.
-  - 상태 전환(Transition) 로직을 각 상태 내부의 `Enter` / `Exit` 함수에 정의하여, 상태 변경 시의 초기화 및 정리 작업을 명확히 했습니다.
-- **상속을 통한 확장** :
-  - `TraceState`를 상속받아 `CFlyTraceState`(비행형 추적), `CGroundTraceState`(지상형 추적) 등으로 세분화하여 코드 재사용성을 극대화했습니다.
-
-**✅ 결과**
-- | 개선 항목 | If-Else 방식 (Before) | State 패턴 (After) |
-  | :---: | :---: | :---: |
-  | **코드 구조** | 하나의 거대한 `Update` 함수 | 기능별로 분리된 **작은 클래스들** |
-  | **확장성** | 코드 수정 시 기존 로직 영향 큼 | **새 클래스 추가**만으로 패턴 확장 가능 (OCP 준수) |
-  | **유지보수** | 특정 조건문 찾기 어려움 | 해당 상태 클래스만 확인하면 됨 |
-
-**🛠️ 구조 변화 비교**
-- | **Before (스파게티 코드)** | **After (깔끔한 구조)** |
-  | :---: | :---: |
-  | <img width="1197" height="922" alt="image" src="https://github.com/user-attachments/assets/4b7b7f5b-d2bc-4f88-b9e7-2571be42e00f" /> | <img width="873" height="282" alt="image" src="https://github.com/user-attachments/assets/b22c68c9-2914-4d24-b141-5c85cd96898d" />|
-  | *중첩된 조건문으로 읽기 힘든 로직* | *간단해진 구조* |
-
-<div align="right">
-  <a href="#toc-tbi">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
----
-
 
