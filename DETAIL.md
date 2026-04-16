@@ -206,6 +206,89 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <br>
 
+## 🔨 주요 개발<a name="주요개발-eternal-return"></a>
+
+
+<a name="async-pipeline-bluearchive"></a>
+<details open>
+<summary><h3>⏳ 비동기 로딩 및 Addressables 파이프라인</h3></summary>
+
+<br>
+
+**구현 목적**
+- 게임 시작 시 모든 리소스를 한 번에 로드하는 동기식 방식에서 벗어나, `Addressables`와 `UniTask`를 활용해 씬 전환 단계에서 필요한 리소스만 비동기로 점진적 로드/해제하는 환경 구축
+
+**주요 구현 내용**
+- **글로벌(Global) 에셋 영구 캐싱**
+  - 게임 시작점(StartScene)에서 전역으로 사용되는 에셋들(`Label: Global`)을 `LoadDependenciesAsync`를 통해 일괄 로드
+  - 로드된 핸들은 `ResourceManager`의 `globalHandles` 딕셔너리에 영구 캐싱되어 게임 종료 시점까지 해제되지 않도록 설계하여 잦은 로드/언로드 오버헤드 방지
+
+- **씬 종속 에셋의 순환 로딩 파이프라인**
+  - `A Scene → Loading Scene → B Scene`으로 전환 시, 이전 씬의 종속 에셋 핸들들을 `sceneHandles` 딕셔너리에서 일괄 해제(Release)하여 메모리 누수 방지
+  - `Loading Scene`에서 다음 씬(B Scene)에 필요한 프리팹, 맵 데이터, BGM 등을 백그라운드에서 비동기로 미리 로드하여 `sceneHandles`에 새롭게 캐싱
+  - 씬 진입 시점에 이미 핸들이 준비되어 있어 런타임 프리징 없이 부드러운 씬 전환 구현
+
+- **동적 리소스 요청 (캐시 우선 조회)**
+  - 씬 초기화 이후 런타임 중 특정 에셋이 필요한 경우, `ResourceManager.LoadAsync<T>(key)` 를 통해 요청
+  - `globalHandles` → `sceneHandles` 순서로 캐시를 먼저 탐색하여, 이미 로드된 핸들이 존재하면 즉시 반환(캐시 히트)
+  - 캐시에 없을 경우에만 `Addressables.LoadAssetAsync<T>`를 실제로 호출하여 불필요한 중복 로드를 방지하는 구조로 설계
+
+- **UniTask 기반 비동기 제어**
+  - `async/await` 기반의 `UniTask`를 도입하여 여러 에셋의 병렬 로딩(`UniTask.WhenAll`)과 흐름 제어를 명시적으로 구현
+
+> **🚀 기술 도입 배경**: 문자열 하드코딩, 인스펙터 직접 참조, `Task` 사용 과정에서 발생한 언로드(Unload) 타이밍 문제와 이를 `UniTask`로 마이그레이션한 과정은 하단 **[🛠️ 문제 해결](#async-unitask-trouble)** 파트에서 다룹니다.
+
+</details>
+
+<div align="right">
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
+---
+
+<br>
+
+## 🛠️ 문제 해결<a name="troubleshooting-eternal-return"></a>
+
+### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
+
+> **🚨 문제 상황: 초기 로딩 구조의 확장성 한계와 유지보수 비용 증가**
+>
+> - **하드코딩 및 인스펙터 참조의 한계** : 초기에는 씬마다 필요한 에셋 경로를 문자열 배열에 직접 적거나 인스펙터에 할당하는 방식을 사용. 하지만 에셋 수가 늘어날수록 수작업 비용이 커지고 누락 에러가 빈번하게 발생.
+> - **동기식 로딩의 프레임 저하** : 씬 전환 시 모든 에셋을 한 번에 동기적으로 메모리에 올리다 보니 필연적으로 게임이 멈추는 현상이 발생.
+
+**💡 해결 과정**
+
+1. **Coroutine 적용**
+- 동기식 로딩의 끊김을 줄이기 위해 유니티의 비동기 방식인 `Coroutine` 기반 비동기 처리 방식을 먼저 적용
+- 짧은 로직이나 단순한 시간 지연 처리에는 적합했지만, 로딩 파이프라인이 길어질수록 현재 어느 단계까지 실행되었는지 흐름을 파악하기 어려웠음
+
+2. **Addressables + Task 도입**
+- 에셋 참조 방식을 정리하기 위해 `Addressables`를 도입하고, 비동기 흐름은 C# `Task`(`async/await`) 기반으로 개편
+- 그러나 씬 전환 시 에셋을 해제하는 과정에서 간헐적으로 다음과 같은 오류가 반복적으로 발생.  
+`AssetBundle.Unload could not complete because the asset bundle still has an async load operation in progress.`
+
+3. **원인 분석**
+- `Load`와 `Unload`의 타이밍이 어긋나는 문제로 판단하고 해제 시점 조정, 메모리 정리 등 여러 방법을 시도했지만 해결되지 않았음
+- 최종적으로 원인을 추적한 결과, C# `Task`는 Unity의 메인 스레드 라이프사이클과 분리된 흐름으로 동작하기 때문에 에셋 비동기 로딩과 씬 전환 시점이 안정적으로 맞물리지 않는다는 점을 확인
+
+4. **UniTask로 마이그레이션**
+- 이 문제를 근본적으로 해결하기 위해, 유니티 생명주기와 동기화되어 동작하는 `UniTask` 라이브러리를 도입.
+- `Addressables` 기반 에셋 로드/언로드를 `UniTask` 흐름 안에서 제어하도록 변경하여 씬 전환 시점의 타이밍 충돌을 줄이고, 코드 흐름도 `async/await` 기반으로 유지
+
+**✅ 결과**
+- 문자열 하드코딩 및 인스펙터 직접 참조 중심의 임시 로딩 구조를 제거하고, `Addressables` 기반 리소스 관리 구조로 전환
+- `Task` 사용 시 반복적으로 발생하던 `AssetBundle.Unload` 관련 오류를 `UniTask` 기반 흐름으로 교체하며 안정화
+- 씬 전환과 리소스 로딩/해제를 하나의 비동기 파이프라인 안에서 관리할 수 있는 구조를 구축
+
+---
+
+<br>
+
 # 🎮 이터널 리턴 모작<a name="eternal-return-main"></a>
 
 <img width="1000" height="800" alt="image" src="https://github.com/user-attachments/assets/ee737290-1c9e-47af-95b2-b62d47e51f0c" />
