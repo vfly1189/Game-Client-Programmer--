@@ -45,7 +45,7 @@
 &nbsp;&nbsp; └ [NPOI 기반 데이터 주도 설계(Data-Driven) 자동화](DETAIL.md#data-driven-bluearchive) <br>
 &nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계](DETAIL.md#behavior-tree-ai) <br>
 &nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인](DETAIL.md#combat-bluearchive) <br>
-&nbsp;&nbsp; └ [호요버스식 장비 파이프라인 및 스탯 모디파이어 시스템](DETAIL.md#ui-optimization-bluearchive) <br>
+&nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](DETAIL.md#ui-optimization-bluearchive) <br>
 
 <br>
 
