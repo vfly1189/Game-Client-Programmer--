@@ -132,7 +132,8 @@
 &nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 자동화]()<br>
 &nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계]()<br>
 &nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인]()<br>
-&nbsp;&nbsp; └ [호요버스식 장비 파이프라인 및 스탯 모디파이어 시스템]()
+&nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리]()
+
 
 **4. 🛠️ 문제 해결 (Troubleshooting)** <br>
 &nbsp;&nbsp; └ **[몬스터 God Class 리팩토링 및 상속 구조 세분화](DETAIL.md#ai-refactoring-trouble)** <br>
@@ -143,9 +144,6 @@
 
 &nbsp;&nbsp; └ **[대규모 JSON 데이터 관리의 한계 극복 및 NPOI 엑셀 자동화](DETAIL.md#data-driven-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  방대한 JSON 관리의 비효율을 엑셀(NPOI) 기반 `ScriptableObject` 베이킹으로 해결하여 **데이터 조회 속도 최적화 (`O(N)` → `O(1)`)**
-
-&nbsp;&nbsp; └ **[파편화된 UI 시스템 통합 및 Canvas 분할 최적화](DETAIL.md#ui-canvas-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `UIManager` 통합 및 용도별 4개의 Canvas 분할을 통해 **Draw Call 및 Canvas Rebuild 부하 최소화**
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
@@ -191,9 +189,10 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - **해결** : 수식 연산이 필요한 대량의 데이터는 Excel로 작성 후 `ScriptableObject`로 자동 직렬화하고, 계층 구조가 필요한 설정 데이터(스포너, 위치 정보 등)는 JSON으로 분리하여 DataManager로 통합 관리
 
 ### 3️⃣ Behavior Tree 기반 AI 아키텍처 설계
-- **문제** : 과거 프로젝트 종료 후 단독으로 FSM을 BT로 리팩토링하며 느꼈던 구조적 아쉬움을 보완하기 위해, 이번 프로젝트는 초기 설계 단계부터 확장성을 고려한 BT 아키텍처를 구축하고자 함
-- **해결** : 몬스터 상속 구조(Base → Boss/Normal)를 세분화하고, 보스의 패턴은 특수 커스텀 노드와 Unity `Timeline`을 연동하여 상태 판단 로직(BT)과 시각적 연출(Timeline)을 분리함
-
+- **배경** : [이터널 리턴 모작](#fsm-to-bt)에서 FSM으로 구현된 AI를 프로젝트 종료 후 BT로 직접 리팩토링하며, "처음부터 BT로 설계했더라면 어땠을까?"라는 구조적 아쉬움을 경험
+- **목표** : 이번 프로젝트는 사후 리팩토링이 아닌, **초기 설계 단계부터 BT 아키텍처를 기반으로** 다종 몬스터 AI와 보스 패턴 시스템을 구축하는 것을 목표로 설정
+- **해결** : 몬스터 상속 구조(`Base → Boss/Normal`)를 세분화하고, 보스 패턴은 커스텀 BT 노드와 Unity `Timeline`을 연동하여 상태 판단 로직(BT)과 시각적 연출(Timeline)을 분리
+  
 ### 4️⃣ 이벤트 기반(Delegate) UI 아키텍처
 - **문제** : UI 스크립트가 인벤토리나 스탯 등 게임 로직의 변수를 직접 참조하여 발생하는 강한 결합
 - **해결** : `Action`과 `Delegate` 기반의 이벤트 구독 시스템을 구축하여, 데이터 변동 시 로직의 직접 호출 없이 UI가 스스로 갱신되는 구조 구현
@@ -283,11 +282,171 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <br>
 
 
+<a name="behavior-tree-ai"></a>
+<details open>
+<summary><h3>🤖 Behavior Tree 기반 몬스터 AI 및 다형성 설계</h3></summary>
+
+<br>
+
+**구현 목적**
+- 단일 몬스터 컨트롤러에 이동, 추적, 공격, 장전, 보스 패턴 등이 모두 몰리면서 발생하는 강한 결합과 스파게티 코드 방지
+- 몬스터 타입이 추가되더라도 기존 코드를 수정하지 않고 확장할 수 있는 객체지향적 AI 아키텍처 구축
+
+**주요 구현 내용**
+- **커스텀 Behavior Tree 노드 아키텍처 구현**
+  - 단순 `if-else` 분기나 거대한 `FSM` 대신, `Node`, `Selector`, `Sequence`, `ActionNode`를 구현하여 상태 판단을 트리 평가 구조로 캡슐화
+  - 공통적인 상태 전이 분기(추적, 대기, 사망 등)는 행동 트리에서 처리하고, 실제 구체적인 액션은 하위 클래스에서 실행하도록 역할 분리
+
+- **다형성을 활용한 몬스터 AI 계층 분리 (`Base ➔ Ranged ➔ Concrete`)**
+  - 모든 몬스터의 공통 생명주기 및 최상위 트리 실행 책임은 `BaseMonsterController`로 통합
+  - 전투 노드는 `GetCombatNode()`와 같은 가상 메서드로 열어두어, `MonsterAR`, `MonsterRL`, `MonsterTank` 등 자식 클래스가 각자의 무기 특성에 맞는 공격 노드를 조립하여 반환하는 다형성 설계 적용
+  - 이를 통해 새로운 몬스터 추가 시 공통 AI 로직을 복사할 필요 없이, 개별 전투 연출만 구현하면 되는 확장성 확보
+
+- **보스 AI와 Timeline 연동 파이프라인**
+  - 보스 몬스터는 `BossMonsterController`와 `BossSkillController`로 별도 계층화
+  - 상태 판단과 스킬 쿨타임 계산은 행동 트리가 담당하고, 카메라 워킹과 이펙트가 포함된 복합 스킬 연출은 `PlayableDirector`와 `TimelineAsset`에 위임
+  - 행동 트리가 Timeline을 `Play`한 뒤 `Running` 상태로 대기하고, Timeline의 `Signal`을 받아 다음 상태로 전이하는 **'의사 결정(BT) ➔ 연출(Timeline)' 분업 아키텍처**
+
+**관련 이미지**
+| **계층형 몬스터 상속 구조** | **일반 몬스터 행동 트리 (다형성 위임)** | **보스 몬스터 행동 트리 (Timeline 연동)** |
+| :---: | :---: | :---: |
+|  <img width="600"  alt="Monster Hierarchy" src="https://github.com/user-attachments/assets/e3fb2002-7de2-4ea3-abf4-e7c5f3f3c88e" /> | <img width="600" alt="Normal Monster BT" src="https://github.com/user-attachments/assets/f2b7462a-3b70-41e6-8ae1-02a64be4e9c0" /> | <img width="600" alt="Boss Monster BT" src="https://github.com/user-attachments/assets/bd293bad-09c8-4b7e-93df-8f4b66aeebfb" /> |
+| *다형성을 활용해 몬스터 종류 증가에 대응하는 객체지향 설계* | *전투 시퀀스를 하위 클래스에서 각자 구현하도록 위임 (붉은 박스)* | *상태 판단(BT)과 스킬 연출(Timeline)을 분리한 보스 전용 패턴 로직* |
+
+> **🚀 기술 도입 배경**: 
+> 몬스터 클래스가 비대해지며 발생한 유지보수 한계와, 이를 해결하기 위해 클래스를 계층화하고 보스 패턴을 Timeline으로 분리한 트러블슈팅 과정은 하단 **[🛠️ 문제 해결](#ai-refactoring-trouble)** 파트에서 다룹니다.
+
+</details>
+
+
+<div align="right">
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
+<a name="combat-equipment-bluearchive"></a>
+<details open>
+<summary><h3>⚔️ 인터페이스와 다형성을 활용한 공용 데미지 파이프라인</h3></summary>
+
+<br>
+
+**구현 목적**
+- 플레이어, 몬스터, 보스가 서로 공격을 주고받는 복잡한 전투 환경에서 발생하는 `if/else`와 Tag/Layer 기반의 하드코딩 분기 제거
+- 객체의 타입과 무관하게 공격과 피격 처리가 가능한 데미지 교환 아키텍처 구축
+
+**주요 구현 내용**
+- **인터페이스(`IDamageable`) 기반의 결합도 분리**
+  - 피격 가능한 모든 객체는 `IDamageable` 인터페이스를 상속받아 `TakeDamage` 메서드를 각자의 방식대로 구현 (몬스터는 HP 감소 등)
+  - 공격자(투사체, 포격)는 충돌한 대상이 `IDamageable` 타입인지 캐스팅(`TryGetComponent`)만 검사하여 데미지를 전달하도록 역할 분리
+
+- **`DamageInfo` 구조체를 통한 데이터 캡슐화**
+  - 단순한 데미지 수치뿐만 아니라 공격자 정보, 크리티컬 여부 등을 담은 `DamageInfo` 구조체를 설계
+  - 무기 타입이 늘어나고 데미지 계산식이 복잡해지더라도 파이프라인을 수정할 필요 없이, 넘겨주는 정보의 형태만 확장하도록 구현
+
+**관련 이미지**
+| **최적화 전 (Before)** | **최적화 후 (After)** |
+| :---: | :---: |
+| <img width="500" alt="Before Damage Pipeline" src="https://github.com/user-attachments/assets/71f34b3e-68c2-4b0b-9548-6cd37ae39516" /> | <img width="500" alt="After Damage Pipeline" src="https://github.com/user-attachments/assets/2f6d21f4-1cba-49fd-a4fa-0b19adf47896" /> |
+| *타입/태그별로 얽힌 하드코딩 피격 분기문* | *`IDamageable` 인터페이스로 일원화된 데미지 파이프라인* |
+
+</details>
+
+<div align="right">
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
+<a name="ui-optimization-bluearchive"></a>
+<details open>
+<summary><h3>🖥️ UI 렌더링 최적화 및 이벤트 분리</h3></summary>
+
+<br>
+
+**구현 목적**
+- UI가 게임 데이터(HP, 인벤토리 등)를 매 프레임 확인(`Update`)하거나 직접 참조하여 발생하는 강한 결합 방지
+- UI 갱신 시 화면 전체가 다시 그려지는 Canvas Rebuild 부하와 Draw Call 증가 문제 해결
+
+**주요 구현 내용**
+- **이벤트 구독 기반 데이터-UI 분리**
+  - C# `Action`과 `Delegate`를 활용하여 체력 변화나 인벤토리 아이템 획득 같은 데이터 변동이 발생할 때만 이벤트를 브로드캐스트하도록 구현
+  - UI 스크립트는 이벤트를 구독하고 있다가, 알림이 올 때만 화면을 갱신하게 하여 게임 로직과 UI 컴포넌트를 분리
+
+- **용도별 Canvas 4분할 최적화**
+  - 모든 UI 요소를 하나의 캔버스에 넣지 않고 갱신 빈도와 뎁스(Depth)에 따라 **4개의 Canvas**(`World`, `Scene`, `Popup`, `System`)로 분할 관리
+  - 체력바나 데미지 텍스트(`World`)처럼 매 프레임 바뀌는 UI가 갱신되더라도, 고정된 UI(`Scene`)나 팝업 창(`Popup`)은 Rebuild되지 않도록 격리하여 렌더링 부하 최소화
+
+</details>
+
+<div align="right">
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
+
 ---
 
 <br>
 
 ## 🛠️ 문제 해결<a name="troubleshooting-eternal-return"></a>
+
+### 1️⃣ 몬스터 God Class 리팩토링 및 Behavior Tree 기반 AI 계층화<a name="ai-refactoring-trouble"></a>
+
+> **📈 이전 프로젝트와의 성장 포인트**
+>
+> | 구분 | [이터널 리턴 모작](#fsm-to-bt) | OperationKivotos (현재) |
+> | :---: | :---: | :---: |
+> | **BT 도입 시점** | 프로젝트 종료 후 사후 리팩토링 | **초기 설계 단계부터 적용** |
+> | **몬스터 종류** | Wolf 1종 | AR / RL / Tank + Boss 다종 |
+> | **확장 구조** | 단일 BT 트리 | 다형성 기반 계층 상속 + BT 결합 |
+> | **보스 패턴** | 없음 | BT + Unity Timeline 연동 |
+> | **비동기 제어** | 없음 | UniTask + CancellationToken |
+>
+> 이전 경험의 "처음부터 BT를 도입했다면?"이라는 아쉬움을 해소한 프로젝트.
+
+> **🚨 문제 상황: 단일 몬스터 컨트롤러 구조의 확장성 한계**
+>
+> - 초기 개발 단계에서는 일반 몬스터의 이동, 추적, 공격, 장전, 사망 로직을 하나의 `MonsterController` 안에서 모두 처리.
+> - 하지만 AR(연사), RL(폭발), Tank(포격) 등 몬스터 공격 타입이 늘어날수록 클래스 하나가 너무 많은 책임을 떠안게 되었고, 특정 몬스터에게만 필요한 변수와 `if` 분기문이 무분별하게 누적.
+> - 이 상태로 보스의 복잡한 스킬 패턴까지 추가될 경우, 팩토리나 스포너 단계에서도 타입별 하드캐스팅이 늘어나 전체 AI 시스템이 강하게 결합될 위험(God Class 안티패턴) 존재.
+
+**💡 해결 과정**
+
+1. **상태 분기의 시각화 및 트리 구조 도입 (Behavior Tree)**
+- 공격, 추적, 대기 등의 상태 전이 로직을 거대한 조건문 덩어리에서 분리. `Selector`와 `Sequence` 기반의 Behavior Tree를 구현하여 논리적 계층 구조로 개편.
+
+2. **공통 책임의 상위 클래스 승격 (`BaseMonsterController`)**
+- 몬스터의 기본 스탯 캐싱, HP 관리, 사망 처리, 그리고 최상위 행동 트리(생존 ➔ 전투)를 실행하는 핵심 책임만 `BaseMonsterController`로 끌어올려 몬스터의 공통 뼈대 확립.
+
+3. **다형성 기반 전투 위임 및 클래스 세분화**
+- 몬스터별로 달라지는 전투 로직은 하위 클래스에 위임. 
+- 부모 클래스가 뼈대 트리를 조립할 때 자식 클래스의 `GetCombatNode()`를 호출하도록 설계하여, `MonsterAR`, `MonsterRL`, `MonsterTank`가 동일한 AI 프레임워크 위에서 각기 다른 무기 패턴을 실행할 수 있게 분리.
+
+4. **보스 연출 한계 극복을 위한 Timeline 연동**
+- 보스 패턴은 단순 반복 공격이 아닌 컷신과 이펙트 타이밍 동기화가 필수. 이를 코드로 제어하는 비효율을 극복하기 위해 보스 전용 커스텀 BT 노드 추가 개발.
+- 행동 트리는 스킬을 선택해 `PlayableDirector`에 타임라인 장착 및 실행만 지시. 실제 복합 연출은 타임라인이 전담하도록 설계하여 **의사 결정(BT)과 연출(Timeline)의 분리**.
+
+**✅ 결과**
+- 모든 로직이 집중되던 `MonsterController`를 역할별 상속 계층(`Base ➔ Concrete`)과 Behavior Tree 컴포넌트로 분리.
+- 새로운 공격 패턴을 가진 몬스터를 추가할 때, 기존 코드 수정 없이 해당 몬스터의 하위 클래스와 전투 노드만 구현하면 되는 **OCP(개방-폐쇄 원칙)** 달성.
+- 일반 몬스터부터 보스 몬스터까지 동일한 AI 철학 위에서 설계되어 유지보수성과 확장성 향상.
+
+<div align="right">
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
 
 ### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
 
@@ -320,6 +479,13 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - `Task` 사용 시 반복적으로 발생하던 `AssetBundle.Unload` 관련 오류를 `UniTask` 기반 흐름으로 교체하며 안정화
 - 씬 전환과 리소스 로딩/해제를 하나의 비동기 파이프라인 안에서 관리할 수 있는 구조를 구축
 
+<div align="right">
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
 
 ### 3️⃣ 대규모 데이터 관리의 한계 극복 및 파이프라인 이원화 (Excel/JSON)<a name="data-driven-trouble"></a>
 
@@ -352,6 +518,14 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - "기획자는 엑셀로 작업하고 클라이언트는 가벼운 SO로 읽는" 데이터 주도 설계(Data-Driven) 환경 구축
 - 무거운 Excel 파싱 로직을 런타임에서 에디터 타임(Build Time)으로 이전하여 로딩 성능 개선
 - 수백 개의 게임 데이터를 하드코딩이나 인스펙터 의존 없이 관리하는 아키텍처 완성
+
+<div align="right">
+  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
 
 ---
 
