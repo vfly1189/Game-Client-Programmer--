@@ -128,11 +128,11 @@
 **2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성)**
 
 **3. 🔨 [주요 개발 기능](#주요개발-bluearchive)** <br>
-&nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인]()<br>
-&nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 자동화]()<br>
-&nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계]()<br>
-&nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인]()<br>
-&nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리]()
+&nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인](#async-pipeline-bluearchive)<br>
+&nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 자동화](data-driven-bluearchive)<br>
+&nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계](#behavior-tree-ai)<br>
+&nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인](#combat-bluearchive)<br>
+&nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](#ui-optimization-bluearchive)
 
 
 **4. 🛠️ 문제 해결 (Troubleshooting)** <br>
@@ -205,7 +205,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <br>
 
-## 🔨 주요 개발<a name="주요개발-eternal-return"></a>
+## 🔨 주요 개발<a name="주요개발-bluearchive"></a>
 
 
 <a name="async-pipeline-bluearchive"></a>
@@ -247,6 +247,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <hr>
 <br>
 
+<a name="data-driven-bluearchive"></a>
 <details open>
 <summary><h3>📊 데이터 주도 설계(Data-Driven) 자동화 파이프라인</h3></summary>
 
@@ -327,7 +328,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <hr>
 <br>
 
-<a name="combat-equipment-bluearchive"></a>
+<a name="combat-bluearchive"></a>
 <details open>
 <summary><h3>⚔️ 인터페이스와 다형성을 활용한 공용 데미지 파이프라인</h3></summary>
 
