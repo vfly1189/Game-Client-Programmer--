@@ -76,8 +76,8 @@
         <br>
         <b><a href="#eternal-return-main">🎮 프로젝트 메인</a></b><br>
         <b><a href="#-게임-개요-1">📖 게임 개요</a></b><br>
-        <b><a href="#-학습-목표-및-달성">📌 학습 목표 및 달성</a></b><br>
-        <b><a href="#-주요-개발">🔨 주요 개발</a></b><br>
+        <b><a href="#-학습-목표-및-달성-1">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#-주요-개발-1">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-eternal-return">🛠️ 문제 해결</a></b><br>
         &nbsp;&nbsp; └ <a href="#deferred-rendering">Deferred Rendering 전환</a><br>
         &nbsp;&nbsp; └ <a href="#navmesh-optimization">NavMesh 검색 최적화</a><br>
@@ -88,8 +88,8 @@
         <br>
         <b><a href="#brotato-main">🎮 프로젝트 메인</a></b><br>
         <b><a href="#-brotato-모작">📖 게임 개요</a></b><br>
-        <b><a href="#-학습-목표-및-달성-1">📌 학습 목표 및 달성</a></b><br>
-        <b><a href="#-주요-개발-1">🔨 주요 개발</a></b><br>
+        <b><a href="#-학습-목표-및-달성-2">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#-주요-개발-2">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-brotato">🛠️ 문제 해결</a></b><br>
         &nbsp;&nbsp; └ <a href="#direct2d-optimization">Direct2D 전환</a><br>
         &nbsp;&nbsp; └ <a href="#tilemap-optimization">타일맵 렌더링 최적화</a><br>
