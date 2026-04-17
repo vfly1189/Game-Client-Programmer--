@@ -67,7 +67,7 @@
         <b><a href="#-게임-개요">📖 게임 개요</a></b><br>
         <b><a href="#-학습-목표-및-달성">📌 학습 목표 및 달성</a></b><br>
         <b><a href="#-주요-개발">🔨 주요 개발</a></b><br>
-        <b><a href="#troubleshooting-eternal-return">🛠️ 문제 해결</a></b><br>
+        <b><a href="#troubleshooting-bluearchive">🛠️ 문제 해결</a></b><br>
         &nbsp;&nbsp; └ <a href="#ai-refactoring-trouble">몬스터 상속 구조 세분화</a><br>
         &nbsp;&nbsp; └ <a href="#async-unitask-trouble">UniTask 비동기 파이프라인</a><br>
         &nbsp;&nbsp; └ <a href="#data-driven-trouble">데이터 관리의 한계 극복 및 자동화</a>
