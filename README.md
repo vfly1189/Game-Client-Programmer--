@@ -59,9 +59,6 @@
 &nbsp;&nbsp; └ **[런타임 파싱 병목 해결을 위한 NPOI 데이터 베이킹](DETAIL.md#data-driven-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 기본 JSON의 딕셔너리 직렬화 한계를 극복하고 엑셀 데이터를 `ScriptableObject`로 베이킹하여 **데이터 조회 속도 최적화 (`O(N)` → `O(1)`)**
 
-&nbsp;&nbsp; └ **[파편화된 UI 시스템 통합 및 Canvas 분할 최적화](DETAIL.md#ui-canvas-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 관리하기 어렵던 UI 요소들을 `UIManager`로 통합하고, 용도별로 Canvas를 4개(Scene/UI/Popup/System)로 분할하여 **Draw Call 및 Canvas Rebuild 부하 최소화**
-
 <br>
 
 ### 🎥 [시연 영상 보러가기](유튜브 링크를 여기에 넣어주세요)
