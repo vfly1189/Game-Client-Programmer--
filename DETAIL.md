@@ -528,7 +528,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 # 🎮 이터널 리턴 모작<a name="eternal-return-main"></a>
 
-<img width="1000" height="800" alt="image" src="https://github.com/user-attachments/assets/ee737290-1c9e-47af-95b2-b62d47e51f0c" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ee737290-1c9e-47af-95b2-b62d47e51f0c" />
 
 ### 📌 프로젝트 정보
 
