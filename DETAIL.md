@@ -107,7 +107,7 @@
 
 # 🎮 블루아카이브 팬 메이드 OperationKivotos<a name="bluearchive-main"></a>
 
-<img width="1000" height="800" alt="image" src="https://github.com/user-attachments/assets/75321802-c496-4e3b-9ab9-5a32846b287f" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/75321802-c496-4e3b-9ab9-5a32846b287f" />
 
 ### 📌 프로젝트 정보
 
