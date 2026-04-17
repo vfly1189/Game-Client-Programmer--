@@ -26,7 +26,6 @@
 <br>
 <br>
 
-
 ---
 
 <br>
@@ -64,9 +63,9 @@
       <td valign="top">
         <br>
         <b><a href="#bluearchive-main">🎮 프로젝트 메인</a></b><br>
-        <b><a href="#-게임-개요">📖 게임 개요</a></b><br>
-        <b><a href="#-학습-목표-및-달성">📌 학습 목표 및 달성</a></b><br>
-        <b><a href="#-주요-개발">🔨 주요 개발</a></b><br>
+        <b><a href="#overview-bluearchive">📖 게임 개요</a></b><br>
+        <b><a href="#goals-bluearchive">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#features-bluearchive">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-bluearchive">🛠️ 문제 해결</a></b><br>
         &nbsp;&nbsp; └ <a href="#ai-refactoring-trouble">몬스터 상속 구조 세분화</a><br>
         &nbsp;&nbsp; └ <a href="#async-unitask-trouble">UniTask 비동기 파이프라인</a><br>
@@ -75,11 +74,11 @@
       <td valign="top">
         <br>
         <b><a href="#eternal-return-main">🎮 프로젝트 메인</a></b><br>
-        <b><a href="#-게임-개요-1">📖 게임 개요</a></b><br>
-        <b><a href="#-학습-목표-및-달성-1">📌 학습 목표 및 달성</a></b><br>
-        <b><a href="#-주요-개발-1">🔨 주요 개발</a></b><br>
+        <b><a href="#overview-eternal">📖 게임 개요</a></b><br>
+        <b><a href="#goals-eternal">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#features-eternal">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-eternal-return">🛠️ 문제 해결</a></b><br>
-        &nbsp;&nbsp; └ <a href="#deferred-rendering">Deferred Rendering 전환</a><br>
+        &nbsp;&nbsp; └ <a href="#deferred-rendering-trouble">Deferred Rendering 전환</a><br>
         &nbsp;&nbsp; └ <a href="#navmesh-optimization">NavMesh 검색 최적화</a><br>
         &nbsp;&nbsp; └ <a href="#quadtree-optimization">쿼드 트리 공간 분할</a><br>
         &nbsp;&nbsp; └ <a href="#fsm-to-bt">FSM → BT 리팩토링</a>
@@ -87,9 +86,9 @@
       <td valign="top">
         <br>
         <b><a href="#brotato-main">🎮 프로젝트 메인</a></b><br>
-        <b><a href="#-brotato-모작">📖 게임 개요</a></b><br>
-        <b><a href="#-학습-목표-및-달성-2">📌 학습 목표 및 달성</a></b><br>
-        <b><a href="#-주요-개발-2">🔨 주요 개발</a></b><br>
+        <b><a href="#overview-brotato">📖 게임 개요</a></b><br>
+        <b><a href="#goals-brotato">📌 학습 목표 및 달성</a></b><br>
+        <b><a href="#features-brotato">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-brotato">🛠️ 문제 해결</a></b><br>
         &nbsp;&nbsp; └ <a href="#direct2d-optimization">Direct2D 전환</a><br>
         &nbsp;&nbsp; └ <a href="#tilemap-optimization">타일맵 렌더링 최적화</a><br>
@@ -122,26 +121,25 @@
 
 ## 📑 프로젝트 목차<a name="toc-bluearchive"></a>
 
-**1. 📖 [게임 개요](#-게임-개요)**
+**1. 📖 [게임 개요](#overview-bluearchive)**
 
-**2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성)**
+**2. 📌 [학습 목표 및 달성](#goals-bluearchive)**
 
-**3. 🔨 [주요 개발 기능](#주요개발-bluearchive)** <br>
+**3. 🔨 [주요 개발 기능](#features-bluearchive)** <br>
 &nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인](#async-pipeline-bluearchive)<br>
-&nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 자동화](data-driven-bluearchive)<br>
+&nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 자동화](#data-driven-bluearchive)<br>
 &nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계](#behavior-tree-ai)<br>
 &nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인](#combat-bluearchive)<br>
 &nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](#ui-optimization-bluearchive)
 
-
-**4. 🛠️ 문제 해결 (Troubleshooting)** <br>
-&nbsp;&nbsp; └ **[몬스터 God Class 리팩토링 및 상속 구조 세분화](DETAIL.md#ai-refactoring-trouble)** <br>
+**4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-bluearchive)** <br>
+&nbsp;&nbsp; └ **[몬스터 God Class 리팩토링 및 상속 구조 세분화](#ai-refactoring-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `MonsterController`에 집중된 로직을 상속 구조 분리와 `Behavior Tree`로 개편하여 **유연한 AI 확장성 확보**
 
-&nbsp;&nbsp; └ **[동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축](DETAIL.md#async-unitask-trouble)** <br>
+&nbsp;&nbsp; └ **[동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축](#async-unitask-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `AssetBundle.Unload` 충돌을 `UniTask` 생명주기 동기화로 해결하여 **안전한 비동기 제어 달성**
 
-&nbsp;&nbsp; └ **[대규모 JSON 데이터 관리의 한계 극복 및 NPOI 엑셀 자동화](DETAIL.md#data-driven-trouble)** <br>
+&nbsp;&nbsp; └ **[대규모 JSON 데이터 관리의 한계 극복 및 NPOI 엑셀 자동화](#data-driven-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  방대한 JSON 관리의 비효율을 엑셀(NPOI) 기반 `ScriptableObject` 베이킹으로 해결하여 **데이터 조회 속도 최적화 (`O(N)` → `O(1)`)**
 
 <div align="right">
@@ -149,7 +147,7 @@
 </div>
 
 
-## 📖 게임 개요
+## 📖 게임 개요<a name="overview-bluearchive"></a>
 
 **장르** : 쿼터뷰 액션 RPG
 
@@ -173,7 +171,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <hr>
 <br>
 
-## 📌 학습 목표 및 달성
+## 📌 학습 목표 및 달성<a name="goals-bluearchive"></a>
 
 > **"이전 프로젝트들을 회고하며 느낀 구조적 아쉬움을 개선하고, 확장성 높은 아키텍처를 연구 및 적용"**
 
@@ -204,8 +202,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <br>
 
-## 🔨 주요 개발<a name="주요개발-bluearchive"></a>
-
+## 🔨 주요 개발<a name="features-bluearchive"></a>
 
 <a name="async-pipeline-bluearchive"></a>
 <details open>
@@ -281,7 +278,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <hr>
 <br>
 
-
 <a name="behavior-tree-ai"></a>
 <details open>
 <summary><h3>🤖 Behavior Tree 기반 몬스터 AI 및 다형성 설계</h3></summary>
@@ -317,7 +313,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 > 몬스터 클래스가 비대해지며 발생한 유지보수 한계와, 이를 해결하기 위해 클래스를 계층화하고 보스 패턴을 Timeline으로 분리한 트러블슈팅 과정은 하단 **[🛠️ 문제 해결](#ai-refactoring-trouble)** 파트에서 다룹니다.
 
 </details>
-
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -377,9 +372,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - C# `Action`과 `Delegate`를 활용하여 체력 변화나 인벤토리 아이템 획득 같은 데이터 변동이 발생할 때만 이벤트를 브로드캐스트하도록 구현
   - UI 스크립트는 이벤트를 구독하고 있다가, 알림이 올 때만 화면을 갱신하게 하여 게임 로직과 UI 컴포넌트를 분리
 
-- **용도별 Canvas 4분할 최적화**
-  - 모든 UI 요소를 하나의 캔버스에 넣지 않고 갱신 빈도와 뎁스(Depth)에 따라 **4개의 Canvas**(`World`, `Scene`, `Popup`, `System`)로 분할 관리
-  - 체력바나 데미지 텍스트(`World`)처럼 매 프레임 바뀌는 UI가 갱신되더라도, 고정된 UI(`Scene`)나 팝업 창(`Popup`)은 Rebuild되지 않도록 격리하여 렌더링 부하 최소화
+- **용도별 Canvas 분할 최적화**
+  - 모든 UI 요소를 하나의 캔버스에 넣지 않고 갱신 빈도와 공간 좌표계에 따라 **4개의 Canvas**(`WorldSpace`, `Fixed`, `Popup`, `System`)로 분할 관리
+  - 체력바나 데미지 텍스트(`WorldSpace`)처럼 매 프레임 위치가 바뀌는 UI가 갱신되더라도, 고정된 UI(`Fixed`)나 팝업 창(`Popup`)은 Rebuild되지 않도록 격리하여 렌더링 부하 최소화
 
 </details>
 
@@ -480,7 +475,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - 씬 전환과 리소스 로딩/해제를 하나의 비동기 파이프라인 안에서 관리할 수 있는 구조를 구축
 
 <div align="right">
-  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -520,7 +515,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - 수백 개의 게임 데이터를 하드코딩이나 인스펙터 의존 없이 관리하는 아키텍처 완성
 
 <div align="right">
-  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
 <br>
@@ -549,18 +544,18 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 ## 📑 프로젝트 목차<a name="toc-eternal"></a>
 
-**1. 📖 [게임 개요](#-게임-개요)**
+**1. 📖 [게임 개요](#overview-eternal)**
 
-**2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성)**
+**2. 📌 [학습 목표 및 달성](#goals-eternal)**
 
-**3. 🔨 [주요 개발 기능](#주요개발-eternal-return)** <br>
+**3. 🔨 [주요 개발 기능](#features-eternal)** <br>
 &nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](#deferred-rendering)<br>
 &nbsp;&nbsp; └ [GPU Instancing](#gpu-instancing)<br>
 &nbsp;&nbsp; └ [Quad Tree 공간 분할](#quad-tree)<br>
 &nbsp;&nbsp; └ [NavMesh 길찾기](#navmesh)<br>
 &nbsp;&nbsp; └ [몬스터 AI 시스템](#fsm-to-bt-feature)
 
-**3. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-eternal-return)** <br>
+**4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-eternal-return)** <br>
 &nbsp;&nbsp; └ **[Forward → Deferred 전환](#deferred-rendering-trouble)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원 처리와 반투명 객체를 혼합한 **Hybrid 파이프라인 구축**
 
@@ -577,17 +572,15 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
 </div>
 
-</div>
-
 <br>
 <hr>
 <br>
 
-## 📖 게임 개요
+## 📖 게임 개요<a name="overview-eternal"></a>
 
 **장르**: 쿼터뷰 배틀로얄 / MOBA (Multiplayer Online Battle Arena)
 
-이터널 리턴은 전략적인 쿼터뷰 시점의 생존 게임입니다. 플레이어는 루미아 섬에서 재료를 파밍하고 장비를 제작하여 캐릭터를 성장시키며, 최후의 1인이 될 때까지 생존해야 합니다.
+이터널 리턴은 전략적인 쿼터뷰 시점의 생존 게임입니다. 플레이어는 루미아 섬에서 재료 파밍하고 장비를 제작하여 캐릭터를 성장시키며, 최후의 1인이 될 때까지 생존해야 합니다.
 
 **🔄 핵심 루프 (Core Loop)**
 1. **파밍 및 제작**: 맵 곳곳의 재료 수집
@@ -607,7 +600,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <hr>
 <br>
 
-## 📌 학습 목표 및 달성
+## 📌 학습 목표 및 달성<a name="goals-eternal"></a>
 
 > **"게임 엔진 레벨의 고급 렌더링 최적화 기법 습득"**
 
@@ -637,7 +630,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <br>
 
-## 🔨 주요 개발<a name="주요개발-eternal-return"></a>
+## 🔨 주요 개발<a name="features-eternal"></a>
 
 <a name="deferred-rendering"></a>
 <details open>
@@ -652,8 +645,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - | **Deferred Render** | **Hybrid ( Forward + Deferred )** |
   | :---: | :---: |
   | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/9baddec0-184e-4fd2-b54c-27656f34afc3" /> | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/6dfe8d4e-7d5f-412d-902d-9b43237c1937"/> |
-
-
 
 **G-Buffer 구성 (MRT)**
 - G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
@@ -670,7 +661,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - Lighting Pass (Deferred): G-Buffer 데이터를 기반으로 조명 계산  [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L169)
 - Forward Pass (Transparent/UI): 투명/반투명 객체(알파 블렌딩, UI 등)를 Forward로 렌더링하여 최종 합성 [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
 
-> **🚀 기술 도입 배경**: 다중 광원 처리를 위한 포워드 렌더링의 한계와 해결 과정은 하단 **[🛠️ 문제 해결](#deferred-rendering)** 파트에서 다룹니다.
+> **🚀 기술 도입 배경**: 다중 광원 처리를 위한 포워드 렌더링의 한계와 해결 과정은 하단 **[🛠️ 문제 해결](#deferred-rendering-trouble)** 파트에서 다룹니다.
 
 </details>
 
@@ -852,7 +843,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
     * | **Deferred Only (반투명/UI 미적용)** | **Hybrid (Deferred + Forward)** |
       | :---: | :---: |
       | <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/532b1300-8d61-492d-895f-298bf2efb7bd" /> | <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/4d721451-2f37-4160-bb71-78030de7103c" /> |
-
 
 **✅ 결과**
 *   **다중 광원 최적화**: 수백 개의 광원이 배치되어도 안정적인 60 FPS 유지
@@ -1041,11 +1031,11 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 ## 📑 프로젝트 목차<a name="toc-brotato"></a>
 
-**1. 📖 [게임 개요](#-brotato-모작)**
+**1. 📖 [게임 개요](#overview-brotato)**
 
-**2. 📌 [학습 목표 및 달성](#-학습-목표-및-달성-1)**
+**2. 📌 [학습 목표 및 달성](#goals-brotato)**
 
-**3. 🔨 [주요 개발 기능](#-주요-개발-1)** <br>
+**3. 🔨 [주요 개발 기능](#features-brotato)** <br>
 &nbsp;&nbsp; └ [렌더링 시스템](#rendering-system-brotato)<br>
 &nbsp;&nbsp; └ [엔진 아키텍처 (Manager-Scene-Object)](#engine-brotato)<br>
 &nbsp;&nbsp; └ [컴포넌트 기반 객체 설계](#component-brotato)<br>
@@ -1066,7 +1056,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <br>
 
-## 📖 게임 개요
+## 📖 게임 개요<a name="overview-brotato"></a>
 
 **장르** : 탑다운 슈팅 / 로그라이크 서바이벌
 
@@ -1090,7 +1080,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 <hr>
 <br>
 
-## 📌 학습 목표 및 달성
+## 📌 학습 목표 및 달성<a name="goals-brotato"></a>
 
 > **"게임 엔진의 기본 아키텍처와 2D 렌더링 파이프라인 학습"**
 
@@ -1119,7 +1109,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 <br>
 
-## 🔨 주요 개발<a name="주요개발-brotato"></a>
+## 🔨 주요 개발<a name="features-brotato"></a>
 
 <a name="rendering-system-brotato"></a>
 <details open>
@@ -1246,7 +1236,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 >
 > **"매 프레임 1,296회의 그리기 명령으로 인한 CPU 오버헤드 발생"**
 >
-> - **상황** : 36x36 크기의 타일맵을 구현하기 위해 매 프레임 **1,296번의 `DrawBitmap`** 함수를 호출.
+> - **상황** : 36x36 크기의 타일맵을 구현하기 위해 매 프레임 **1,296번의 `DrawBitmap`** 함수 호출.
 > - **위험** : 초기에는 650 FPS로 문제가 없어 보였으나, 몬스터(100마리 이상)와 투사체가 급증하는 후반부 웨이브에서 프레임 드랍이 발생할 잠재적 위험 확인.
 > - **기술적 원인 분석** :
 >   - **Context Switching 비용 과다** : 1,296번의 렌더링 명령을 개별적으로 처리하면서 CPU가 GPU에 명령을 제출(Submit)하는 과정에 병목 발생.
@@ -1272,7 +1262,6 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
   | :---: | :---: |
   | ![타일최적화(Before)](https://github.com/user-attachments/assets/b5534d3c-3910-4649-914d-8c13902e7670) | ![타일최적화(After)](https://github.com/user-attachments/assets/08e592ca-8a7e-4ad2-9cb7-264ab596d6be) |
   | **DrawCall: 1,296회 / FPS: ~650** | **DrawCall: 1회 / FPS: ~1,400** |
-
 
 <div align="right">
   <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -1324,4 +1313,3 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 <br>
 
 ---
-
