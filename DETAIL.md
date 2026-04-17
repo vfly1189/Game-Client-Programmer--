@@ -557,16 +557,16 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 **4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-eternal-return)** <br>
 &nbsp;&nbsp; └ **[Forward → Deferred 전환](#deferred-rendering-trouble)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 다중 광원 처리와 반투명 객체를 혼합한 **Hybrid 파이프라인 구축**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  다중 광원 처리와 반투명 객체를 혼합한 **Hybrid 파이프라인 구축**
 
 &nbsp;&nbsp; └ **[NavMesh 검색 최적화](#navmesh-optimization)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
 
 &nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](#quadtree-optimization)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
 
 &nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](#fsm-to-bt)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🧠 Behavior Tree 도입으로 **복잡한 AI 로직의 유지보수성 확보**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Behavior Tree 도입으로 **복잡한 AI 로직의 유지보수성 확보**
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
@@ -1042,13 +1042,13 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 **4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-brotato)** <br>
 &nbsp;&nbsp; └ **[GDI+ → Direct2D 전환](#direct2d-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⚡ 하드웨어 가속 도입으로 대규모 웨이브 시 **FPS 10배 향상 (20 → 200+)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  하드웨어 가속 도입으로 대규모 웨이브 시 **FPS 10배 향상 (20 → 200+)**
 
 &nbsp;&nbsp; └ **[타일맵 렌더링 최적화](#tilemap-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎨 비트맵 베이킹(Baking) 기법으로 **Draw Call 99.9% 감소 (1,296회 → 1회)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  비트맵 베이킹(Baking) 기법으로 **Draw Call 99.9% 감소 (1,296회 → 1회)**
 
 &nbsp;&nbsp; └ **[이벤트 시스템 자료구조 개선](#event-queue-system)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔄 `unordered_set` 도입으로 **삭제 중복 요청(Double Free) 및 순환 참조 해결**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `unordered_set` 도입으로 **삭제 중복 요청(Double Free) 및 순환 참조 해결**
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
