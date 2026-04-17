@@ -9,7 +9,7 @@
 
 # 💻 프로젝트
 
-## 🎮 블루아카이브 팬메이드 프로젝트 - OperationKivotos ([상세내용](DETAIL.md#-블루아카이브-스타일-액션-rpg))
+## 🎮 블루아카이브 팬메이드 프로젝트 - OperationKivotos ([상세내용](DETAIL.md#bluearchive-main))
 
 > ( 2026.01 ~ 진행 중 )
 
@@ -41,11 +41,11 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 주요 개발 기능** <br>
-&nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인](DETAIL.md#addressable-async-loading) <br>
-&nbsp;&nbsp; └ [NPOI 기반 데이터 주도 설계(Data-Driven) 자동화](DETAIL.md#data-driven-system) <br>
-&nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계](DETAIL.md#boss-ai-behavior-tree) <br>
-&nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인](DETAIL.md#combat-damage-pipeline) <br>
-&nbsp;&nbsp; └ [호요버스식 장비 파이프라인 및 스탯 모디파이어 시스템](DETAIL.md#equipment-stat-system) <br>
+&nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인](DETAIL.md#async-pipeline-bluearchive) <br>
+&nbsp;&nbsp; └ [NPOI 기반 데이터 주도 설계(Data-Driven) 자동화](DETAIL.md#data-driven-bluearchive) <br>
+&nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계](DETAIL.md#behavior-tree-ai) <br>
+&nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인](DETAIL.md#combat-bluearchive) <br>
+&nbsp;&nbsp; └ [호요버스식 장비 파이프라인 및 스탯 모디파이어 시스템](DETAIL.md#ui-optimization-bluearchive) <br>
 
 <br>
 
