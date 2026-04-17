@@ -396,7 +396,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <br>
 
-## 🛠️ 문제 해결<a name="troubleshooting-eternal-return"></a>
+## 🛠️ 문제 해결<a name="troubleshooting-bluearchive"></a>
 
 ### 1️⃣ 몬스터 God Class 리팩토링 및 Behavior Tree 기반 AI 계층화<a name="ai-refactoring-trouble"></a>
 
