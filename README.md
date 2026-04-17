@@ -1,7 +1,7 @@
 # 🗺️ 이형규 포트폴리오
 > "프레임의 낭만, 끝까지 쫓다."
 > 
-> <b> `DX11`, `C++`, `Win32API` 기반 게임 클라이언트 프로그래머. <br>
+> <b> `Unity`,`DX11`, `C++`, `Win32API` 기반 게임 클라이언트 프로그래머. <br>
 >
 > 1 프레임의 성능 최적화를 위해 끝까지 파고드는 개발자 이형규입니다. "동작하는 코드"를 넘어 "성능과 구조가 아름다운 코드"를 지향하며, 엔진 레벨의 깊이 있는 이해를 바탕으로 문제를 해결합니다.
 
@@ -24,17 +24,17 @@
 > **확장성을 고려한 데이터 주도 설계(Data-Driven Design)와 비동기 로딩 파이프라인을 구축했습니다.**
 
 *   **System Architecture**
-    *   싱글톤(`Managers`) 기반의 중앙 집중형 시스템 구축으로 코어 매니저 13종의 결합도 최소화
-    *   JSON 및 엑셀 기반의 데이터 주도 설계(`Data-Driven Design`)로 하드코딩을 배제하고 유지보수성 확보
-    *   Observer 패턴(`Action Event`)을 활용해 프레임 낭비 없는 데이터-UI 동기화 파이프라인 구축
+    *   싱글톤(`Managers`) 기반의 중앙 집중형 시스템 아키텍쳐 설계
+    *   Excel/JSON 이원화 기반 데이터 주도 설계 및 `DataManager` 통합 조회 시스템 구축
+    *   `Action`/`Delegate` 이벤트 구독 방식으로 데이터-UI 분리
 *   **Optimization & Memory Management**
-    *   `Addressables` 에셋 시스템을 도입해 글로벌/씬 단위 핸들을 분리하고 명시적 메모리 해제(`Release`) 제어
-    *   `UniTask`와 `CancellationToken`을 연계해 코루틴 누수를 방어하는 비동기 태스크 최적화 수행
-    *   사전 로드(`Preload`) 기능을 지원하는 Addressables 전용 오브젝트 풀링 시스템을 직접 구현하여 **GC 스파이크 차단**
+    *   `Addressables` 기반 글로벌/씬 단위 핸들 분리 및 명시적 Release 구조 설계
+    *   `UniTask` 기반 비동기 파이프라인 구축
+    *   `Addressables` 오브젝트 풀링 시스템 구현
 *   **Gameplay & Combat**
-    *   파티 기반의 실시간 캐릭터 교체(Tag) 전투 시스템 및 경험치/레벨 공유 로직 구현
+    *   파티 기반의 실시간 캐릭터 교체 전투 시스템
     *   인터페이스(`IDamageable`)와 다형성을 활용하여 결합도를 낮춘 공용 데미지 연산 파이프라인 설계
-    *   메인 옵션과 서브 옵션이 무작위로 부여되는 호요버스(원신/스타레일) 스타일의 장비 아이템/스탯 구조 확립
+    *   메인/서브 옵션 무작위 부여 방식의 호요버스 스타일 장비 스탯 시스템 구현
     *   `Behavior Tree`와 Unity `Timeline`을 연동하여 보스 몬스터의 다양한 공격 패턴 제어
 
 ### 🚀 Highlights & 목차
@@ -51,13 +51,13 @@
 
 **2. 🛠️ 문제 해결 (Troubleshooting)** <br>
 &nbsp;&nbsp; └ **[몬스터 God Class 리팩토링 및 상속 구조 세분화](DETAIL.md#ai-refactoring-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 방대한 `if-else`로 얽힌 코드를 계층형 상속 구조와 `Behavior Tree`로 분리하여 **OCP(개방-폐쇄 원칙) 준수 및 확장성 확보**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `MonsterController`에 집중된 로직을 상속 구조 분리와 `Behavior Tree`로 개편하여 **유연한 AI 확장성 확보**
 
 &nbsp;&nbsp; └ **[비동기 제어 한계 극복 및 UniTask 파이프라인 도입](DETAIL.md#async-unitask-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 코루틴의 콜백 지옥과 씬 전환 시 발생하는 고아 태스크(Orphan Task) 메모리 누수를 `CancellationToken`과 `UniTask`로 **완벽히 제어**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `AssetBundle.Unload` 충돌을 `UniTask` 생명주기 동기화로 해결하여 **안전한 비동기 제어 달성**
 
 &nbsp;&nbsp; └ **[런타임 파싱 병목 해결을 위한 NPOI 데이터 베이킹](DETAIL.md#data-driven-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 기본 JSON의 딕셔너리 직렬화 한계를 극복하고 엑셀 데이터를 `ScriptableObject`로 베이킹하여 **데이터 조회 속도 최적화 (`O(N)` → `O(1)`)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 방대한 JSON 관리의 비효율을 엑셀(NPOI) 기반 `ScriptableObject` 베이킹으로 해결하여 **데이터 조회 속도 최적화 (`O(N)` → `O(1)`)**
 
 <br>
 
