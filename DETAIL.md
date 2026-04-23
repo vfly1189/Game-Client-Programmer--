@@ -211,25 +211,17 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <br>
 
 **구현 목적**
-- 게임 시작 시 모든 리소스를 한 번에 로드하는 동기식 방식에서 벗어나, `Addressables`와 `UniTask`를 활용해 씬 전환 단계에서 필요한 리소스만 비동기로 점진적 로드/해제하는 환경 구축
+- 게임 시작 시 모든 리소스를 한 번에 로드하는 동기식 방식에서 벗어나, `Addressables`와 `UniTask`를 활용해 필요한 리소스만 점진적으로 로드/해제하는 환경 구축
 
 **주요 구현 내용**
-- **글로벌(Global) 에셋 영구 캐싱**
-  - 게임 시작점(StartScene)에서 전역으로 사용되는 에셋들(`Label: Global`)을 `LoadDependenciesAsync`를 통해 일괄 로드
-  - 로드된 핸들은 `ResourceManager`의 `globalHandles` 딕셔너리에 영구 캐싱되어 게임 종료 시점까지 해제되지 않도록 설계하여 잦은 로드/언로드 오버헤드 방지
-
-- **씬 종속 에셋의 순환 로딩 파이프라인**
-  - `A Scene → Loading Scene → B Scene`으로 전환 시, 이전 씬의 종속 에셋 핸들들을 `sceneHandles` 딕셔너리에서 일괄 해제(Release)하여 메모리 누수 방지
-  - `Loading Scene`에서 다음 씬(B Scene)에 필요한 프리팹, 맵 데이터, BGM 등을 백그라운드에서 비동기로 미리 로드하여 `sceneHandles`에 새롭게 캐싱
-  - 씬 진입 시점에 이미 핸들이 준비되어 있어 런타임 프리징 없이 부드러운 씬 전환 구현
-
-- **동적 리소스 요청 (캐시 우선 조회)**
-  - 씬 초기화 이후 런타임 중 특정 에셋이 필요한 경우, `ResourceManager.LoadAsync<T>(key)` 를 통해 요청
-  - `globalHandles` → `sceneHandles` 순서로 캐시를 먼저 탐색하여, 이미 로드된 핸들이 존재하면 즉시 반환(캐시 히트)
-  - 캐시에 없을 경우에만 `Addressables.LoadAssetAsync<T>`를 실제로 호출하여 불필요한 중복 로드를 방지하는 구조로 설계
-
-- **UniTask 기반 비동기 제어**
-  - `async/await` 기반의 `UniTask`를 도입하여 여러 에셋의 병렬 로딩(`UniTask.WhenAll`)과 흐름 제어를 명시적으로 구현
+- **글로벌(Global) 에셋 영구 캐싱 및 중복 패킹 방지**
+  - 전역으로 사용되는 UI, 사운드 에셋(`Label: Global`)과 씬 종속적인 데이터(맵, 특정 몬스터)를 별도의 번들로 분리 설계
+  - 이를 통해 **에셋 번들 간 종속성 중복 패킹으로 인한 메모리 파편화 및 누수를 차단**
+  - 글로벌 에셋은 `LoadDependenciesAsync`를 통해 일괄 로드 후 `globalHandles`에 영구 캐싱하여 잦은 로드/언로드 오버헤드 방지
+  
+- **동적 리소스 요청 및 $O(1)$ 캐시 히트(Cache Hit)**
+  - 씬 진입 전 `sceneHandles` 딕셔너리에 필요한 프리팹을 비동기로 미리 로드
+  - 런타임에 에셋을 요청할 경우, `globalHandles` ➔ `sceneHandles` 순으로 캐시를 먼저 탐색하여 불필요한 I/O 병목 제거
 
 > **🚀 기술 도입 배경**: 문자열 하드코딩, 인스펙터 직접 참조, `Task` 사용 과정에서 발생한 언로드(Unload) 타이밍 문제와 이를 `UniTask`로 마이그레이션한 과정은 하단 **[🛠️ 문제 해결](#async-unitask-trouble)** 파트에서 다룹니다.
 
@@ -280,38 +272,53 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <a name="behavior-tree-ai"></a>
 <details open>
-<summary><h3>🤖 Behavior Tree 기반 몬스터 AI 및 다형성 설계</h3></summary>
+<summary><h3>🧱 다형성과 Timeline을 활용한 객체지향적 몬스터 아키텍처 설계</h3></summary>
 
 <br>
 
 **구현 목적**
-- 단일 몬스터 컨트롤러에 이동, 추적, 공격, 장전, 보스 패턴 등이 모두 몰리면서 발생하는 강한 결합과 스파게티 코드 방지
-- 몬스터 타입이 추가되더라도 기존 코드를 수정하지 않고 확장할 수 있는 객체지향적 AI 아키텍처 구축
+- 몬스터 타입(AR, RL, Tank, Boss 등)이 추가될 때마다 단일 컨트롤러에 `if-else` 분기가 누적되는 **God Class 안티패턴 방지**
+- 공통 로직은 재사용하고 고유 패턴만 확장할 수 있는 **개방-폐쇄 원칙(OCP) 기반의 객체지향 아키텍처** 구축
 
 **주요 구현 내용**
-- **커스텀 Behavior Tree 노드 아키텍처 구현**
-  - 단순 `if-else` 분기나 거대한 `FSM` 대신, `Node`, `Selector`, `Sequence`, `ActionNode`를 구현하여 상태 판단을 트리 평가 구조로 캡슐화
-  - 공통적인 상태 전이 분기(추적, 대기, 사망 등)는 행동 트리에서 처리하고, 실제 구체적인 액션은 하위 클래스에서 실행하도록 역할 분리
+- **다형성을 활용한 계층형 상속 구조 (`Base ➔ Ranged ➔ Concrete`)**
+  - 모든 몬스터의 공통 생명주기(스탯 초기화, HP 관리, 사망 처리, 추적 등)는 상위 클래스인 `BaseMonsterController`로 통합하여 코드 중복 제거
+  - 실제 공격 패턴은 `GetCombatNode()`와 같은 **가상 메서드**로 열어두어, `MonsterAR`이나 `MonsterRL` 등 하위 클래스가 각자의 무기 특성에 맞는 공격 로직을 조립하여 반환하도록 다형성 설계 적용
+  - 이를 통해 새로운 몬스터 추가 시 기존 코드를 전혀 수정하지 않고 하위 클래스만 추가하면 되는 확장성 확보
 
-- **다형성을 활용한 몬스터 AI 계층 분리 (`Base ➔ Ranged ➔ Concrete`)**
-  - 모든 몬스터의 공통 생명주기 및 최상위 트리 실행 책임은 `BaseMonsterController`로 통합
-  - 전투 노드는 `GetCombatNode()`와 같은 가상 메서드로 열어두어, `MonsterAR`, `MonsterRL`, `MonsterTank` 등 자식 클래스가 각자의 무기 특성에 맞는 공격 노드를 조립하여 반환하는 다형성 설계 적용
-  - 이를 통해 새로운 몬스터 추가 시 공통 AI 로직을 복사할 필요 없이, 개별 전투 연출만 구현하면 되는 확장성 확보
+- **의사 결정(Logic)과 시각적 연출(Timeline)의 분업화**
+  - 일반 몬스터의 단순 공격과 달리, 보스 몬스터의 스킬 패턴은 이펙트 동기화가 필수적임을 인지
+  - 이를 코드로 모두 하드코딩하는 대신, **상태 판단 및 쿨타임 계산(Logic)은 컨트롤러가 담당하고, 실제 복합 연출은 Unity `Timeline`과 `PlayableDirector`에 위임**
+  - 컨트롤러가 Timeline을 `Play`한 뒤 대기하고, 타임라인 연출 도중 **특정 프레임에 `Signal`을 발생시켜 실제 타격/소환 로직(`UniTask`)을 비동기로 동기화**하는 구조 설계
+  - 연출이 완료되면 `stopped` 이벤트를 통해 콜백을 받아 다음 상태로 안전하게 전이되도록 구현하여, 기획자가 이펙트 타이밍을 자유롭게 제어할 수 있는 파이프라인 완성
 
-- **보스 AI와 Timeline 연동 파이프라인**
-  - 보스 몬스터는 `BossMonsterController`와 `BossSkillController`로 별도 계층화
-  - 상태 판단과 스킬 쿨타임 계산은 행동 트리가 담당하고, 카메라 워킹과 이펙트가 포함된 복합 스킬 연출은 `PlayableDirector`와 `TimelineAsset`에 위임
-  - 행동 트리가 Timeline을 `Play`한 뒤 `Running` 상태로 대기하고, Timeline의 `Signal`을 받아 다음 상태로 전이하는 **'의사 결정(BT) ➔ 연출(Timeline)' 분업 아키텍처**
+- **AI 상태 판단의 캡슐화 (Behavior Tree 도입)**
+  - 거대한 `Update()` 문 안의 스파게티 코드를 막기 위해, 상위 컨트롤러의 상태 판단(생존 ➔ 전투 ➔ 추적 ➔ 대기) 로직을 `Selector`와 `Sequence` 기반의 트리 구조로 캡슐화하여 우선순위를 구조화
 
 **관련 이미지**
-| **계층형 몬스터 상속 구조** | **일반 몬스터 행동 트리 (다형성 위임)** | **보스 몬스터 행동 트리 (Timeline 연동)** |
-| :---: | :---: | :---: |
-|  <img width="600"  alt="Monster Hierarchy" src="https://github.com/user-attachments/assets/e3fb2002-7de2-4ea3-abf4-e7c5f3f3c88e" /> | <img width="600" alt="Normal Monster BT" src="https://github.com/user-attachments/assets/f2b7462a-3b70-41e6-8ae1-02a64be4e9c0" /> | <img width="600" alt="Boss Monster BT" src="https://github.com/user-attachments/assets/bd293bad-09c8-4b7e-93df-8f4b66aeebfb" /> |
-| *다형성을 활용해 몬스터 종류 증가에 대응하는 객체지향 설계* | *전투 시퀀스를 하위 클래스에서 각자 구현하도록 위임 (붉은 박스)* | *상태 판단(BT)과 스킬 연출(Timeline)을 분리한 보스 전용 패턴 로직* |
+
+<div align="center">
+
+**1️⃣ 계층형 몬스터 상속 구조**<br>
+<img width="800" alt="Monster Hierarchy" src="https://github.com/user-attachments/assets/e3fb2002-7de2-4ea3-abf4-e7c5f3f3c88e" />
+<p><em>공통 로직 통합과 확장성을 고려한 상속 설계</em></p>
+
+<br>
+
+**2️⃣ 일반 몬스터 다형성 위임 구조**<br>
+<img width="800" alt="Normal Monster BT" src="https://github.com/user-attachments/assets/f2b7462a-3b70-41e6-8ae1-02a64be4e9c0" />
+<p><em>전투 로직을 하위 클래스에서 각자 구현하도록 위임 (붉은 박스)</em></p>
+
+<br>
+
+**3️⃣ 보스 몬스터 Timeline 연동 구조**<br>
+<img width="800" alt="Boss Monster Flow" src="https://github.com/user-attachments/assets/1c9e12da-b91b-43bc-9451-ca1f14f1b670" />
+<p><em>스킬 판단(Logic)과 스킬 연출(Timeline)을 분리한 보스 패턴</em></p>
+
+</div>
 
 > **🚀 기술 도입 배경**: 
 > 몬스터 클래스가 비대해지며 발생한 유지보수 한계와, 이를 해결하기 위해 클래스를 계층화하고 보스 패턴을 Timeline으로 분리한 트러블슈팅 과정은 하단 **[🛠️ 문제 해결](#ai-refactoring-trouble)** 파트에서 다룹니다.
-
 </details>
 
 <div align="right">
@@ -393,46 +400,42 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 ## 🛠️ 문제 해결<a name="troubleshooting-bluearchive"></a>
 
-### 1️⃣ 몬스터 God Class 리팩토링 및 Behavior Tree 기반 AI 계층화<a name="ai-refactoring-trouble"></a>
+### 1️⃣ 몬스터 God Class 리팩토링 및 다형성 기반 아키텍처 설계<a name="ai-refactoring-trouble"></a>
 
 > **📈 이전 프로젝트와의 성장 포인트**
 >
 > | 구분 | [이터널 리턴 모작](#fsm-to-bt) | OperationKivotos (현재) |
 > | :---: | :---: | :---: |
-> | **BT 도입 시점** | 프로젝트 종료 후 사후 리팩토링 | **초기 설계 단계부터 적용** |
-> | **몬스터 종류** | Wolf 1종 | AR / RL / Tank + Boss 다종 |
-> | **확장 구조** | 단일 BT 트리 | 다형성 기반 계층 상속 + BT 결합 |
-> | **보스 패턴** | 없음 | BT + Unity Timeline 연동 |
-> | **비동기 제어** | 없음 | UniTask + CancellationToken |
+> | **AI 설계 관점** | 알고리즘 중심의 단순 BT 구현 | **객체지향과 디자인 패턴 결합** |
+> | **몬스터 종류** | 단일 몬스터 | AR / RL / Tank + Boss 다종 |
+> | **확장 구조** | 단일 컨트롤러 하드코딩 | **다형성 기반 상속 + 가상 메서드 위임** |
+> | **보스 패턴** | 없음 | **기획 연출(Timeline)과 로직(Logic)의 분업** |
 >
-> 이전 경험의 "처음부터 BT를 도입했다면?"이라는 아쉬움을 해소한 프로젝트.
+> 이전 경험에서 느꼈던 "AI 알고리즘만 고도화한다고 구조가 좋아지는 것은 아니다"라는 깨달음을 바탕으로, **객체지향 아키텍처** 관점에서 접근한 프로젝트.
 
-> **🚨 문제 상황: 단일 몬스터 컨트롤러 구조의 확장성 한계**
+> **🚨 문제 상황: 단일 컨트롤러의 God Class화 및 OCP 위반**
 >
-> - 초기 개발 단계에서는 일반 몬스터의 이동, 추적, 공격, 장전, 사망 로직을 하나의 `MonsterController` 안에서 모두 처리.
-> - 하지만 AR(연사), RL(폭발), Tank(포격) 등 몬스터 공격 타입이 늘어날수록 클래스 하나가 너무 많은 책임을 떠안게 되었고, 특정 몬스터에게만 필요한 변수와 `if` 분기문이 무분별하게 누적.
-> - 이 상태로 보스의 복잡한 스킬 패턴까지 추가될 경우, 팩토리나 스포너 단계에서도 타입별 하드캐스팅이 늘어나 전체 AI 시스템이 강하게 결합될 위험(God Class 안티패턴) 존재.
+> - 초기 개발 단계에서는 일반 몬스터의 이동, 추적, 공격 로직을 하나의 `MonsterController` 안에서 모두 처리.
+> - 하지만 AR(연사), RL(폭발), Tank(포격) 등 몬스터 공격 타입이 늘어날수록 특정 몬스터에게만 필요한 변수와 `if-else` 분기문이 무분별하게 누적됨.
+> - 새로운 몬스터나 보스를 추가할 때마다 기존 컨트롤러 코드를 뜯어고쳐야 하는 심각한 **OCP(개방-폐쇄 원칙) 위반 및 God Class 안티패턴**에 직면.
 
 **💡 해결 과정**
 
-1. **상태 분기의 시각화 및 트리 구조 도입 (Behavior Tree)**
-- 공격, 추적, 대기 등의 상태 전이 로직을 거대한 조건문 덩어리에서 분리. `Selector`와 `Sequence` 기반의 Behavior Tree를 구현하여 논리적 계층 구조로 개편.
+1. **공통 책임의 상위 클래스 승격 (`BaseMonsterController`)**
+- 몬스터의 스탯 캐싱, HP 관리, 사망 처리 등 공통 생명주기를 `BaseMonsterController`로 끌어올려 중복 코드를 제거하고 뼈대를 확립.
 
-2. **공통 책임의 상위 클래스 승격 (`BaseMonsterController`)**
-- 몬스터의 기본 스탯 캐싱, HP 관리, 사망 처리, 그리고 최상위 행동 트리(생존 ➔ 전투)를 실행하는 핵심 책임만 `BaseMonsterController`로 끌어올려 몬스터의 공통 뼈대 확립.
+2. **다형성(Polymorphism)을 활용한 로직 위임**
+- 몬스터별로 달라지는 전투 로직은 하위 클래스로 분리. 부모 클래스는 가상 메서드(`GetCombatNode()`)를 호출하기만 하고, 실제 구현은 `MonsterAR`, `MonsterRL` 등이 각자의 무기 패턴에 맞게 오버라이딩하도록 다형성 설계 적용.
+- 이를 통해 기존 코드를 수정하지 않고 하위 클래스만 추가하면 되는 유연한 확장성 확보.
 
-3. **다형성 기반 전투 위임 및 클래스 세분화**
-- 몬스터별로 달라지는 전투 로직은 하위 클래스에 위임. 
-- 부모 클래스가 뼈대 트리를 조립할 때 자식 클래스의 `GetCombatNode()`를 호출하도록 설계하여, `MonsterAR`, `MonsterRL`, `MonsterTank`가 동일한 AI 프레임워크 위에서 각기 다른 무기 패턴을 실행할 수 있게 분리.
-
-4. **보스 연출 한계 극복을 위한 Timeline 연동**
-- 보스 패턴은 단순 반복 공격이 아닌 컷신과 이펙트 타이밍 동기화가 필수. 이를 코드로 제어하는 비효율을 극복하기 위해 보스 전용 커스텀 BT 노드 추가 개발.
-- 행동 트리는 스킬을 선택해 `PlayableDirector`에 타임라인 장착 및 실행만 지시. 실제 복합 연출은 타임라인이 전담하도록 설계하여 **의사 결정(BT)과 연출(Timeline)의 분리**.
+3. **Behavior Tree의 한계 극복과 Timeline 연동 (분업화)**
+- 모든 복잡한 액션을 Behavior Tree 노드로 쪼개면 **노드 수가 기하급수적으로 늘어나 유지보수가 불가능해지는 BT의 단점**을 인지.
+- 이를 해결하기 위해 보스 패턴 구현 시, **의사 결정(스킬 선택 및 쿨타임)은 BT가 담당하되, 카메라 워킹과 이펙트 동기화 같은 복합 연출은 `Unity Timeline`에 위임.**
+- BT가 타임라인을 실행(`Play`)한 후 대기하다가, 타임라인의 특정 프레임에서 `Signal`을 방출해 실제 데미지 로직(`UniTask`)을 트리거하는 정교한 분업 파이프라인 구축.
 
 **✅ 결과**
-- 모든 로직이 집중되던 `MonsterController`를 역할별 상속 계층(`Base ➔ Concrete`)과 Behavior Tree 컴포넌트로 분리.
-- 새로운 공격 패턴을 가진 몬스터를 추가할 때, 기존 코드 수정 없이 해당 몬스터의 하위 클래스와 전투 노드만 구현하면 되는 **OCP(개방-폐쇄 원칙)** 달성.
-- 일반 몬스터부터 보스 몬스터까지 동일한 AI 철학 위에서 설계되어 유지보수성과 확장성 향상.
+- 무조건적인 BT 적용을 지양하고, **상태 전이는 BT, 스킬 연출은 Timeline, 세부 로직은 다형성(상속)**이라는 각 시스템의 장점만 취합한 유연한 AI 아키텍처를 완성.
+- 프로그래머는 구조 설계에 집중하고, 기획자는 타임라인 툴을 통해 스킬 타격 타이밍을 프로그래머의 도움 없이 자유롭게 튜닝할 수 있는 **데이터 주도(Data-Driven) 파이프라인** 환경을 구축.
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -445,34 +448,31 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 ### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
 
-> **🚨 문제 상황: 초기 로딩 구조의 확장성 한계와 유지보수 비용 증가**
+> **🚨 문제 상황: Task의 스레드 분리와 라이프사이클 충돌**
 >
-> - **하드코딩 및 인스펙터 참조의 한계** : 초기에는 씬마다 필요한 에셋 경로를 문자열 배열에 직접 적거나 인스펙터에 할당하는 방식을 사용. 하지만 에셋 수가 늘어날수록 수작업 비용이 커지고 누락 에러가 빈번하게 발생.
-> - **동기식 로딩의 프레임 저하** : 씬 전환 시 모든 에셋을 한 번에 동기적으로 메모리에 올리다 보니 필연적으로 게임이 멈추는 현상이 발생.
+> - **초기 구현**: 하드코딩과 인스펙터 참조의 한계를 극복하고자 `Addressables`를 도입하고, 비동기 흐름은 C# 기본 `Task(async/await)`를 활용해 구현.
+> - **문제 발생**: 그러나 씬 전환 시 `AssetBundle.Unload could not complete because the asset bundle still has an async load operation in progress.` 에러가 간헐적으로 발생하며 씬 이동이 멈추는 데드락 현상 발생.
+> - **원인 분석**:
+>   - 순수 C# `Task`는 ThreadPool 기반으로 백그라운드에서 동작한 뒤 메인 스레드로 복귀함.
+>   - 그러나 Unity의 핵심 API(Instantiate, Asset 로드 등)는 반드시 메인 스레드에서 실행되어야 하므로, 이 복귀 과정에서 `SynchronizationContext` 캡처 오버헤드가 발생.
+>   - 이로 인해 Unity 메인 스레드의 라이프사이클과 Task의 타이밍이 어긋나 언로드 타이밍을 놓치는 것이 근본 원인임을 확인.
 
 **💡 해결 과정**
 
-1. **Coroutine 적용**
-- 동기식 로딩의 끊김을 줄이기 위해 유니티의 비동기 방식인 `Coroutine` 기반 비동기 처리 방식을 먼저 적용
-- 짧은 로직이나 단순한 시간 지연 처리에는 적합했지만, 로딩 파이프라인이 길어질수록 현재 어느 단계까지 실행되었는지 흐름을 파악하기 어려웠음
+1. **UniTask로의 마이그레이션 (Zero-Allocation)**
+   - 스레드 컨텍스트 충돌 문제를 근본적으로 해결하기 위해, Unity의 메인 스레드(`PlayerLoop`)에 직접 개입하여 동기화되는 **`UniTask`** 라이브러리 도입.
+   - `Task`가 힙 메모리를 할당하여 GC 스파이크를 유발하는 것과 달리, `UniTask`는 Struct 기반으로 설계되어 런타임 프레임 드랍을 유발하지 않는 **Zero-Allocation** 비동기 처리 구현.
 
-2. **Addressables + Task 도입**
-- 에셋 참조 방식을 정리하기 위해 `Addressables`를 도입하고, 비동기 흐름은 C# `Task`(`async/await`) 기반으로 개편
-- 그러나 씬 전환 시 에셋을 해제하는 과정에서 간헐적으로 다음과 같은 오류가 반복적으로 발생.  
-`AssetBundle.Unload could not complete because the asset bundle still has an async load operation in progress.`
+2. **CancellationToken을 활용한 안전한 생명주기 제어**
+   - 씬 전환 도중 이전 씬의 비동기 로딩이 백그라운드에서 완료되어 파괴된 객체를 참조하려는 예외(`MissingReferenceException`)를 방지하기 위해 `CancellationToken` 주입.
+   - 씬이 파괴되거나 로딩이 취소될 때 실행 중인 비동기 작업을 즉각적이고 안전하게 취소하도록 제어 로직 추가.
 
-3. **원인 분석**
-- `Load`와 `Unload`의 타이밍이 어긋나는 문제로 판단하고 해제 시점 조정, 메모리 정리 등 여러 방법을 시도했지만 해결되지 않았음
-- 최종적으로 원인을 추적한 결과, C# `Task`는 Unity의 메인 스레드 라이프사이클과 분리된 흐름으로 동작하기 때문에 에셋 비동기 로딩과 씬 전환 시점이 안정적으로 맞물리지 않는다는 점을 확인
-
-4. **UniTask로 마이그레이션**
-- 이 문제를 근본적으로 해결하기 위해, 유니티 생명주기와 동기화되어 동작하는 `UniTask` 라이브러리를 도입.
-- `Addressables` 기반 에셋 로드/언로드를 `UniTask` 흐름 안에서 제어하도록 변경하여 씬 전환 시점의 타이밍 충돌을 줄이고, 코드 흐름도 `async/await` 기반으로 유지
+3. **병렬 처리(WhenAll) 파이프라인 구축**
+   - `A Scene → Loading Scene → B Scene` 구조에서, 다음 씬에 필요한 프리팹, BGM, 맵 데이터를 개별적으로 `await`하지 않고 `UniTask.WhenAll`을 활용해 병렬 로드하여 전체 씬 전환 시간 단축.
 
 **✅ 결과**
-- 문자열 하드코딩 및 인스펙터 직접 참조 중심의 임시 로딩 구조를 제거하고, `Addressables` 기반 리소스 관리 구조로 전환
-- `Task` 사용 시 반복적으로 발생하던 `AssetBundle.Unload` 관련 오류를 `UniTask` 기반 흐름으로 교체하며 안정화
-- 씬 전환과 리소스 로딩/해제를 하나의 비동기 파이프라인 안에서 관리할 수 있는 구조를 구축
+- Unity 메인 스레드와 겉도는 `Task` 대신 `UniTask`를 적용하여, **스레드 컨텍스트 충돌 없이 씬 전환과 리소스 로드/해제가 맞물리는 비동기 파이프라인** 완성.
+- 기존의 콜백 중첩이나 코루틴의 스파게티 코드를 `async/await`의 선형적인 코드로 리팩토링하여 로딩 로직의 가독성과 유지보수성 향상.
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
