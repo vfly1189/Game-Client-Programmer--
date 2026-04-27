@@ -196,25 +196,30 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <a name="optimization-bluearchive"></a>
 <details open>
-<summary><h3>🗺️ 심리스 필드 탐험을 위한 공간 분할(Sector) 시스템</h3></summary>
+<summary><h3>🗺️ Sector 기반 플레이어 위치 추적형 존 로딩 시스템</h3></summary>
 
 <br>
 
 **구현 목적**
-- '방치형 인스턴스 던전' 구조에서 탈피하여 '심리스 오픈 필드' 탐험 구조로 기획을 변경함에 따라 발생하는 수많은 몬스터 스포너의 CPU/렌더링 연산 병목 제거
+- 포탈 없이 연결된 단일 필드 구조로 전환하면서 맵 전체에 배치된 374마리 몬스터의 AI·렌더링 연산 병목을 구역 단위로 제거하기 위해 도입.
 
 **주요 구현 내용**
 - **Trigger 기반 공간 분할(Sector) 아키텍처**
-  - 매 프레임 재귀적 갱신 비용이 드는 QuadTree나 Octree 대신, 고정된 크기의 Trigger Collider를 활용해 맵을 논리적 구역(`Sector`)으로 분할하는 $O(1)$ 조회 시스템 구축
-  
-- **Manager 기반 시야 컬링(Culling)**
-  - 플레이어가 특정 구역에 진입 시 `SectorManager`가 이를 감지, **현재 위치한 Sector의 스포너만 활성화**하고 화면 밖의 스포너는 메모리에서 해제하여 144FPS 안정화 달성
-  
-- **CancellationToken을 활용한 안전한 리스폰 제어**
-  - 구역 이탈이나 씬 전환 시, 몬스터의 리스폰 대기 연산(`UniTask.Delay`)이 런타임 에러(Missing Reference)를 일으키지 않도록 **토큰을 강제 폐기(Dispose)하는 안전한 메모리 해제 파이프라인** 구현
+  - 매 프레임 재귀적 갱신 비용이 드는 QuadTree/Octree 대신, 고정 크기의 Trigger Collider로 맵을 논리 구역(`Sector`)으로 분할하는 $O(1)$ 조회 시스템 구축.
+  - 레벨 디자이너가 Inspector에서 구역을 직접 편집 가능한 구조 선택.
 
-> **🚀 기술 도입 배경**: 
-> 기획 변경으로 인해 프레임 드랍(144➔120FPS)에 직면하게 된 과정과, 이를 공간 분할 및 비동기 제어 지식으로 극복한 치열한 고민은 하단 **[🛠️ 문제 해결](#optimization-trouble)** 파트에서 상세히 다룹니다.
+- **플레이어 위치 기반 엔티티 컬링(Entity Culling)**
+  - 플레이어 진입 시 `SectorManager`가 현재 Sector의 스포너만 활성화.
+  - Unity Frustum Culling이 처리하지 못하는 **오프스크린 AI/Script 연산**을 구역 단위로 차단.
+  - Profiler 실측: Script 연산 **▼57%**, Triangles **▼67%**, Batches **▼37%**
+
+- **CancellationToken을 활용한 안전한 리스폰 제어**
+  - 구역 이탈·씬 전환 시 `CancelAllSpawnTasks()`로 리스폰 대기 중인 `UniTask.Delay`를 즉시 폐기(Dispose).
+  - GameObject 파괴 이후 비동기 컨텍스트가 남아 Missing Reference를 유발하는 문제를 토큰 생명주기 관리로 원천 차단.
+
+> **🚀 기술 도입 배경**:
+> 기획 변경으로 직면한 AI·렌더링 연산 병목과, 공간 분할·비동기 제어 지식으로 이를 극복한 과정은
+> 하단 **[🛠️ 문제 해결](#optimization-trouble)** 파트에서 상세히 다룹니다.
 
 </details>
 
@@ -233,16 +238,18 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <br>
 
 **구현 목적**
-- `Resources.Load`의 동기적 로딩 병목을 제거하고, 에셋 번들 간 **종속성 중복 패킹으로 인한 메모리 누수 및 파편화**를 방지하기 위해 `Addressables` 도입
+- `Resources.Load`의 동기 로딩으로 인한 메인 스레드 블로킹을 제거하고, 런타임 중 디스크 I/O 없이 에셋을 즉시 반환하는 캐시 기반 비동기 파이프라인 구축
 
 **주요 구현 내용**
 - **글로벌(Global) 에셋 영구 캐싱 및 종속성 분리**
   - 전역으로 사용되는 UI, 사운드 에셋(`Label: Global`)과 씬 종속적인 데이터(맵, 몬스터)를 별도의 번들로 분리하여 **메모리 중복 로드 차단**
   - 글로벌 에셋은 `LoadDependenciesAsync`를 통해 일괄 로드 후 `globalHandles`에 영구 캐싱하여 잦은 로드/언로드 오버헤드 방지
-  
+  - <img width="716" height="357" alt="image" src="https://github.com/user-attachments/assets/c83e3e54-fe5a-4df8-8ad1-5a14ebd339b5" />
+
 - **동적 리소스 요청 및 $O(1)$ 캐시 히트(Cache Hit)**
   - 씬 진입 전 필요한 프리팹을 `sceneHandles` 딕셔너리에 비동기로 미리 로드
   - 런타임 에셋 요청 시 `globalHandles` ➔ `sceneHandles` 순으로 캐시를 탐색하여 **인게임 런타임 중 디스크 I/O 병목 제거**
+  - 씬 이탈 시 sceneHandles만 선택적으로 해제.
 
 > **🚀 기술 도입 배경**: 문자열 하드코딩, 인스펙터 직접 참조, `Task` 사용 과정에서 발생한 언로드 타이밍 문제와 이를 `UniTask`로 마이그레이션한 과정은 하단 **[🛠️ 문제 해결](#async-unitask-trouble)** 파트에서 다룹니다.
 
@@ -393,8 +400,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - UI는 이벤트 수신 시에만 화면을 갱신하도록 설계하여 불필요한 `Update()` 연산 제거
 
 - **목적별 Canvas 분할 최적화**
-  - 모든 요소를 단일 캔버스에 넣지 않고, 갱신 빈도에 따라 **4개의 Canvas**(`WorldSpace`, `Scene`, `Popup`, `System`)로 격리
-  - 체력바나 팝업 데미지(`WorldSpace`)가 매 프레임 위치를 갱신하며 캔버스를 더럽히더라도(Dirty), 정적인 기본 UI(`Scene`)는 **Rebuild 대상에서 제외되어 렌더링 부하 최소화 및 Draw Call 절약**
+  - 모든 요소를 단일 캔버스에 넣지 않고, 갱신 빈도에 따라 **4개의 Canvas**(`Scene`, `System`, `World`, `Popup`)로 격리
+  - 체력바나 팝업 데미지(`World`)가 매 프레임 위치를 갱신하며 캔버스를 더럽히더라도, 정적인 기본 UI(`Scene`)는 **Rebuild 대상에서 제외되어 렌더링 부하 최소화 및 Draw Call 절약**
+  <img width="478" height="428" alt="image" src="https://github.com/user-attachments/assets/4aeb505b-1aa2-4777-b176-2b99db994853" />
 
 </details>
 
@@ -413,28 +421,53 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 ## 🛠️ 문제 해결<a name="troubleshooting-bluearchive"></a>
 
-### 1️⃣ 기획 변경에 따른 프레임 저하 극복: 공간 분할(Sector) 기반 스포너 최적화<a name="optimization-trouble"></a>
+### 1️⃣ 기획 변경에 따른 AI·렌더링 연산 병목 해소: Sector 기반 존 로딩 시스템<a name="optimization-trouble"></a>
 
-> **🚨 문제 상황: 탐험 요소 추가로 인한 전체 맵 스포너의 렌더링/AI 연산 병목**
+> **🚨 문제 상황: 단일 필드 전환 후 전체 맵 스포너의 AI/렌더링 연산 병목**
 >
-> - **기획의 한계 인지**: 단순히 포탈을 타고 인스턴스 던전으로 진입하는 구조는 몰입감이 떨어진다고 판단. '로스트아크'처럼 큰 심리스 맵 곳곳에 몬스터가 스폰되는 필드 탐험 구조로 기획 전면 수정.
-> - **성능 저하 발생**: 거대한 단일 맵에 배치된 수십 개의 `MonsterSpawner`가 동시에 몬스터를 스폰하고 AI를 연산하면서, 시야 밖의 오브젝트들까지 CPU 틱을 소모해 평균 144FPS가 120FPS로 떨어지는 유의미한 오버헤드 발생.
+> - **기획 전환 결정**: 제한된 필드 구역에서 포탈(일반/보스)을 통해 인스턴스 던전에 진입하는 기존 구조는 탐험 몰입감이 떨어진다고 판단.
+> - 포탈 없이 필드를 직접 탐험하는 단일 연결 구조로 전환하고, 맵 전체에 374마리 규모의 몬스터 배치.
+> - **연산 병목 발생**: 시야 밖 구역의 MonsterSpawner까지 AI Behavior Tree 틱과 렌더링 연산을
+> - 매 프레임 소모하면서  오버헤드 발생.
 
 **💡 해결 과정**
 
 1. **왜 QuadTree가 아닌 Trigger 기반 Sector 분할인가?**
-- 몬스터 밀집도가 극단적으로 높지 않은 레벨 디자인 특성상, 트리 자료구조를 매 프레임 갱신하며 재귀적으로 공간을 쪼개는 QuadTree/Octree 방식은 오히려 오버헤드가 될 수 있다고 판단.
-- 따라서 고정된 크기의 Trigger Collider로 공간을 분할하는 직관적인 `Sector` 시스템을 구축. 연산 비용이 사실상 제로($O(1)$)에 가깝고 레벨 디자이너가 구역을 쉽게 조작할 수 있는 구조 선택.
+   - 몬스터 밀집도가 극단적으로 높지 않은 레벨 디자인 특성상, 트리 자료구조를 매 프레임 재귀 갱신하는 QuadTree/Octree 방식은 구조 유지 비용이 오히려 오버헤드가 될 수 있다고 판단.
+   - 고정 크기의 Trigger Collider로 공간을 분할하는 `Sector` 시스템으로 설계.
+   - 물리 엔진에 위임하므로 연산 비용이 사실상 $O(1)$이며, 구역 크기·위치를 Inspector에서 즉시 조정 가능.
+     
+<!-- Sector 구역 분할 Gizmo 이미지 -->
+<div align="center">
+<img width="600" alt="Sector" src="https://github.com/user-attachments/assets/5e1ca242-1aca-4d77-8550-39abaee0dedc" /> 
+</div>
 
-2. **Manager를 통한 플레이어 위치 기반 컬링(Culling)**
-- 플레이어가 특정 구역에 진입(`OnTriggerEnter`)하면 `SectorManager`가 이를 감지하여 **현재 플레이어가 속한 Sector의 스포너만 활성화**하고, 이전 Sector의 스폰은 즉시 중단 및 객체를 해제하는 공간 컬링 구현.
+2. **플레이어 위치 기반 엔티티 컬링 구현**
+   - 플레이어가 구역 진입(`OnTriggerEnter`) 시 `SectorManager`가 해당 Sector의 스포너만 활성화.
+   - 이전 구역은 스폰 즉시 중단하고 오브젝트를 풀로 반환하여 AI 틱 연산 자체를 제거.
+   - Unity Frustum Culling은 렌더링만 생략할 뿐 Script·Physics 연산은 그대로 실행됨을 Profiler로 확인. Sector 시스템은 이를 엔티티 단위로 보완하는 역할.
 
-3. **코루틴 대신 UniTask를 활용한 안전한 비동기 리스폰 제어**
-- 활성화 구역 내 몬스터의 리스폰을 구현할 때, GameObject가 파괴되면 강제 종료되어 예외 처리가 까다로운 `Coroutine` 대신, 생명주기 제어가 명확한 `UniTask` 채택.
-- 플레이어가 구역을 이탈해 스포너가 비활성화될 때, `CancelAllSpawnTasks()`를 호출해 `CancellationToken`을 즉시 폐기(Dispose)함으로써 메모리 누수와 Missing Reference 예외를 차단.
+3. **Profiler를 통한 병목 지점 특정**
+   - Batches 수치는 전체 활성·단일 Sector 조건 모두 동일하게 측정됨.
+   - 렌더링 Draw Call이 아닌 **Script(AI 연산)** 가 실질 병목임을 Profiler로 특정하고 Sector 컬링으로 접근 방향 결정.
 
-**✅ 결과**
-- "화면 밖의 연산은 생략한다"는 대원칙을 적용하여, 심리스 필드 탐험이라는 기획적 목표를 달성하면서도 **안정적인 144FPS 방어에 성공.**
+4. **UniTask + CancellationToken 기반 안전한 비동기 리스폰 제어**
+   - 리스폰 대기 구현 시, GameObject 파괴 시 강제 종료되어 예외 처리가 까다로운 `Coroutine` 대신 생명주기 제어가 명확한 `UniTask` 채택.
+   - 구역 이탈로 스포너가 비활성화될 때 `CancelAllSpawnTasks()`로 `CancellationToken`을 즉시 폐기.
+   - 파괴된 GameObject를 참조하는 비동기 컨텍스트가 남지 않도록 설계하여 Missing Reference 차단.
+
+**✅ 결과 (Unity Profiler 실측)**
+
+| 항목 | 전체 Sector 활성 | 단일 Sector 활성 | 절감률 |
+|---|---|---|---|
+| Script 연산 | 1.793ms | 0.763ms | **▼ 57%** |
+| Triangles | 1.75M | 575k | **▼ 67%** |
+| Batches | 약 2,700 | 약 1,700 | **▼ 37%** |
+
+<img width="1274" alt="Sector" src="https://github.com/user-attachments/assets/e129309e-227d-42e3-ab9c-b85a5e048980" /> 
+
+> 374마리 배치 기준 측정. 활성 구역이 전체의 약 1/5임을 감안하면,
+> **몬스터 밀도가 증가할수록 절감 효과가 선형적으로 확대되는 확장 가능한 구조.**
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -451,6 +484,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 > - 초기 구현 시 비동기 에셋 로딩을 위해 C# 기본 `Task(async/await)`를 활용. 
 > - 그러나 씬 전환 시 `AssetBundle.Unload could not complete...` 에러가 간헐적으로 발생하며 씬 이동이 멈추는 데드락(Deadlock) 현상 발생.
 > - **원인 분석**: 순수 C# `Task`는 ThreadPool 기반으로 백그라운드에서 동작한 뒤 메인 스레드로 복귀함. 그러나 Unity의 핵심 API는 반드시 메인 스레드에서 실행되어야 하므로, 이 복귀 과정에서 `SynchronizationContext` 캡처가 지연되거나 Unity 메인 스레드의 라이프사이클과 타이밍이 어긋나 언로드 타이밍을 놓치는 것이 근본 원인.
+>
+> <img width="283" height="54" alt="image" src="https://github.com/user-attachments/assets/7b1883f7-c131-4f8a-be43-c33d2a0f434e" />
+
 
 **💡 해결 과정**
 
