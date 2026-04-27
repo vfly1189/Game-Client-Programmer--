@@ -452,24 +452,62 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 4. **UniTask + CancellationToken 기반 안전한 비동기 리스폰 제어**
    - 리스폰 대기 구현 시, GameObject 파괴 시 강제 종료되어 예외 처리가 까다로운 `Coroutine` 대신 생명주기 제어가 명확한 `UniTask` 채택.
-   - 구역 이탈로 스포너가 킹 현상 발생.
-> - **원인 분석**: 순수 C# `Task`는 ThreadPool 기반으로 백그라운드에서 동작한 뒤 메인 스레드로 복귀함. 그러나 Unity의 핵심 API는 반드시 메인 스레드에서 실행되어야 하므로, 이 복귀 과정에서 `SynchronizationContext` 캡처가 지연되거나 Unity 메인 스레드의 라이프사이클과 타이밍이 어긋나 언로드 타이밍을 놓치는 것이 근본 원인.
+      - 구역 이탈로 스포너가 비활성화될 때 `CancelAllSpawnTasks()`로 `CancellationToken`을 즉시 폐기.
+   - 파괴된 GameObject를 참조하는 비동기 컨텍스트가 남지 않도록 설계하여 Missing Reference 차단.
+
+**✅ 결과 (Unity Profiler 실측)**
+
+| 항목 | 전체 Sector 활성 | 단일 Sector 활성 | 절감률 |
+|---|---|---|---|
+| Script 연산 | 1.793ms | 0.763ms | **▼ 57%** |
+| Triangles | 1.75M | 575k | **▼ 67%** |
+| Batches | 약 2,700 | 약 1,700 | **▼ 37%** |
+
+<img width="1274" alt="Sector" src="https://github.com/user-attachments/assets/e129309e-227d-42e3-ab9c-b85a5e048980" />
+
+> 374마리 배치 기준 측정. 활성 구역이 전체의 약 1/5임을 감안하면,
+> **몬스터 밀도가 증가할수록 절감 효과가 선형적으로 확대되는 확장 가능한 구조.**
+
+<div align="right">
+  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
+</div>
+
+<br>
+<hr>
+<br>
+
+
+### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
+
+> **🚨 문제 상황: 순수 C# Task의 스레드 분리와 라이프사이클 충돌**
+>
+> - 초기 구현 시 비동기 에셋 로딩을 위해 C# 기본 `Task(async/await)`를 활용.
+> - 그러나 씬 전환 시 `AssetBundle.Unload could not complete...` 에러가 간헐적으로 발생하며
+>   씬 이동이 멈추는 **블로킹(Blocking) 현상** 발생.
+> - **원인 분석**: 순수 C# `Task`는 ThreadPool 기반으로 백그라운드에서 동작한 뒤 메인 스레드로 복귀함.
+>   그러나 Unity의 핵심 API는 반드시 메인 스레드에서 실행되어야 하므로, 이 복귀 과정에서
+>   `SynchronizationContext` 캡처가 지연되거나 Unity 메인 스레드의 라이프사이클과 타이밍이
+>   어긋나 언로드 타이밍을 놓치는 것이 근본 원인.
 >
 > <img width="283" height="54" alt="image" src="https://github.com/user-attachments/assets/7b1883f7-c131-4f8a-be43-c33d2a0f434e" />
-
 
 **💡 해결 과정**
 
 1. **왜 Task 대신 UniTask인가? (Zero-Allocation)**
-   - 스레드 컨텍스트 충돌 문제를 해결하기 위해, Unity의 메인 스레드(`PlayerLoop`)에 직접 개입하여 동기화되는 **`UniTask`** 라이브러리 도입.
-   - 특히 로딩 과정에서 `Task`는 힙(Heap) 메모리를 대량 할당하여 치명적인 GC 스파이크를 유발하는 반면, `UniTask`는 값 타입(Struct) 기반으로 설계되어 런타임 힙 할당을 방지(Zero-Allocation)할 수 있다는 점이 채택 사유.
+   - 스레드 컨텍스트 충돌 문제를 해결하기 위해, Unity의 메인 스레드(`PlayerLoop`)에 직접 개입하여
+     동기화되는 **`UniTask`** 라이브러리 도입.
+   - 특히 로딩 과정에서 `Task`는 힙(Heap) 메모리를 대량 할당하여 치명적인 GC 스파이크를 유발하는 반면,
+     `UniTask`는 값 타입(Struct) 기반으로 설계되어 런타임 힙 할당을 방지(Zero-Allocation)할 수 있다는
+     점이 채택 사유.
 
 2. **CancellationToken을 활용한 안전한 생명주기 제어**
-   - 씬 전환 도중 이전 씬의 비동기 로딩이 백그라운드에서 완료되어 파괴된 객체를 참조하려는 예외를 방지하기 위해, 모든 비동기 메서드에 `CancellationToken` 주입.
+   - 씬 전환 도중 이전 씬의 비동기 로딩이 백그라운드에서 완료되어 파괴된 객체를 참조하려는 예외를
+     방지하기 위해, 모든 비동기 메서드에 `CancellationToken` 주입.
    - 씬이 파괴되거나 로딩이 취소될 때 실행 중인 비동기 작업을 중단하도록 생명주기 동기화.
 
 **✅ 결과**
-- 스레드풀을 사용하는 `Task` 대신 유니티 생태계에 최적화된 `UniTask`를 적용하여, **스레드 컨텍스트 충돌 없이 씬 전환과 리소스 로드/해제가 맞물리는 안전한 비동기 파이프라인** 완성.
+- 스레드풀을 사용하는 `Task` 대신 유니티 생태계에 최적화된 `UniTask`를 적용하여,
+  **스레드 컨텍스트 충돌 없이 씬 전환과 리소스 로드/해제가 맞물리는 안전한 비동기 파이프라인** 완성.
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
