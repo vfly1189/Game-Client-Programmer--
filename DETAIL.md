@@ -181,7 +181,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - **달성 성과** : 모든 수치 데이터를 외부 포맷(Excel/JSON)으로 완전히 분리. 특히 무거운 파싱 로직을 빌드 타임으로 이전하는 SO 베이킹 자동화 툴을 개발하여, 코드 수정 없이 데이터만으로 게임의 밸런스를 제어하는 환경 구축
 
 ### 3️⃣ 결합도 감소를 통한 '산탄총 수술' 방지 (Decoupling)
-- **과거의 한계** : 객체 간 강한 참조로 인해 기능 하나를 수정하면 수십 개의 파일(cpp)을 동시에 수정해야 하는 '산탄총 수술' 현상 발생. 설계의 부재가 개발 속도를 저해하는 악순환 경험
+- **과거의 한계** : 객체 간 강한 참조로 인해 기능 하나를 수정하면 수십 개의 파일을 동시에 수정해야 하는 '산탄총 수술' 현상 발생. 설계의 부재가 개발 속도를 저해하는 악순환 경험
 - **달성 성과** : **인터페이스(Interface)** 와 이벤트(Observer) 패턴을 적극 도입하여 시스템 간 의존성 최소화. 기능을 수정하거나 추가해도 다른 모듈에 영향을 주지 않는 독립적이고 확장성 있는 아키텍처 설계 역량 확보
 
 <div align="right">
@@ -427,8 +427,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 >
 > - **기획 전환 결정**: 제한된 필드 구역에서 포탈(일반/보스)을 통해 인스턴스 던전에 진입하는 기존 구조는 탐험 몰입감이 떨어진다고 판단.
 > - 포탈 없이 필드를 직접 탐험하는 단일 연결 구조로 전환하고, 맵 전체에 374마리 규모의 몬스터 배치.
-> - **연산 병목 발생**: 시야 밖 구역의 MonsterSpawner까지 AI Behavior Tree 틱과 렌더링 연산을
-> - 매 프레임 소모하면서  오버헤드 발생.
+> - **연산 병목 발생**: 시야 밖 구역의 MonsterSpawner까지 AI Behavior Tree 틱과 렌더링 연산을 매 프레임 소모하면서  오버헤드 발생.
 
 **💡 해결 과정**
 
@@ -453,36 +452,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 4. **UniTask + CancellationToken 기반 안전한 비동기 리스폰 제어**
    - 리스폰 대기 구현 시, GameObject 파괴 시 강제 종료되어 예외 처리가 까다로운 `Coroutine` 대신 생명주기 제어가 명확한 `UniTask` 채택.
-   - 구역 이탈로 스포너가 비활성화될 때 `CancelAllSpawnTasks()`로 `CancellationToken`을 즉시 폐기.
-   - 파괴된 GameObject를 참조하는 비동기 컨텍스트가 남지 않도록 설계하여 Missing Reference 차단.
-
-**✅ 결과 (Unity Profiler 실측)**
-
-| 항목 | 전체 Sector 활성 | 단일 Sector 활성 | 절감률 |
-|---|---|---|---|
-| Script 연산 | 1.793ms | 0.763ms | **▼ 57%** |
-| Triangles | 1.75M | 575k | **▼ 67%** |
-| Batches | 약 2,700 | 약 1,700 | **▼ 37%** |
-
-<img width="1274" alt="Sector" src="https://github.com/user-attachments/assets/e129309e-227d-42e3-ab9c-b85a5e048980" /> 
-
-> 374마리 배치 기준 측정. 활성 구역이 전체의 약 1/5임을 감안하면,
-> **몬스터 밀도가 증가할수록 절감 효과가 선형적으로 확대되는 확장 가능한 구조.**
-
-<div align="right">
-  <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
-
-> **🚨 문제 상황: 순수 C# Task의 스레드 분리와 라이프사이클 충돌**
->
-> - 초기 구현 시 비동기 에셋 로딩을 위해 C# 기본 `Task(async/await)`를 활용. 
-> - 그러나 씬 전환 시 `AssetBundle.Unload could not complete...` 에러가 간헐적으로 발생하며 씬 이동이 멈추는 데드락(Deadlock) 현상 발생.
+   - 구역 이탈로 스포너가 킹 현상 발생.
 > - **원인 분석**: 순수 C# `Task`는 ThreadPool 기반으로 백그라운드에서 동작한 뒤 메인 스레드로 복귀함. 그러나 Unity의 핵심 API는 반드시 메인 스레드에서 실행되어야 하므로, 이 복귀 과정에서 `SynchronizationContext` 캡처가 지연되거나 Unity 메인 스레드의 라이프사이클과 타이밍이 어긋나 언로드 타이밍을 놓치는 것이 근본 원인.
 >
 > <img width="283" height="54" alt="image" src="https://github.com/user-attachments/assets/7b1883f7-c131-4f8a-be43-c33d2a0f434e" />
