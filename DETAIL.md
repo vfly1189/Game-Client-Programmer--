@@ -128,8 +128,8 @@
 &nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](#ui-optimization-bluearchive)
 
 **4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-bluearchive)** <br>
-&nbsp;&nbsp; └ **[기획 변경에 따른 프레임 저하 극복: 공간 분할(Sector) 기반 스포너 최적화](#optimization-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 거대한 심리스 맵의 렌더링 및 AI 연산 병목을 `Sector` 기반 시야 컬링과 비동기 생명주기 제어로 해결하여 **안정적인 144FPS 방어 성공**
+&nbsp;&nbsp; └ **[기획 변경에 따른 AI·렌더링 연산 병목 해소: Sector 기반 존 로딩 시스템](#optimization-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Sector` 기반 시야 컬링과 비동기 생명주기 제어로 해결하여 **안정적인 프레임 방어 성공**
 
 &nbsp;&nbsp; └ **[동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축](#async-unitask-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `Task` 스레드풀의 `AssetBundle.Unload` 충돌을 `UniTask` 메인 스레드 동기화로 해결하여 **안전한 제어 및 Zero-Allocation 달성**
@@ -243,7 +243,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 **주요 구현 내용**
 - **글로벌(Global) 에셋 영구 캐싱 및 종속성 분리**
   - 전역으로 사용되는 UI, 사운드 에셋(`Label: Global`)과 씬 종속적인 데이터(맵, 몬스터)를 별도의 번들로 분리하여 **메모리 중복 로드 차단**
-  - 글로벌 에셋은 `LoadDependenciesAsync`를 통해 일괄 로드 후 `globalHandles`에 영구 캐싱하여 잦은 로드/언로드 오버헤드 방지
+  - 글로벌 에셋은 `LoadDependenciesAsync`(커스텀 프리로드 함수)를 통해 일괄 로드 후 `globalHandles`에 영구 캐싱하여 잦은 로드/언로드 오버헤드 방지
   - <img width="716" height="357" alt="image" src="https://github.com/user-attachments/assets/c83e3e54-fe5a-4df8-8ad1-5a14ebd339b5" />
 
 - **동적 리소스 요청 및 $O(1)$ 캐시 히트(Cache Hit)**
@@ -427,7 +427,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 >
 > - **기획 전환 결정**: 제한된 필드 구역에서 포탈(일반/보스)을 통해 인스턴스 던전에 진입하는 기존 구조는 탐험 몰입감이 떨어진다고 판단.
 > - 포탈 없이 필드를 직접 탐험하는 단일 연결 구조로 전환하고, 맵 전체에 374마리 규모의 몬스터 배치.
-> - **연산 병목 발생**: 시야 밖 구역의 MonsterSpawner까지 AI Behavior Tree 틱과 렌더링 연산을 매 프레임 소모하면서  오버헤드 발생.
+> - **연산 병목 발생**: 시야 밖 구역의 MonsterSpawner까지 AI Behavior Tree 틱과 렌더링 연산을 매 프레임 소모하면서 유의미한 오버헤드 발생.
 
 **💡 해결 과정**
 
@@ -446,13 +446,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
    - 이전 구역은 스폰 즉시 중단하고 오브젝트를 풀로 반환하여 AI 틱 연산 자체를 제거.
    - Unity Frustum Culling은 렌더링만 생략할 뿐 Script·Physics 연산은 그대로 실행됨을 Profiler로 확인. Sector 시스템은 이를 엔티티 단위로 보완하는 역할.
 
-3. **Profiler를 통한 병목 지점 특정**
-   - Batches 수치는 전체 활성·단일 Sector 조건 모두 동일하게 측정됨.
-   - 렌더링 Draw Call이 아닌 **Script(AI 연산)** 가 실질 병목임을 Profiler로 특정하고 Sector 컬링으로 접근 방향 결정.
-
-4. **UniTask + CancellationToken 기반 안전한 비동기 리스폰 제어**
+3. **UniTask + CancellationToken 기반 안전한 비동기 리스폰 제어**
    - 리스폰 대기 구현 시, GameObject 파괴 시 강제 종료되어 예외 처리가 까다로운 `Coroutine` 대신 생명주기 제어가 명확한 `UniTask` 채택.
-      - 구역 이탈로 스포너가 비활성화될 때 `CancelAllSpawnTasks()`로 `CancellationToken`을 즉시 폐기.
+   - 구역 이탈로 스포너가 비활성화될 때 `CancelAllSpawnTasks()`로 `CancellationToken`을 즉시 폐기.
    - 파괴된 GameObject를 참조하는 비동기 컨텍스트가 남지 않도록 설계하여 Missing Reference 차단.
 
 **✅ 결과 (Unity Profiler 실측)**
@@ -494,15 +490,11 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 **💡 해결 과정**
 
 1. **왜 Task 대신 UniTask인가? (Zero-Allocation)**
-   - 스레드 컨텍스트 충돌 문제를 해결하기 위해, Unity의 메인 스레드(`PlayerLoop`)에 직접 개입하여
-     동기화되는 **`UniTask`** 라이브러리 도입.
-   - 특히 로딩 과정에서 `Task`는 힙(Heap) 메모리를 대량 할당하여 치명적인 GC 스파이크를 유발하는 반면,
-     `UniTask`는 값 타입(Struct) 기반으로 설계되어 런타임 힙 할당을 방지(Zero-Allocation)할 수 있다는
-     점이 채택 사유.
+   - 스레드 컨텍스트 충돌 문제를 해결하기 위해, Unity의 메인 스레드(`PlayerLoop`)에 직접 개입하여 동기화되는 **`UniTask`** 라이브러리 도입.
+   - 특히 로딩 과정에서 `Task`는 힙(Heap) 메모리를 대량 할당하여 치명적인 GC 스파이크를 유발하는 반면, `UniTask`는 값 타입(Struct) 기반으로 설계되어 런타임 힙 할당을 방지(Zero-Allocation)할 수 있다는 점이 채택 사유.
 
 2. **CancellationToken을 활용한 안전한 생명주기 제어**
-   - 씬 전환 도중 이전 씬의 비동기 로딩이 백그라운드에서 완료되어 파괴된 객체를 참조하려는 예외를
-     방지하기 위해, 모든 비동기 메서드에 `CancellationToken` 주입.
+   - 씬 전환 도중 이전 씬의 비동기 로딩이 백그라운드에서 완료되어 파괴된 객체를 참조하려는 예외를 방지하기 위해, 모든 비동기 메서드에 `CancellationToken` 주입.
    - 씬이 파괴되거나 로딩이 취소될 때 실행 중인 비동기 작업을 중단하도록 생명주기 동기화.
 
 **✅ 결과**
@@ -530,9 +522,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - 기획 편의성을 위해 모든 것을 Excel로 통합할 수도 있었으나, 구역별 스포너(배열 안에 배열이 있는 형태) 정보처럼 **계층적 뎁스(Depth)가 깊은 데이터는 2차원 표 형태인 엑셀로 표현하기가 더 비효율적임**을 인지.
 - 따라서 수식 연산과 교차 참조가 필요한 스탯/아이템은 **Excel**로, 계층적 구조화가 필요한 스포너 등은 **JSON** 포맷으로 유지하는 **데이터 특성 기반 이원화 전략** 채택.
 
-2. **왜 런타임에 파싱하지 않고 Build Time에 SO로 굽는(Baking)가?**
+2. **왜 런타임에 파싱하지 않고 Editor Time에 SO로 굽는(Baking)가?**
 - 초기에는 NPOI 라이브러리를 활용해 런타임에 엑셀을 직접 파싱했으나, 방대한 셀을 순회하며 발생하는 막대한 GC 할당과 렉(Spike) 확인.
-- 이를 해결하기 위해 무거운 파싱 로직을 런타임에서 에디터 타임(Build Time)으로 이전. 기획자가 Excel을 수정하면 클릭 한 번으로 모든 시트를 파싱하여 가벼운 **`ScriptableObject` 에셋으로 자동 변환(Baking)하는 커스텀 에디터 툴** 개발.
+- 이를 해결하기 위해 무거운 파싱 로직을 런타임에서 에디터 타임으로 이전. 기획자가 Excel을 수정하면 클릭 한 번으로 모든 시트를 파싱하여 가벼운 **`ScriptableObject` 에셋으로 자동 변환(Baking)하는 커스텀 에디터 툴** 개발.
 - | **약 5,600개 데이터 베이킹 후 캐싱** | **약 10,600개 데이터 베이킹 후 캐싱 (스트레스 테스트)** |
   | :---: | :---: |
   | <img width="600" height="260" alt="image" src="https://github.com/user-attachments/assets/456c463b-8de5-4106-825d-a78f3b0aaf19" /> | <img width="600" height="260" alt="image" src="https://github.com/user-attachments/assets/aac554af-1480-4cd6-9724-ff32afa6b318"/> |
