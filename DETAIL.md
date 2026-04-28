@@ -205,7 +205,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 **주요 구현 내용**
 - **Trigger 기반 공간 분할(Sector) 아키텍처**
-  - 매 프레임 재귀적 갱신 비용이 드는 QuadTree/Octree 대신, 고정 크기의 Trigger Collider로 맵을 논리 구역(`Sector`)으로 분할하는 $O(1)$ 조회 시스템 구축.
+  - 매 프레임 재귀적 갱신 비용이 드는 QuadTree/Octree 대신, 고정 크기의 Trigger Collider로 맵을 논리 구역(`Sector`)으로 분할하는 시스템 구축.
   - 레벨 디자이너가 Inspector에서 구역을 직접 편집 가능한 구조 선택.
 
 - **플레이어 위치 기반 엔티티 컬링(Entity Culling)**
@@ -457,7 +457,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 |---|---|---|---|
 | Script 연산 | 1.793ms | 0.763ms | **▼ 57%** |
 | Triangles | 1.75M | 575k | **▼ 67%** |
-| Batches | 약 2,700 | 약 1,700 | **▼ 37%** |
 
 <img width="1274" alt="Sector" src="https://github.com/user-attachments/assets/e129309e-227d-42e3-ab9c-b85a5e048980" />
 
