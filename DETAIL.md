@@ -434,7 +434,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 1. **왜 QuadTree가 아닌 Trigger 기반 Sector 분할인가?**
    - 몬스터 밀집도가 극단적으로 높지 않은 레벨 디자인 특성상, 트리 자료구조를 매 프레임 재귀 갱신하는 QuadTree/Octree 방식은 구조 유지 비용이 오히려 오버헤드가 될 수 있다고 판단.
    - 고정 크기의 Trigger Collider로 공간을 분할하는 `Sector` 시스템으로 설계.
-   - 물리 엔진에 위임하므로 연산 비용이 사실상 $O(1)$이며, 구역 크기·위치를 Inspector에서 즉시 조정 가능.
+   - 구역 크기·위치를 Inspector에서 조정 가능.
      
 <!-- Sector 구역 분할 Gizmo 이미지 -->
 <div align="center">
@@ -491,7 +491,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 1. **왜 Task 대신 UniTask인가? (Zero-Allocation)**
    - 스레드 컨텍스트 충돌 문제를 해결하기 위해, Unity의 메인 스레드(`PlayerLoop`)에 직접 개입하여 동기화되는 **`UniTask`** 라이브러리 도입.
-   - 특히 로딩 과정에서 `Task`는 힙(Heap) 메모리를 대량 할당하여 치명적인 GC 스파이크를 유발하는 반면, `UniTask`는 값 타입(Struct) 기반으로 설계되어 런타임 힙 할당을 방지(Zero-Allocation)할 수 있다는 점이 채택 사유.
+   - 특히 로딩 과정에서 `Task`는 힙(Heap) 메모리를 대량 할당하여 치명적인 GC 스파이크를 유발하는 반면, UniTask는 값 타입(Struct) 기반으로 설계되어 Task 대비 런타임 힙 할당을 대폭 줄이는것이 채택 사유.
 
 2. **CancellationToken을 활용한 안전한 생명주기 제어**
    - 씬 전환 도중 이전 씬의 비동기 로딩이 백그라운드에서 완료되어 파괴된 객체를 참조하려는 예외를 방지하기 위해, 모든 비동기 메서드에 `CancellationToken` 주입.
@@ -892,8 +892,8 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
     *   맵 전체를 일정 크기의 **그리드(Grid)** 형태로 분할하고, 각 셀에 포함된 삼각형을 HashMap에 저장
     *   [[📄NavMesh.h :: SpatialGrid]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.h#L31-L81)
 
-2.  **검색 알고리즘 최적화 ( $O(N) \rightarrow O(1)$ )**
-    *   **해시맵(HashMap) 활용** : 입력된 월드 좌표를 키(Key)로 변환하여 $O(1)$ 시간 복잡도로 현재 속한 셀에 즉시 접근
+2.  **검색 알고리즘 최적화 ( $O(N) \rightarrow O(k)$, $k \ll N$ )**
+    *   **해시맵(HashMap) 활용** : 입력된 월드 좌표를 키(Key)로 변환하여 셀에 즉시 접근하고, 해당 셀에 등록된 소수의 삼각형(k개, $k \ll N$)만 검사하도록 로직 변경
     *   **탐색 범위 축소** : 전체 삼각형을 순회하는 대신, 해당 셀에 등록된 **소수의 삼각형만 검사** 하도록 로직 변경
       *   | **Grid** |
           | :---: |
