@@ -109,7 +109,7 @@
 **2. 📌 [학습 목표 및 달성](#goals-bluearchive)**
 
 **3. 🔨 [주요 개발 기능](#features-bluearchive)** <br>
-&nbsp;&nbsp; └ [심리스 필드 탐험을 위한 공간 분할(Sector) 시스템](#optimization-bluearchive)<br>
+&nbsp;&nbsp; └ [Sector 기반 플레이어 위치 추적형 존 로딩 시스템](#optimization-bluearchive)<br>
 &nbsp;&nbsp; └ [비동기 로딩 및 Addressables 최적화 파이프라인](#async-pipeline-bluearchive)<br>
 &nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 및 에셋 베이킹 자동화](#data-driven-bluearchive)<br>
 &nbsp;&nbsp; └ [다형성과 Timeline을 활용한 객체지향적 몬스터 아키텍처 설계](#behavior-tree-ai)<br>
