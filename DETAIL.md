@@ -463,7 +463,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <br>
 
 
-### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축
+### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
 
 > **🚨 문제 상황: C# Task의 구조적 한계와 씬 라이프사이클 충돌**
 >
