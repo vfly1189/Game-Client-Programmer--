@@ -21,7 +21,7 @@
 - **Library/Package**: `Addressables`, `UniTask`, `Newtonsoft.Json`, `NPOI`
 
 ### 📌 담당 업무 및 경험
-> **확장성을 고려한 데이터 주도 설계(Data-Driven Design)와 비동기 로딩 파이프라인을 구축했습니다.**
+> **이전 프로젝트들을 회고하며 느낀 구조적 아쉬움을 개선하고, 확장성 높은 아키텍처를 연구 및 적용**
 
 *   **System Architecture**
     *   싱글톤(`Managers`) 기반의 중앙 집중형 시스템 아키텍쳐 설계
@@ -30,7 +30,7 @@
 *   **Optimization & Memory Management**
     *   `Addressables` 기반 글로벌/씬 단위 핸들 분리 및 명시적 Release 구조 설계
     *   `UniTask` 기반 비동기 파이프라인 구축
-    *   `Addressables` 오브젝트 풀링 시스템 구현
+    *   오브젝트 풀링 시스템 구현
 *   **Gameplay & Combat**
     *   파티 기반의 실시간 캐릭터 교체 전투 시스템
     *   인터페이스(`IDamageable`)와 다형성을 활용하여 결합도를 낮춘 공용 데미지 연산 파이프라인 설계
@@ -41,23 +41,24 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 주요 개발 기능** <br>
+&nbsp;&nbsp; └ [Sector 기반 플레이어 위치 추적형 존 로딩 시스](DETAIL.md#async-pipeline-bluearchive) <br>
 &nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인](DETAIL.md#async-pipeline-bluearchive) <br>
-&nbsp;&nbsp; └ [NPOI 기반 데이터 주도 설계(Data-Driven) 자동화](DETAIL.md#data-driven-bluearchive) <br>
-&nbsp;&nbsp; └ [Behavior Tree 기반 몬스터 AI 설계](DETAIL.md#behavior-tree-ai) <br>
-&nbsp;&nbsp; └ [인터페이스와 다형성을 활용한 공용 데미지 파이프라인](DETAIL.md#combat-bluearchive) <br>
+&nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 및 에셋 베이킹 자동화](DETAIL.md#data-driven-bluearchive) <br>
+&nbsp;&nbsp; └ [다형성과 Timeline을 활용한 객체지향적 몬스터 아키텍처 설계](DETAIL.md#behavior-tree-ai) <br>
+&nbsp;&nbsp; └ [인터페이스(Interface) 기반 공용 데미지 파이프라인](DETAIL.md#combat-bluearchive) <br>
 &nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](DETAIL.md#ui-optimization-bluearchive) <br>
 
 <br>
 
 **2. 🛠️ 문제 해결 (Troubleshooting)** <br>
-&nbsp;&nbsp; └ **[몬스터 God Class 리팩토링 및 상속 구조 세분화](DETAIL.md#ai-refactoring-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `MonsterController`에 집중된 로직을 상속 구조 분리와 `Behavior Tree`로 개편하여 **유연한 AI 확장성 확보**
+&nbsp;&nbsp; └ **[기획 변경에 따른 AI·렌더링 연산 병목 해소: Sector 기반 존 로딩 시스템](DETAIL.md#optimization-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Sector` 기반 시야 컬링과 비동기 생명주기 제어로 해결하여 **안정적인 프레임 방어 성공**
 
-&nbsp;&nbsp; └ **[비동기 제어 한계 극복 및 UniTask 파이프라인 도입](DETAIL.md#async-unitask-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `AssetBundle.Unload` 충돌을 `UniTask` 생명주기 동기화로 해결하여 **안전한 비동기 제어 달성**
+&nbsp;&nbsp; └ **[동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축](DETAIL.md#async-unitask-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `Task` 스레드풀의 `AssetBundle.Unload` 충돌을 `UniTask` 메인 스레드 동기화로 해결
 
-&nbsp;&nbsp; └ **[런타임 파싱 병목 해결을 위한 NPOI 데이터 베이킹](DETAIL.md#data-driven-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 방대한 JSON 관리의 비효율을 엑셀(NPOI) 기반 `ScriptableObject` 베이킹으로 해결하여 **데이터 조회 속도 최적화 (`O(N)` → `O(1)`)**
+&nbsp;&nbsp; └ **[대규모 데이터 관리의 한계 극복 및 파이프라인 이원화 (Excel/JSON)](DETAIL.md#data-driven-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 런타임 엑셀 파싱의 오버헤드를 에디터 타임 `ScriptableObject` 베이킹으로 이전하고 `DataManager`로 통합하여 **데이터 관리 최적화**
 
 <br>
 
