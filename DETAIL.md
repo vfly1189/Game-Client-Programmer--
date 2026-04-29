@@ -196,6 +196,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - **Trigger 기반 공간 분할(Sector) 아키텍처**
   - 매 프레임 재귀적 갱신 비용이 드는 QuadTree/Octree 대신, 고정 크기의 Trigger Collider로 맵을 논리 구역(`Sector`)으로 분할하는 시스템 구축.
   - 레벨 디자이너가 Inspector에서 구역을 직접 편집 가능한 구조 선택.
+  - <img width="436" height="347" alt="스크린샷 2026-04-29 232436" src="https://github.com/user-attachments/assets/b4baaad4-d175-43f6-9a7a-1474a4839919" />
 
 - **플레이어 위치 기반 엔티티 컬링(Entity Culling)**
   - 플레이어 진입 시 `SectorManager`가 현재 Sector의 스포너만 활성화.
@@ -265,6 +266,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - **대규모 수치 데이터 베이킹 자동화 (Excel ➔ ScriptableObject)**
   - 캐릭터 스탯, 성장치 등 수식 연산이 필수적인 데이터는 기획 친화적인 **Excel**로 관리
   - 런타임 엑셀 파싱 시 발생하는 GC 할당을 막기 위해, 빌드 전 NPOI를 활용해 엑셀 데이터를 가벼운 **`ScriptableObject` 에셋으로 자동 변환(Baking)** 하는 에디터 툴 구축
+  - <img width="380" height="147" alt="스크린샷 2026-04-29 232518" src="https://github.com/user-attachments/assets/4e9c2464-d570-4eca-b778-7d5929bdb959" />
   
 - **계층적 구조 데이터 관리 (JSON)**
   - 구역별 스포너 위치 등 다단계 깊이(Depth)를 가지는 데이터는 Excel의 2차원 표로 관리하기 부적합하여 **JSON** 포맷 채택
