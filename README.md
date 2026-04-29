@@ -43,7 +43,7 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 주요 개발 기능** <br>
-&nbsp;&nbsp; └ [Sector 기반 플레이어 위치 추적형 존 로딩 시스](DETAIL.md#async-pipeline-bluearchive) <br>
+&nbsp;&nbsp; └ [Sector 기반 플레이어 위치 추적형 존 로딩 시스템](DETAIL.md#optimization-bluearchive) <br>
 &nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인](DETAIL.md#async-pipeline-bluearchive) <br>
 &nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 및 에셋 베이킹 자동화](DETAIL.md#data-driven-bluearchive) <br>
 &nbsp;&nbsp; └ [다형성과 Timeline을 활용한 객체지향적 몬스터 아키텍처 설계](DETAIL.md#behavior-tree-ai) <br>
