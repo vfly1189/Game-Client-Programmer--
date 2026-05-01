@@ -64,7 +64,7 @@
 
 <br>
 
-### 🎥 [시연 영상 보러가기](유튜브 링크를 여기에 넣어주세요)
+### 🎥 [시연 영상 보러가기](https://youtu.be/yPBj7T_f7ds?si=zlXlAo7Us3Utixns)
 
 <br>
 <hr>
