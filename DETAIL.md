@@ -98,7 +98,7 @@
 | ⏱️ **개발 기간** | 2026.01 ~ 2026.04 (4개월) |
 | 👥 **개발 인원** | 1인 (개인 프로젝트) |
 | 🛠️ **개발 환경** | Unity, C#, `Addressables`, `UniTask`, `NPOI` |
-| 🎬 **시연 영상** | [YouTube 바로가기]() |
+| 🎬 **시연 영상** | [YouTube 바로가기](https://youtu.be/yPBj7T_f7ds?si=zlXlAo7Us3Utixns) |
 | 📝 **개발 블로그** | [Velog 바로가기](https://velog.io/@vfly1189/series/Unity-%EB%B8%94%EB%A3%A8%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B8%8C-%EC%B0%BD%EC%9E%91-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8) |
 | 💾 **GitHub** | [소스코드](https://github.com/vfly1189/OperationKivotos) |
 
