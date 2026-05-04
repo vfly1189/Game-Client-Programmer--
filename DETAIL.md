@@ -109,7 +109,7 @@
 
 ### 🎬 개발 과정 영상 (총 4편)
 
-| #1 | #2 | #3 | #4 |
+| #초기 버전 | #던전 & 스킬 | #아이템 & 필드 | #전체 시연 영상 |
 |:---:|:---:|:---:|:---:|
 | [![](https://img.youtube.com/vi/ZPzTefOje7Y/mqdefault.jpg)](https://youtu.be/ZPzTefOje7Y?si=nfJI9SmWANtrbu3n) | [![](https://img.youtube.com/vi/StobiSiFDl4/mqdefault.jpg)](https://youtu.be/StobiSiFDl4?si=F91KjveRbM7ykqkk) | [![](https://img.youtube.com/vi/T_7pYuZHefc/mqdefault.jpg)](https://youtu.be/T_7pYuZHefc?si=nVhiV1aIA-CvPJpC) | [![](https://img.youtube.com/vi/yPBj7T_f7ds/mqdefault.jpg)](https://youtu.be/yPBj7T_f7ds?si=8MYIhSHqMjUc-nJw) |
 
