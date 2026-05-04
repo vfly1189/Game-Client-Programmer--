@@ -111,6 +111,7 @@
 | 초기 빌드 | 던전 & 스킬 | 아이템 & 필드 | 최종 완성 |
 |:---:|:---:|:---:|:---:|
 | [![](https://img.youtube.com/vi/ZPzTefOje7Y/mqdefault.jpg)](https://youtu.be/ZPzTefOje7Y?si=nfJI9SmWANtrbu3n) | [![](https://img.youtube.com/vi/StobiSiFDl4/mqdefault.jpg)](https://youtu.be/StobiSiFDl4?si=F91KjveRbM7ykqkk) | [![](https://img.youtube.com/vi/T_7pYuZHefc/mqdefault.jpg)](https://youtu.be/T_7pYuZHefc?si=nVhiV1aIA-CvPJpC) | [![](https://img.youtube.com/vi/yPBj7T_f7ds/mqdefault.jpg)](https://youtu.be/yPBj7T_f7ds?si=8MYIhSHqMjUc-nJw) |
+| [▶ YouTube](https://youtu.be/ZPzTefOje7Y) | [▶ YouTube](https://youtu.be/StobiSiFDl4) | [▶ YouTube](https://youtu.be/T_7pYuZHefc) | [▶ YouTube](https://youtu.be/yPBj7T_f7ds) |
 
 ## 📑 프로젝트 목차<a name="toc-bluearchive"></a>
 
