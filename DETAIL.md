@@ -107,6 +107,12 @@
 | 📝 **개발 블로그** | [Velog 바로가기](https://velog.io/@vfly1189/series/Unity-%EB%B8%94%EB%A3%A8%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B8%8C-%EC%B0%BD%EC%9E%91-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8) |
 | 💾 **GitHub** | [소스코드](https://github.com/vfly1189/OperationKivotos) |
 
+### 🎬 개발 과정 영상 (총 4편)
+
+| #1 | #2 | #3 | #4 |
+|:---:|:---:|:---:|:---:|
+| [![](https://img.youtube.com/vi/ZPzTefOje7Y/mqdefault.jpg)](https://youtu.be/ZPzTefOje7Y?si=nfJI9SmWANtrbu3n) | [![](https://img.youtube.com/vi/StobiSiFDl4/mqdefault.jpg)](https://youtu.be/StobiSiFDl4?si=F91KjveRbM7ykqkk) | [![](https://img.youtube.com/vi/T_7pYuZHefc/mqdefault.jpg)](https://youtu.be/T_7pYuZHefc?si=nVhiV1aIA-CvPJpC) | [![](https://img.youtube.com/vi/yPBj7T_f7ds/mqdefault.jpg)](https://youtu.be/yPBj7T_f7ds?si=8MYIhSHqMjUc-nJw) |
+
 ## 📑 프로젝트 목차<a name="toc-bluearchive"></a>
 
 **1. 📖 [게임 개요](#overview-bluearchive)**
@@ -130,6 +136,8 @@
 
 &nbsp;&nbsp; └ **[대규모 데이터 관리의 한계 극복 및 파이프라인 이원화 (Excel/JSON)](#data-driven-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 런타임 엑셀 파싱의 오버헤드를 에디터 타임 `ScriptableObject` 베이킹으로 이전하고 `DataManager`로 통합하여 **데이터 관리 최적화**
+
+
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
