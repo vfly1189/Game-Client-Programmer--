@@ -42,7 +42,7 @@
 
 ## 🎮 블루아카이브 팬메이드 프로젝트 - OperationKivotos ([상세내용](DETAIL.md#bluearchive-main))
 
-> ( 2026.01 ~ 2026.04 )
+> ( 2026.01 ~ 2026.04 ) ( 4개월 ) ( 1인 )
 
 <img width="700" height="400" alt="블루아카이브 프로젝트 스크린샷" src="https://github.com/user-attachments/assets/127ef1e4-c683-425a-a1f7-4bcc25107fc0" />
 
@@ -101,7 +101,7 @@
 
 ## 🎮 Eternal Return (이터널리턴) ([상세내용](DETAIL.md#-이터널-리턴-모작))
 
-> ( 2025.07 ~ 2025.09 ) ( 2개월 )
+> ( 2025.07 ~ 2025.09 ) ( 2개월 ) ( 2인 )
 
 <img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/b5edd5af-9ce7-4f17-bc8a-84f8bb745edd" />
 
@@ -163,7 +163,7 @@
 
 ## 🎮 Brotato ([상세내용](DETAIL.md#-brotato-모작))
 
-> ( 2025.02 ~ 2025.03 ) ( 3주 )
+> ( 2025.02 ~ 2025.03 ) ( 3주 ) ( 2인 )
 
 <img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/707d63de-187c-40e8-a571-43c336de358f" />
 
