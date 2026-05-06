@@ -222,6 +222,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - [[📄Sector.cs (헤더 설계)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/Sector.cs)
 - [[📄SectorManager.cs (섹터 관리 매니저)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/SectorManager.cs)
 - [[📄섹터내 몬스터 스폰 로]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L145)
+- [[📄오브젝트 풀링]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/PoolManager.cs#L115-L147)
 
 > **🚀 기술 도입 배경**:
 > 기획 변경으로 AI·렌더링 연산 병목과, 공간 분할·비동기 제어로 이를 극복한 과정은
@@ -257,6 +258,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 런타임 에셋 요청 시 `globalHandles` ➔ `sceneHandles` 순으로 캐시를 탐색하여 **인게임 런타임 중 디스크 I/O 병목 제거**
   - 씬 이탈 시 sceneHandles만 선택적으로 해제.
 
+**관련 코드**
+- [[📄ResourceManager 비동기]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/ResourceManager.cs#L40-L115)
+
 > **🚀 기술 도입 배경**: 문자열 하드코딩, 인스펙터 직접 참조, `Task` 사용 과정에서 발생한 언로드 타이밍 문제와 이를 `UniTask`로 마이그레이션한 과정은 하단 **[🛠️ 문제 해결](#async-unitask-trouble)** 파트에서 다룹니다.
 
 </details>
@@ -290,6 +294,10 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - **DataManager를 통한 $O(1)$ 통합 조회 시스템**
   - 베이킹된 SO 에셋과 JSON 데이터를 `DataManager`가 메모리에 일괄 로드하여 캐싱
   - 인게임 로직에서는 원본 파일 형식에 구애받지 않고 **ID(Key) 기반 $O(1)$ 속도로 데이터를 즉시 조회**
+
+**관련 코드**
+- [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Editor/ItemExcelImporter.cs)
+
 
 > **🚀 기술 도입 배경**: 
 > 단순 하드코딩 ➔ 개별 SO ➔ 전체 JSON ➔ Excel/JSON 하이브리드로 파이프라인이 진화하게 된 성능 병목과 최적화 과정은 하단 **[🛠️ 문제 해결](#data-driven-trouble)** 파트에서 다룹니다.
@@ -325,6 +333,13 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 - **AI 상태 판단의 캡슐화 (Behavior Tree)**
   - 거대한 `Update()` 스파게티 코드를 막기 위해 최상위 상태 판단(생존 ➔ 전투 ➔ 추적 ➔ 대기)을 `Selector`와 `Sequence` 기반의 트리 구조로 캡슐화
+
+**관련 코드**
+- [[📄BaseMonsterController.cs]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Controllers/MonsterController/BaseMonsterController.cs)
+- [[📄NormalMonster 행동트리 제작 함]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Controllers/MonsterController/NormalMonsterController.cs#L79-L105)
+- [[📄원거리 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Controllers/MonsterController/RangedMonsterController.cs)
+- [[📄보스 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Controllers/MonsterController/Boss/BossMonsterController.cs)
+
 
 **관련 이미지**
 
@@ -376,6 +391,10 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 단순 수치뿐만 아니라 공격자 참조, 크리티컬 여부 등을 담은 `DamageInfo` 구조체 설계
   - 향후 데미지 연산 공식이 복잡해져도 파이프라인 수정 없이 데이터 형태만 확장할 수 있는 유연성 확보
 
+**관련 코드**
+- [[📄IDamageable 인턴페이스]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Interface/IDamageable.cs)
+- [[📄TakeDamage 예시]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Data/Unit/CharacterStat.cs#L239-L254)
+
 **관련 이미지**
 | **최적화 전 (Before)** | **최적화 후 (After)** |
 | :---: | :---: |
@@ -410,6 +429,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 모든 요소를 단일 캔버스에 넣지 않고, 갱신 빈도에 따라 **4개의 Canvas**(`Scene`, `System`, `World`, `Popup`)로 격리
   - 체력바나 팝업 데미지(`World`)가 매 프레임 위치를 갱신하며 캔버스를 더럽히더라도, 정적인 기본 UI(`Scene`)는 **Rebuild 대상에서 제외되어 렌더링 부하 최소화 및 Draw Call 절약**
   <img width="478" height="428" alt="image" src="https://github.com/user-attachments/assets/4aeb505b-1aa2-4777-b176-2b99db994853" />
+
+**관련 코드**
+- [[📄UIManager.cs]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/UIManager.cs)
 
 </details>
 
@@ -469,6 +491,12 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 > 374마리 배치 기준 측정. 활성 구역이 전체의 약 1/5임을 감안하면,
 > **몬스터 밀도가 증가할수록 절감 효과가 선형적으로 확대되는 확장 가능한 구조.**
+
+**관련 코드**
+- [[📄Sector.cs (헤더 설계)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/Sector.cs)
+- [[📄SectorManager.cs (섹터 관리 매니저)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/SectorManager.cs)
+- [[📄섹터내 몬스터 스폰 로]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L145)
+- [[📄오브젝트 풀링]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/PoolManager.cs#L115-L147)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -542,6 +570,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 **✅ 결과**
 - "기획자는 수식 기반의 엑셀로 편하게 밸런싱하고, 클라이언트는 가볍게 구워진 SO로 빠르게 읽어 들이는" **실무형 데이터 주도 설계(Data-Driven) 파이프라인** 구축 완료.
+
+**관련 코드**
+- [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Editor/ItemExcelImporter.cs)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
