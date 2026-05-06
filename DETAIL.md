@@ -218,11 +218,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 구역 이탈·씬 전환 시 `CancelAllSpawnTasks()`로 리스폰 대기 중인 `UniTask.Delay`를 즉시 폐기(Dispose).
   - GameObject 파괴 이후 비동기 컨텍스트가 남아 Missing Reference를 유발하는 문제를 토큰 생명주기 관리로 차단.
 
-**관련 코드**
-- [[📄Sector.cs (헤더 설계)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/Sector.cs)
-- [[📄SectorManager.cs (섹터 관리 매니저)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/SectorManager.cs)
-- [[📄섹터내 몬스터 스폰 로]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L145)
-- [[📄오브젝트 풀링]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/PoolManager.cs#L115-L147)
 
 > **🚀 기술 도입 배경**:
 > 기획 변경으로 AI·렌더링 연산 병목과, 공간 분할·비동기 제어로 이를 극복한 과정은
@@ -531,6 +526,9 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
    - **반환값 문제**: 코루틴(`IEnumerator`)은 결과를 직접 반환할 수 없어, 에셋 핸들을 `globalHandles` / `sceneHandles`에 저장하는 현재 구조에서 멤버 변수 우회가 강제됨.
    - `UniTask<T>`는 로드 결과를 `await` 한 줄로 받아 딕셔너리에 직접 캐싱 가능
    - **병렬 처리**: 씬 진입 전 다수 에셋을 동시에 프리로드해야 하는 파이프라인에서 코루틴은 `WhenAll`을 직접 구현해야 하나, `UniTask.WhenAll()`로 병렬 로드와 완료 대기를 간결하게 처리하여 총 로딩 시간 단축
+   - 
+**관련 코드**
+- [[📄LoadingScene.cs]](https://github.com/vfly1189/OperationKivotos/blob/6211ddfbb19dc1ff310b7b2051d1a9694f8496cb/Assets/Scripts/Scenes/LoadingScene/LoadingScene.cs#L25-L79)
 
 **✅ 결과**
 - **레이스 컨디션 제거**: PlayerLoop 기반 UniTask로 씬 전환과 리소스 로드/해제 타이밍 보장
