@@ -218,6 +218,11 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 구역 이탈·씬 전환 시 `CancelAllSpawnTasks()`로 리스폰 대기 중인 `UniTask.Delay`를 즉시 폐기(Dispose).
   - GameObject 파괴 이후 비동기 컨텍스트가 남아 Missing Reference를 유발하는 문제를 토큰 생명주기 관리로 차단.
 
+**관련 코드**
+- [[📄Sector.cs (헤더 설계)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/Sector.cs)
+- [[📄SectorManager.cs (섹터 관리 매니저)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/SectorManager.cs)
+- [[📄섹터내 몬스터 스폰 로]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L145)
+
 > **🚀 기술 도입 배경**:
 > 기획 변경으로 AI·렌더링 연산 병목과, 공간 분할·비동기 제어로 이를 극복한 과정은
 > 하단 **[🛠️ 문제 해결](#optimization-trouble)** 파트에서 상세히 다룹니다.
