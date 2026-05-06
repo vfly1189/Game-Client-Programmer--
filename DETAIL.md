@@ -12,7 +12,7 @@
 ### 🎮 게임플레이 — "머릿속 아이디어가 코드를 통해 실제로 플레이가 될 때 가장 재밌습니다"
 - 기획서의 아이디어가 플레이어에게 어떻게 느껴질지를 먼저 고민하고, 직접 플레이하며 의도대로 전달되는지 확인합니다.
   - [보스 스킬 판단(Logic)과 연출(Timeline)을 분리해 기획 의도를 코드로 구현](#behavior-tree-ai)
-  - [포탈 없는 단일 필드 — Sector 존 로딩으로 Script ▼57%, 렌더링 ▼67% 절감](#optimization-bluearchive)
+  - [포탈 없는 단일 필드 — Sector 존 로딩으로 Script ▼57%, Triangles ▼67% 절감](#optimization-bluearchive)
 
 ---
 
