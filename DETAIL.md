@@ -504,36 +504,42 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 ### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
 
-> **🚨 문제 상황: C# Task의 구조적 한계와 씬 라이프사이클 충돌**
+> **🚨 문제 상황: C# Task 도입 이후의 레이스 컨디션**
 >
-> - 초기 구현 시 비동기 에셋 로딩을 위해 C# 기본 `Task(async/await)` 활용.
-> - 씬 전환 시 `AssetBundle.Unload could not complete...` 에러가 간헐적으로 발생하며
->   씬 이동이 멈추는 현상 발생.
+> - Addressables 비동기 로딩을 C# 표준 `Task(async/await)`로 구현.
+> - 씬 전환 시 `AssetBundle.Unload could not complete...` 에러가 간헐적으로 발생하며 씬 이동이 멈추는 현상 발생.
 > - **원인 분석**:
->   1. **Unity 라이프사이클과의 분리**: C# `Task`는 Unity 메인 스레드의 생명주기와 무관하게 동작
->   2. **비동기 타이밍 충돌 (레이스 컨디션)**: Load 완료 전 씬 전환이 시작되면 다음 씬의 `Unload`가 먼저 호출되어 에셋 번들 해제 타이밍 충돌 발생
->   3. **제어 불가**: 씬 전환 중 이전 씬의 비동기 작업을 중단할 수단이 없어, 파괴된 객체를 참조하는 예외로 이어짐
+>   1. **PlayerLoop 미통합**: `Task`는 .NET 자체 스케줄러로 컨티뉴에이션이 실행되며, Unity의 PlayerLoop(매 프레임 Update 등을 실행하는 자체 스케줄링 시스템)에 통합되어 있지 않음
+>   2. **비동기 타이밍 충돌 (레이스 컨디션)**: Load Task의 컨티뉴에이션 실행 시점과 SceneManager의 Unload 호출 시점 사이에 Unity 엔진 차원의 순서 보장이 없어, Load 완료 전 Unload가 먼저 호출되는 순서 역전이 프레임 타이밍에 따라 간헐적으로 발생
+>   3. **순서 보장이 개발자 책임에 의존**: `await` 배치를 통한 순서 제어 자체는 가능하나, 이 보장이 프레임워크 차원이 아니라 개발자가 모든 호출 지점에서 정확히 구현하는 데 전적으로 의존
 >
 > <img width="283" height="54" alt="image" src="https://github.com/user-attachments/assets/7b1883f7-c131-4f8a-be43-c33d2a0f434e" />
 
 **💡 해결 과정**
 
-1. **왜 Task 대신 UniTask인가?**
-   - `UniTask`는 Unity 메인 스레드(`PlayerLoop`) 기반으로 동작하여 `Unload` 호출 순서가 PlayerLoop 안에서 보장됨 → 레이스 컨디션 해소
-   - `destroyCancellationToken`으로 오브젝트 파괴 시 진행 중인 비동기 작업을 자동 중단하여 파괴된 객체 참조 예외 원천 차단
+1. **대안 조사: Unity 실행 루프에 편입되는 두 가지 방식**
+   - Task의 근본 문제(PlayerLoop 미통합)를 해결하려면 Unity 자체 실행 루프에 편입되어 실행되는 방식이 필요.
+   - 코루틴: `MonoBehaviour`의 Update 루프에 종속되어 실행되므로 Unity 스케줄링과 자연 동기화.
+   - `UniTask`: `PlayerLoopHelper`로 Unity의 PlayerLoop 시스템에 직접 실행 단계를 등록하여 동기화.
+   - 두 방식 모두 레이스 컨디션 자체는 해결 가능하나, 아래 세 가지 기준에서 `UniTask`를 최종 선택.
 
-2. **왜 코루틴 대신 UniTask인가?**
-   - **반환값 문제**: 코루틴(`IEnumerator`)은 결과를 직접 반환할 수 없어, 에셋 핸들을 `globalHandles` / `sceneHandles`에 저장하는 현재 구조에서 멤버 변수 우회가 강제됨.
-   - `UniTask<T>`는 로드 결과를 `await` 한 줄로 받아 딕셔너리에 직접 캐싱 가능
-   - **병렬 처리**: 씬 진입 전 다수 에셋을 동시에 프리로드해야 하는 파이프라인에서 코루틴은 `WhenAll`을 직접 구현해야 하나, `UniTask.WhenAll()`로 병렬 로드와 완료 대기를 간결하게 처리하여 총 로딩 시간 단축
-   - 
+2. **왜 코루틴이 아닌 UniTask인가?**
+   - **반환값 직접 수신 불가**: `IEnumerator`는 결과 타입을 담을 수 없어, 코루틴마다 결과를 받을 컨테이너(멤버 변수·`globalHandles`/`sceneHandles` 딕셔너리)를 미리 설계해야 함. `UniTask<T>`는 호출 지점에서 `await` 한 줄로 결과를 바로 반환받아 별도 컨테이너 없이 사용 가능.
+   - **try-catch 사용 불가 (CS1626)**: C#은 `yield return`을 `catch`가 있는 `try` 블록 안에서 사용할 수 없어(컴파일 에러), 예외 발생 여부를 결과 객체의 `Status`/`OperationException` 필드로 매번 수동 검사해야 함. `async/await`은 일반 동기 코드와 동일하게 `try-catch`로 예외를 자연스럽게 처리 가능.
+   - **GC 할당 최소화**: `Task<T>`는 참조 타입(class)이라 매 호출마다 힙 할당이 발생하는 반면, `UniTask<T>`는 구조체(struct) 기반이라 할당이 최소화되어 다수 에셋을 동시에 다루는 파이프라인에서 GC 스파이크 억제.
+
+3. **PlayerLoop 통합과 취소 배선 자동화**
+   - Unload 호출 순서와 컨티뉴에이션 재개 시점이 PlayerLoop 내에서 결정론적으로 보장되어 레이스 컨디션 해소. 순서 보장의 책임이 개발자의 await 배치가 아닌 엔진 스케줄러로 이전됨.
+   - `destroyCancellationToken`으로 오브젝트 파괴 시 연결된 토큰이 자동으로 취소됨. (`Task`도 `CancellationToken`으로 취소 자체는 가능하나, 매 오브젝트마다 `CancellationTokenSource` 생성과 `OnDestroy` 취소 호출을 수동으로 배선해야 함)
+
 **관련 코드**
 - [[📄LoadingScene.cs]](https://github.com/vfly1189/OperationKivotos/blob/6211ddfbb19dc1ff310b7b2051d1a9694f8496cb/Assets/Scripts/Scenes/LoadingScene/LoadingScene.cs#L25-L79)
 
 **✅ 결과**
 - **레이스 컨디션 제거**: PlayerLoop 기반 UniTask로 씬 전환과 리소스 로드/해제 타이밍 보장
 - **안전한 생명주기 제어**: `destroyCancellationToken`으로 파괴된 객체 참조 예외 원천 차단
-- **효율적인 병렬 로딩**: `UniTask.WhenAll()`로 다수 에셋 동시 로드, 씬 진입 로딩 시간 단축
+- **GC 스파이크 억제**: 구조체 기반 `UniTask<T>`로 참조 타입 `Task<T>` 대비 힙 할당 감소
+- **간결한 다중 대기 처리**: `UniTask.WhenAll()`로 다수 에셋의 I/O 대기를 동시에 중첩시켜 총 로딩 시간 단축
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
