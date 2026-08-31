@@ -102,7 +102,7 @@
 | 👥 **개발 인원** | 1인 (개인 프로젝트) |
 | 🛠️ **개발 환경** | Unity, C#, `Addressables`, `UniTask`, `NPOI` |
 | 📝 **개발 블로그** | [Velog 바로가기](https://velog.io/@vfly1189/series/Unity-%EB%B8%94%EB%A3%A8%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B8%8C-%EC%B0%BD%EC%9E%91-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8) |
-| 💾 **GitHub** | [소스코드](https://github.com/vfly1189/OperationKivotos) |
+| 💾 **GitHub** | [소스코드](https://github.com/vfly1189/OperationKivotos-Code) |
 
 ### 🎬 개발 과정 영상 (총 4편)
 
@@ -254,7 +254,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 씬 이탈 시 sceneHandles만 선택적으로 해제.
 
 **관련 코드**
-- [[📄ResourceManager 비동기]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/ResourceManager.cs#L40-L115)
+- [[📄ResourceManager 비동기]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/Resource/ResourceManager.cs#L190-L228)
 
 > **🚀 기술 도입 배경**: 문자열 하드코딩, 인스펙터 직접 참조, `Task` 사용 과정에서 발생한 언로드 타이밍 문제와 이를 `UniTask`로 마이그레이션한 과정은 하단 **[🛠️ 문제 해결](#async-unitask-trouble)** 파트에서 다룹니다.
 
@@ -291,7 +291,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 인게임 로직에서는 원본 파일 형식에 구애받지 않고 **ID(Key) 기반 $O(1)$ 속도로 데이터를 즉시 조회**
 
 **관련 코드**
-- [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Editor/ItemExcelImporter.cs)
+- [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Editor/ItemExcelImporter.cs)
 
 
 > **🚀 기술 도입 배경**: 
@@ -330,10 +330,10 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 거대한 `Update()` 스파게티 코드를 막기 위해 최상위 상태 판단(생존 ➔ 전투 ➔ 추적 ➔ 대기)을 `Selector`와 `Sequence` 기반의 트리 구조로 캡슐화
 
 **관련 코드**
-- [[📄BaseMonsterController.cs]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Controllers/MonsterController/BaseMonsterController.cs)
-- [[📄NormalMonster 행동트리 제작 함]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Controllers/MonsterController/NormalMonsterController.cs#L79-L105)
-- [[📄원거리 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Controllers/MonsterController/RangedMonsterController.cs)
-- [[📄보스 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Controllers/MonsterController/Boss/BossMonsterController.cs)
+- [[📄BaseMonsterController.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Controllers/Monster/BaseMonsterController.cs)
+- [[📄NormalMonster 행동트리 제작 함]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Controllers/Monster/NormalMonsterController.cs#L113-L141)
+- [[📄원거리 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Controllers/Monster/RangedMonsterController.cs)
+- [[📄보스 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Controllers/Monster/Boss/BossMonsterController.cs)
 
 
 **관련 이미지**
@@ -387,8 +387,8 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   - 향후 데미지 연산 공식이 복잡해져도 파이프라인 수정 없이 데이터 형태만 확장할 수 있는 유연성 확보
 
 **관련 코드**
-- [[📄IDamageable 인턴페이스]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Interface/IDamageable.cs)
-- [[📄TakeDamage 예시]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Data/Unit/CharacterStat.cs#L239-L254)
+- [[📄IDamageable 인턴페이스]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Interface/IDamageable.cs)
+- [[📄TakeDamage 예시]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Data/Stat/Health.cs#L41-L55)
 
 **관련 이미지**
 | **최적화 전 (Before)** | **최적화 후 (After)** |
@@ -426,7 +426,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
   <img width="478" height="428" alt="image" src="https://github.com/user-attachments/assets/4aeb505b-1aa2-4777-b176-2b99db994853" />
 
 **관련 코드**
-- [[📄UIManager.cs]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/UIManager.cs)
+- [[📄UIManager.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/UIManager.cs)
 
 </details>
 
@@ -488,10 +488,10 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 > **몬스터 밀도가 증가할수록 절감 효과가 선형적으로 확대되는 확장 가능한 구조.**
 
 **관련 코드**
-- [[📄Sector.cs (헤더 설계)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/Sector.cs)
-- [[📄SectorManager.cs (섹터 관리 매니저)]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Scripts/Managers/Core/SectorManager/SectorManager.cs)
-- [[📄섹터내 몬스터 스폰 로]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L145)
-- [[📄오브젝트 풀링]](https://github.com/vfly1189/OperationKivotos/blob/f4345de065311498663be067bb61a108918cfd37/Assets/Scripts/Managers/Core/PoolManager.cs#L115-L147)
+- [[📄Sector.cs (헤더 설계)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/SectorManager/Sector.cs)
+- [[📄SectorManager.cs (섹터 관리 매니저)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/SectorManager/SectorManager.cs)
+- [[📄섹터내 몬스터 스폰 로]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L147)
+- [[📄오브젝트 풀링]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/PoolManager.cs#L117-L180)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -533,7 +533,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
    - `destroyCancellationToken`으로 오브젝트 파괴 시 연결된 토큰이 자동으로 취소됨. (`Task`도 `CancellationToken`으로 취소 자체는 가능하나, 매 오브젝트마다 `CancellationTokenSource` 생성과 `OnDestroy` 취소 호출을 수동으로 배선해야 함)
 
 **관련 코드**
-- [[📄LoadingScene.cs]](https://github.com/vfly1189/OperationKivotos/blob/6211ddfbb19dc1ff310b7b2051d1a9694f8496cb/Assets/Scripts/Scenes/LoadingScene/LoadingScene.cs#L25-L79)
+- [[📄SceneManagerEx.RunLoadSequenceAsync]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/SceneManagerEx.cs#L73-L127)
 
 **✅ 결과**
 - **레이스 컨디션 제거**: PlayerLoop 기반 UniTask로 씬 전환과 리소스 로드/해제 타이밍 보장
@@ -576,7 +576,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - "기획자는 수식 기반의 엑셀로 편하게 밸런싱하고, 클라이언트는 가볍게 구워진 SO로 빠르게 읽어 들이는" **실무형 데이터 주도 설계(Data-Driven) 파이프라인** 구축 완료.
 
 **관련 코드**
-- [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos/blob/main/Assets/Editor/ItemExcelImporter.cs)
+- [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Editor/ItemExcelImporter.cs)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
