@@ -313,16 +313,17 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 **관련 이미지**
 
-<div align="center">
 
 **1️⃣ 리소스 로드 흐름**<br>
-<img width="800" alt="이미지 추가 예정 — 리소스 로드 흐름" src="" />
+<img width="922" height="276" alt="스크린샷 2026-09-04 002749" src="https://github.com/user-attachments/assets/485f7a3a-5e0c-42f5-a806-5ce52029880c" />
+
 <p><em>첫 요청만 실제 로드가 일어나고, 재요청은 레지스트리 캐시에서 반환된다</em></p>
 
 <br>
 
 **2️⃣ refCount 정산**<br>
-<img width="800" alt="이미지 추가 예정 — refCount 정산" src="" />
+<img width="954" height="349" alt="스크린샷 2026-09-04 002805" src="https://github.com/user-attachments/assets/95f6b83b-6792-4f0c-bd3b-a5e524308bc2" />
+
 <p><em>수명 경계에서 스코프가 사라지면 소유자가 없어진 키만 Release된다</em></p>
 
 </div>
