@@ -201,60 +201,39 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <br>
 
 **구현 목적**
-- **"공격을 발동한다"는 같은 개념이 플레이어 / 일반 몬스터 / 보스 3진영에 각각 따로 구현**되어 있고, 스킬 1개가 곧 클래스 1개라 조합이 불가능하던 구조를 해소하기 위해 도입
-- **발동(When)은 한 곳으로 모으고, 무엇을 할지(What)는 데이터가 소유**하도록 책임을 분리
+- 공격 로직을 **몬스터별 · 캐릭터별로 개별 구현**하다 보니, 캐릭터 하나 · 스킬 하나가 늘 때마다 **스크립트 파일이 함께 늘어나는 구조**였고 규모가 커지면 유지보수가 불가능해질 것이 명확했음
+- 흩어진 공격 발동을 **하나의 전투 파이프라인(공통 규약)으로 묶어** 관리하는 것이 목적
 
 **주요 구현 내용**
-- **발동이 통과하는 단 하나의 게이트 (`AbilityRunner`)**
-  - 캐스터마다 러너를 1개씩 소유(`BaseCharacter`, `BaseMonsterController`)하여 **3진영이 동일한 발동 규약을 공유**
-  - 쿨다운 검사와 태그 게이트(`RequiredTags` 전부 보유 · `BlockedTags` 미보유)를 러너가 **단독 소유**. 통과하지 못하면 부작용 없이 즉시 반환
-  - **`Commit`(게이트 통과 + 쿨 시작)과 `Fire`(캐스트 타임 대기 ➔ Effect 실행)를 분리**하여, 입력 시점과 실제 발사 시점이 다른 스킬(애니메이션 비트 발동)도 같은 게이트를 지나도록 통일
-  - 쿨다운을 '남은 시간'이 아닌 **종료 절대 시각**(`Now + cooldown`)으로 저장해 매 프레임 감산 로직 제거. 시간 소스는 `IClock`으로 주입하여 테스트 가능한 이음새 확보
-  - 캐스팅 중 부여 태그(`GrantsTags`)는 `try/finally`로 해제 ➔ 이펙트가 도중 취소되어도 `State.Casting`이 남아 캐릭터가 잠기는 문제 차단
+- **발동은 러너 한 곳으로 (`AbilityRunner`)**
+  - 캐스터마다 러너를 1개씩 소유(`BaseCharacter`, `BaseMonsterController`)하여 **플레이어 · 일반 몬스터 · 보스 3진영이 같은 규약을 공유**
+  - 쿨다운과 태그 게이트를 러너가 **단독 소유**하여, 발동이 통과하는 지점을 하나로 고정
+  - `Commit`(게이트 통과 + 쿨 시작)과 `Fire`(캐스트 대기 ➔ 실행)를 분리해, 입력 시점과 발사 시점이 다른 스킬도 동일한 게이트를 지나도록 통일
 
-- **무엇을 할지는 코드가 아니라 데이터가 소유 (`AbilityData` SO)**
-  - `AbilityData`(ScriptableObject) = 쿨다운·코스트·캐스트 타임·게이팅 태그 + `EffectData[]`
-  - 러너는 `foreach (effect) await effect.ExecuteAsync(ctx, token)` 만 수행 — **무엇이 실행될지는 코드에 존재하지 않음**
-  - `AbilityContext` 하나로 캐스터·기준 Transform·타겟·스탯·태그를 **스냅샷으로 배달**하여, Effect는 캐스터의 구체 타입을 몰라도 동작
-
-- **스킬은 새로 만드는 것이 아니라 부품을 끼우는 것 (`IEffect`)**
-  - 발사(`SpawnProjectiles`) · 연출(`SpawnVFX`) · 상태(`ApplyStatusTag`) · 패턴(`RadialBurstPattern`) · 흐름(`DelayEffect`, `BranchByChoice`)으로 **Effect 부품 15벌** 구성
-  - `RepeatEffect`처럼 **자식 Effect를 품는 컨테이너 부품**을 두어, '연발'이라는 로직이 트리 안 단 한 곳에만 존재하도록 설계
-  - 실증 : 일반 몹 라이플 5연사(`count:5, interval:0.1`) ↔ 히나 8연사(`count:8, interval:0.05`) — **코드 차이 0줄**
-  - 결과 : **부품 15벌의 조합으로 어빌리티 에셋 54개 구성(신규 코드 0줄)**, 보스 이관으로 `BossSkillBase` 파생 **6종 328줄 소멸**(기반·디스패처 포함 시 8파일 436줄)
+- **무엇을 할지는 코드가 아니라 데이터가 소유 (`AbilityData` SO + `IEffect`)**
+  - 러너는 `foreach (effect) await effect.ExecuteAsync(ctx, token)` 만 수행 — **실행할 내용이 코드에 존재하지 않음**
+  - 발사 · 연출 · 상태 · 패턴 · 흐름을 **Effect 부품 15벌**로 쪼개고, `RepeatEffect`처럼 자식을 품는 컨테이너 부품을 두어 '연발' 같은 로직이 단 한 곳에만 존재하도록 설계
+  - 결과 : **부품 조합만으로 어빌리티 에셋 54개 구성(신규 코드 0줄)**, 보스 이관으로 `BossSkillBase` 파생 **6종 328줄 소멸**
 
 **관련 코드**
 - [[📄AbilityRunner.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Ability/AbilityRunner.cs)
 - [[📄AbilityData.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Data/Ability/AbilityData.cs)
 - [[📄RepeatEffect.cs (컨테이너 부품)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Data/Ability/Effects/Pattern/RepeatEffect.cs)
 
-<!-- ▼▼▼ 이미지 2장 삽입 자리 (비워둠) ▼▼▼
-     1) "스킬은 새로 만드는 것이 아닌 부품을 끼우는 것"  — 부품 상자 ➔ Hina 8연사 / 보스 전방위 장판 파도
-     2) "왜 '상속'이 아니라 '조합'인가"                  — 부품 15벌 ➔ asset 54개 · 코드 추가 0줄 · 한계 ①②
-
-     아래 형식으로 채우기:
+<!-- ▼▼▼ 이미지 삽입 자리 (비워둠) — 블록(Effect 부품) 조합 이미지 1장 ▼▼▼
 
 **관련 이미지**
 
 <div align="center">
-
-**1️⃣ 부품 조합으로 만들어지는 스킬**<br>
 <img width="800" alt="Ability Effect Composition" src="" />
-<p><em>같은 부품을 다시 끼워 플레이어 8연사와 보스 장판 파도를 구성</em></p>
-
-<br>
-
-**2️⃣ 상속이 아니라 조합을 택한 이유와 그 비용**<br>
-<img width="800" alt="Inheritance vs Composition" src="" />
-<p><em>부품 15벌 ➔ 어빌리티 에셋 54개(코드 0줄), 그리고 재사용이 끝나는 지점의 한계</em></p>
-
+<p><em>같은 부품을 다시 끼워 플레이어 8연사와 보스 장판 파도를 구성 — 코드 추가 0줄</em></p>
 </div>
+
 ▲▲▲ 이미지 자리 끝 ▲▲▲ -->
 
 > **🚀 기술 도입 배경**:
-> 발동이 3갈래로 흩어져 있던 상황과, 이를 러너 1곳으로 통합하고 스킬을 Effect 조합으로 바꾼 과정,
-> 그리고 **'상속'이 아니라 '조합'을 택한 이유와 이 구조가 내는 비용**은
-> 하단 **[🛠️ 문제 해결](#ability-trouble)** 파트에서 상세히 다룹니다.
+> 발동이 3갈래로 흩어져 있던 상황과, **'상속'이 아니라 '조합'을 택한 이유 및 그 구조가 내는 비용**은
+> 하단 **[🛠️ 문제 해결](#ability-trouble)** 파트에서 다룹니다.
 
 </details>
 
@@ -312,61 +291,52 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <br>
 
 **구현 목적**
-- `Global` / `Scene` **2개 버킷만으로 리소스를 운영**하다 보니, 실제 수명은 그보다 다양해 **수명이 애매한 리소스가 전부 `Global`로 도피**하던 구조적 문제 해소
-- **"누가 Release를 호출하는가"** 라는 책임을 호출부(46개 파일 · 130곳)에서 걷어내고, **리소스의 수명을 코드가 아닌 구조로 표현**
+- `Global` / `Scene` **2개 버킷만으로 리소스를 운영**하다 보니, 실제 수명은 그보다 다양해 **수명이 애매한 리소스가 전부 `Global`로 도피**하던 구조 해소
+- **"누가 Release를 호출하는가"** 라는 책임을 호출부(46개 파일 · 130곳)에서 걷어내고, **수명을 코드가 아닌 구조로 표현**
 
 **주요 구현 내용**
-- **책임을 3층으로 분리 (라우팅 / 수명 / 핸들)**
-  - `ResourceManager`(라우팅만) ➔ `ResourceScope`(수명 티켓 · 키 집합) ➔ `ResourceRegistry`(실제 핸들 · refCount) ➔ `Addressables`(실제 I/O)
-  - **실제 로드가 일어나는 지점은 레지스트리 단 한 곳**이며, 같은 키의 재요청은 레지스트리 캐시에서 반환되고 늘어나는 것은 로드가 아니라 refCount
-  - 키는 `ResourceKey`(문자열 + `Type`) 구조체로 잡아, 같은 경로라도 로드 타입이 다르면 별개 엔트리로 정확히 분리
+- **책임을 3층으로 분리**
+  - `ResourceManager`(라우팅) ➔ `ResourceScope`(수명 티켓 · 키 집합) ➔ `ResourceRegistry`(핸들 · refCount) ➔ `Addressables`(실제 I/O)
+  - 실제 로드는 레지스트리 한 곳에서만 일어나고 재요청은 캐시에서 반환 — **요청이 늘어도 늘어나는 것은 로드가 아니라 refCount**
 
 - **수명 스코프 4종 — 수명 경계가 곧 해제 시점**
-  - `Global`(부팅 ➔ 종료, Dispose 없음) · `Scene`(씬 전환 시 자동 회전) · `Party`(씬 전환을 넘어 생존) · `Popup`(스택 0➔1에서 생성, 1➔0에서 Dispose)
-  - 각 스코프는 **자기가 잡은 키만** `Dispose()` 시점에 `-1` 하므로, **호출부는 Release를 기억할 필요가 없음**
-  - 스코프 내부가 `HashSet<ResourceKey>`라 동일 스코프의 중복 요청은 refCount를 올리지 않고, 서로 다른 스코프가 같은 에셋을 참조하면 refCount가 정확히 누적되어 **마지막 소유자가 사라지는 순간에만 실제 해제**
+  - `Global`(종료까지) · `Scene`(씬 전환) · `Party`(씬 전환을 넘어 생존) · `Popup`(스택 0➔1 생성, 1➔0 Dispose)
+  - 각 스코프는 **자기가 잡은 키만** `Dispose()` 시점에 `-1` 하므로 **호출부는 Release를 기억할 필요가 없음**
+  - 세는 것은 Addressables가 하지만 **'언제 줄일지'는 사람이 직접 작성해야 한다** — 스코프 층이 "이제 필요 없다"는 도메인 신호를 refCount 감소로 번역
 
-- **Addressables가 이미 참조를 세는데 카운트를 하나 더 둔 이유**
-  - **세는 것은 Addressables가 하지만, '언제 줄일지'는 사람이 직접 작성해야 한다.** 스코프 층은 "이제 필요 없다"는 **도메인 신호를 refCount 감소로 번역**하는 역할
-  - 이 층이 없으면 호출부 130곳이 각자 Release 시점을 기억해야 이어지고, 하나만 빠뜨려도 조용히 메모리에 남음
-  - 취소·실패 시에는 스코프의 소유 기록과 레지스트리의 refCount를 **양쪽 모두 롤백** — 한쪽만 되돌리면 소유자 없는 유령 핸들이 남아 회수가 영구히 막힘
-
-- **오브젝트 풀 · 아틀라스 캐시까지 수명 통합**
-  - 풀이 원본 프리팹의 **refCount 티켓을 직접 획득**(`AcquirePoolRef`)하도록 하여, 씬 전환 시 원본이 언로드되어 풀 인스턴스가 깨지는 창을 구조적으로 차단
-  - 아틀라스에서 뽑은 **클론 Sprite**가 영구 캐시에 남으면 refCount와 무관하게 텍스처가 고정되므로, 레지스트리의 `OnReleased` 이벤트를 구독해 **캐시의 수명을 핸들과 동행**시킴
-  - 실측(에디터 플레이) : `GameScene ➔ 팝업 5종 ➔ BossDungeon ➔ GameScene` 왕복 후 메모리 **358.6MB ➔ 359.1MB (flat)** 로 누수 없음 확인
+- **풀 · 아틀라스 캐시까지 수명 통합**
+  - 풀이 원본 프리팹의 **refCount 티켓을 직접 획득**하여, 씬 전환 시 원본이 언로드되어 풀 인스턴스가 깨지는 창을 차단
+  - 아틀라스에서 뽑은 클론 Sprite를 레지스트리의 `OnReleased`에 맞춰 함께 파기 — 캐시가 핸들을 붙잡아 회수가 무효화되는 것 방지
+  - 실측 : 팝업 5종 · 보스 던전 왕복 후 메모리 **358.6MB ➔ 359.1MB (flat)** 로 누수 없음 확인
 
 **관련 코드**
 - [[📄ResourceScope.cs (수명 티켓)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceScope.cs)
 - [[📄ResourceRegistry.cs (핸들 · refCount)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceRegistry.cs)
 - [[📄ResourceManager.cs (스코프 라우팅)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceManager.cs)
 
-<!-- ▼▼▼ 이미지 2장 삽입 자리 (비워둠) ▼▼▼
-     1) "재요청은 Registry에서 되돌아온다"        — 호출부 ➔ Manager ➔ Scope ➔ Registry ➔ Addressables 4층 시퀀스
-     2) "'누가 Release 하는가' 문제를 어떻게 없앴는가" — Global/Scene/Popup 스코프와 Registry refCount 정산 표
-
-     아래 형식으로 채우기:
+<!-- ▼▼▼ 이미지 삽입 자리 (비워둠) — 2장 ▼▼▼
+     1) 로드 흐름 그래프 / 스크린샷
+     2) refCount 정산 (스코프 소멸 ➔ 소유자 없는 키만 Release)
 
 **관련 이미지**
 
 <div align="center">
 
-**1️⃣ 첫 요청과 재요청 — 실제 로드는 한 번뿐**<br>
-<img width="800" alt="Resource Load Path" src="" />
-<p><em>요청이 늘어도 늘어나는 것은 로드가 아니라 refCount — 에셋 하나당 핸들은 언제나 1개</em></p>
+**1️⃣ 로드 흐름**<br>
+<img width="800" alt="Resource Load Flow" src="" />
 
 <br>
 
-**2️⃣ 수명 경계에서 스코프가 사라지면 refCount가 스스로 정산된다**<br>
-<img width="800" alt="Resource Scope Settlement" src="" />
-<p><em>팝업을 모두 닫으면 Popup Scope가 자신이 가진 키만 -1 ➔ 소유자가 없어진 키만 Release</em></p>
+**2️⃣ refCount 정산**<br>
+<img width="800" alt="Resource refCount" src="" />
 
 </div>
+
 ▲▲▲ 이미지 자리 끝 ▲▲▲ -->
 
 > **🚀 기술 도입 배경**:
-> 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유하던 2버킷 구조가 왜 한계에 부딪혔는지,
-> 그리고 이를 수명 스코프로 재설계한 판단은 하단 **[🛠️ 문제 해결](#resource-lifetime-trouble)** 파트에서 다룹니다.
+> 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유하던 2버킷 구조가 왜 한계에 부딪혔는지는
+> 하단 **[🛠️ 문제 해결](#resource-lifetime-trouble)** 파트에서 다룹니다.
 
 </details>
 
