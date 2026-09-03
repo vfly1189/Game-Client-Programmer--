@@ -559,8 +559,8 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
    - 보스 이관으로 `BossSkillBase` 파생 6종 328줄 소멸(기반 · 디스패처 포함 8파일 436줄).
 
 <!-- "왜 상속이 아니라 조합인가" — 재사용 15벌→54개 · 한계①② 다이어그램 -->
-<div align="center">
-<img width="900" alt="이미지 추가 예정 — 왜 상속이 아니라 조합인가" src="" />
+<img width="946" height="349" alt="스크린샷 2026-09-04 005741" src="https://github.com/user-attachments/assets/433eb408-f283-489f-b04e-f3511a709a50" />
+
 </div>
 
 4. **이 구조도 비용을 낸다 — 재사용이 끝나는 지점부터**
@@ -609,8 +609,8 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
    - 결과적으로 해제 짝맞춤 지점이 **호출부 130곳 → 수명 경계(씬 전환 · 팝업 스택 0 · 파티 해체) 개수**로 압축됨.
 
 <!-- "Addressables가 이미 참조를 세는데 왜 카운트를 하나 더 두었는가" — Addressables만으로 vs 수명 스코프 비교 다이어그램 -->
-<div align="center">
-<img width="900" alt="이미지 추가 예정 — Addressables만으로 vs 수명 스코프 비교" src="" />
+<img width="962" height="333" alt="스크린샷 2026-09-04 005756" src="https://github.com/user-attachments/assets/f7a4ed97-c46a-4012-9ee4-10f0e54d86c7" />
+
 </div>
 
 4. **오브젝트 풀 · 아틀라스 캐시까지 수명 통합**
