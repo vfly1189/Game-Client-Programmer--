@@ -220,16 +220,14 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - [[📄AbilityData.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Data/Ability/AbilityData.cs)
 - [[📄RepeatEffect.cs (컨테이너 부품)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Data/Ability/Effects/Pattern/RepeatEffect.cs)
 
-<!-- ▼▼▼ 이미지 삽입 자리 (비워둠) — 블록(Effect 부품) 조합 이미지 1장 ▼▼▼
-
 **관련 이미지**
 
 <div align="center">
-<img width="800" alt="Ability Effect Composition" src="" />
-<p><em>같은 부품을 다시 끼워 플레이어 8연사와 보스 장판 파도를 구성 — 코드 추가 0줄</em></p>
-</div>
 
-▲▲▲ 이미지 자리 끝 ▲▲▲ -->
+<img width="800" alt="이미지 추가 예정 — Effect 부품 조합 구조" src="" />
+<p><em>같은 부품을 다시 끼워 플레이어 8연사와 보스 장판 파도를 구성 — 코드 추가 0줄</em></p>
+
+</div>
 
 > **🚀 기술 도입 배경**:
 > 발동이 3갈래로 흩어져 있던 상황과, **'상속'이 아니라 '조합'을 택한 이유 및 그 구조가 내는 비용**은
@@ -314,25 +312,21 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 - [[📄ResourceRegistry.cs (핸들 · refCount)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceRegistry.cs)
 - [[📄ResourceManager.cs (스코프 라우팅)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceManager.cs)
 
-<!-- ▼▼▼ 이미지 삽입 자리 (비워둠) — 2장 ▼▼▼
-     1) 로드 흐름 그래프 / 스크린샷
-     2) refCount 정산 (스코프 소멸 ➔ 소유자 없는 키만 Release)
-
 **관련 이미지**
 
 <div align="center">
 
-**1️⃣ 로드 흐름**<br>
-<img width="800" alt="Resource Load Flow" src="" />
+**1️⃣ 리소스 로드 흐름**<br>
+<img width="800" alt="이미지 추가 예정 — 리소스 로드 흐름" src="" />
+<p><em>첫 요청만 실제 로드가 일어나고, 재요청은 레지스트리 캐시에서 반환된다</em></p>
 
 <br>
 
 **2️⃣ refCount 정산**<br>
-<img width="800" alt="Resource refCount" src="" />
+<img width="800" alt="이미지 추가 예정 — refCount 정산" src="" />
+<p><em>수명 경계에서 스코프가 사라지면 소유자가 없어진 키만 Release된다</em></p>
 
 </div>
-
-▲▲▲ 이미지 자리 끝 ▲▲▲ -->
 
 > **🚀 기술 도입 배경**:
 > 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유하던 2버킷 구조가 왜 한계에 부딪혔는지는
