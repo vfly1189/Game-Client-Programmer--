@@ -28,7 +28,7 @@
 - 낯선 기술이나 어려운 문제도 "배울 수 있는 기회"로 보고 즐겁게 도전합니다.
 - 개발 중 마주하는 벽도 끝까지 파고들어 해결합니다.
   - [GDI+의 한계를 느끼고 하드웨어 가속(Direct2D) 시스템으로 전면 교체](#direct2d-optimization)
-  - [동기 방식의 병목을 해결하기 위해 익숙지 않았던 UniTask 비동기 파이프라인 도입](#async-unitask-trouble)
+  - [Addressables 수동 해제의 한계를 겪고 익숙지 않았던 Scope 기반 수명 관리 구조에 도전](#resource-lifetime-trouble)
 
 ---
 
@@ -54,8 +54,8 @@
         <b><a href="#features-bluearchive">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-bluearchive">🛠️ 문제 해결</a></b><br>
         &nbsp;&nbsp; └ <a href="#optimization-trouble">공간 분할(Sector) 스포너 최적화</a><br>
-        &nbsp;&nbsp; └ <a href="#async-unitask-trouble">UniTask 비동기 파이프라인</a><br>
-        &nbsp;&nbsp; └ <a href="#data-driven-trouble">데이터 관리 한계 극복 및 자동화</a>
+        &nbsp;&nbsp; └ <a href="#ability-trouble">데이터 주도 AbilitySystem</a><br>
+        &nbsp;&nbsp; └ <a href="#resource-lifetime-trouble">리소스 수명 스코프</a>
       </td>
       <td valign="top">
         <br>
@@ -129,11 +129,11 @@
 &nbsp;&nbsp; └ **[기획 변경에 따른 AI·렌더링 연산 병목 해소: Sector 기반 존 로딩 시스템](#optimization-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Sector` 기반 시야 컬링과 비동기 생명주기 제어로 해결하여 **안정적인 프레임 방어 성공**
 
-&nbsp;&nbsp; └ **[동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축](#async-unitask-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `Task` 스레드풀의 `AssetBundle.Unload` 충돌을 `UniTask` 메인 스레드 동기화로 해결
+&nbsp;&nbsp; └ **[흩어진 공격 발동과 데이터 주도 AbilitySystem 설계](#ability-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 캐스터마다 따로 구현되던 발동을 `AbilityRunner` 단일 게이트로 통합하고 스킬을 **Effect 조합**으로 재설계
 
-&nbsp;&nbsp; └ **[대규모 데이터 관리의 한계 극복 및 파이프라인 이원화 (Excel/JSON)](#data-driven-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 런타임 엑셀 파싱의 오버헤드를 에디터 타임 `ScriptableObject` 베이킹으로 이전하고 `DataManager`로 통합하여 **데이터 관리 최적화**
+&nbsp;&nbsp; └ **[2버킷 구조의 한계와 수명 스코프 도입](#resource-lifetime-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Global`/`Scene` 2버킷에 도피하던 리소스를 **수명 스코프 4종**으로 재설계하여 해제 책임을 구조로 이전
 
 
 
@@ -367,10 +367,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 **관련 코드**
 - [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Editor/ItemExcelImporter.cs)
 
-
-> **🚀 기술 도입 배경**: 
-> 단순 하드코딩 ➔ 개별 SO ➔ 전체 JSON ➔ Excel/JSON 하이브리드로 파이프라인이 진화하게 된 성능 병목과 최적화 과정은 하단 **[🛠️ 문제 해결](#data-driven-trouble)** 파트에서 다룹니다.
-
 </details>
 
 <div align="right">
@@ -539,44 +535,43 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <br>
 
 
-### 2️⃣ 동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축<a name="async-unitask-trouble"></a>
+### 2️⃣ 흩어진 공격 발동과 데이터 주도 AbilitySystem 설계<a name="ability-trouble"></a>
 
-> **🚨 문제 상황: C# Task 도입 이후의 레이스 컨디션**
+> **🚨 문제 상황: "공격을 발동한다"는 같은 개념이 3갈래로 흩어져 있었다**
 >
-> - Addressables 비동기 로딩을 C# 표준 `Task(async/await)`로 구현.
-> - 씬 전환 시 `AssetBundle.Unload could not complete...` 에러가 간헐적으로 발생하며 씬 이동이 멈추는 현상 발생.
-> - **원인 분석**:
->   1. **PlayerLoop 미통합**: `Task`는 .NET 자체 스케줄러로 컨티뉴에이션이 실행되며, Unity의 PlayerLoop(매 프레임 Update 등을 실행하는 자체 스케줄링 시스템)에 통합되어 있지 않음
->   2. **비동기 타이밍 충돌 (레이스 컨디션)**: Load Task의 컨티뉴에이션 실행 시점과 SceneManager의 Unload 호출 시점 사이에 Unity 엔진 차원의 순서 보장이 없어, Load 완료 전 Unload가 먼저 호출되는 순서 역전이 프레임 타이밍에 따라 간헐적으로 발생
->   3. **순서 보장이 개발자 책임에 의존**: `await` 배치를 통한 순서 제어 자체는 가능하나, 이 보장이 프레임워크 차원이 아니라 개발자가 모든 호출 지점에서 정확히 구현하는 데 전적으로 의존
->
-> <img width="283" height="54" alt="image" src="https://github.com/user-attachments/assets/7b1883f7-c131-4f8a-be43-c33d2a0f434e" />
+> - 플레이어 · 일반 몬스터 · 보스가 각자 공격 발동 로직을 처음부터 따로 구현 — 공통 규약이 없어 캐스터가 늘 때마다 코드가 중복.
+> - 스킬 1개 = 클래스 1개 구조라 조합이 불가능. 발사 횟수 · 간격 · 배율 같은 값이 코드 상수로 박혀 있어 변형이 생길 때마다 새 클래스로 갈라짐.
+> - 보스 스킬은 `BossSkillBase` 파생 클래스 6종(328줄)이 플레이어 · 몹 발동 경로와 완전히 분리된 이중 시스템으로 존재.
 
 **💡 해결 과정**
 
-1. **대안 조사: Unity 실행 루프에 편입되는 두 가지 방식**
-   - Task의 근본 문제(PlayerLoop 미통합)를 해결하려면 Unity 자체 실행 루프에 편입되어 실행되는 방식이 필요.
-   - 코루틴: `MonoBehaviour`의 Update 루프에 종속되어 실행되므로 Unity 스케줄링과 자연 동기화.
-   - `UniTask`: `PlayerLoopHelper`로 Unity의 PlayerLoop 시스템에 직접 실행 단계를 등록하여 동기화.
-   - 두 방식 모두 레이스 컨디션 자체는 해결 가능하나, 아래 세 가지 기준에서 `UniTask`를 최종 선택.
+1. **발동이 통과하는 단 하나의 게이트 (`AbilityRunner`)**
+   - 캐스터마다 러너를 1개씩 소유(`BaseCharacter`, `BaseMonsterController`)하여 3진영이 동일한 발동 규약을 공유.
+   - 쿨다운 · 태그 게이트를 러너가 단독 소유. `Commit`(게이트 통과+쿨 시작)과 `Fire`(캐스트 대기+실행)를 분리해, 입력 시점과 발사 시점이 다른 스킬도 같은 게이트를 지나도록 통일.
 
-2. **왜 코루틴이 아닌 UniTask인가?**
-   - **반환값 직접 수신 불가**: `IEnumerator`는 결과 타입을 담을 수 없어, 코루틴마다 결과를 받을 컨테이너(멤버 변수·`globalHandles`/`sceneHandles` 딕셔너리)를 미리 설계해야 함. `UniTask<T>`는 호출 지점에서 `await` 한 줄로 결과를 바로 반환받아 별도 컨테이너 없이 사용 가능.
-   - **try-catch 사용 불가 (CS1626)**: C#은 `yield return`을 `catch`가 있는 `try` 블록 안에서 사용할 수 없어(컴파일 에러), 예외 발생 여부를 결과 객체의 `Status`/`OperationException` 필드로 매번 수동 검사해야 함. `async/await`은 일반 동기 코드와 동일하게 `try-catch`로 예외를 자연스럽게 처리 가능.
-   - **GC 할당 최소화**: `Task<T>`는 참조 타입(class)이라 매 호출마다 힙 할당이 발생하는 반면, `UniTask<T>`는 구조체(struct) 기반이라 할당이 최소화되어 다수 에셋을 동시에 다루는 파이프라인에서 GC 스파이크 억제.
+2. **무엇을 할지는 코드가 아니라 데이터가 소유 (`AbilityData` SO)**
+   - `AbilityData` = 쿨다운 · 코스트 · 게이팅 태그 + `EffectData[]`. 러너는 `foreach(effect) → ExecuteAsync`만 수행 — 실행 내용이 코드에 존재하지 않음.
+   - 발사 · 연출 · 상태 · 패턴 · 흐름으로 Effect 부품 15벌을 구성하고, `RepeatEffect`처럼 자식을 품는 컨테이너 부품으로 '연발' 로직이 트리 안 한 곳에만 존재하도록 설계.
 
-3. **PlayerLoop 통합과 취소 배선 자동화**
-   - Unload 호출 순서와 컨티뉴에이션 재개 시점이 PlayerLoop 내에서 결정론적으로 보장되어 레이스 컨디션 해소. 순서 보장의 책임이 개발자의 await 배치가 아닌 엔진 스케줄러로 이전됨.
-   - `destroyCancellationToken`으로 오브젝트 파괴 시 연결된 토큰이 자동으로 취소됨. (`Task`도 `CancellationToken`으로 취소 자체는 가능하나, 매 오브젝트마다 `CancellationTokenSource` 생성과 `OnDestroy` 취소 호출을 수동으로 배선해야 함)
+3. **왜 '상속'이 아니라 '조합'인가**
+   - 재사용이 늘어난 만큼 코드 없이 스킬이 늘어난다 — Effect 부품 15벌의 조합만으로 어빌리티 asset 54개 구성(코드 추가 0줄).
+   - 실증 : 몹 라이플 5연사(`count:5, interval:0.1`) ↔ 히나 8연사(`count:8, interval:0.05`) — **코드 차이 0줄**.
+   - 보스 이관으로 `BossSkillBase` 파생 6종 328줄 소멸(기반 · 디스패처 포함 8파일 436줄).
 
-**관련 코드**
-- [[📄SceneManagerEx.RunLoadSequenceAsync]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/SceneManagerEx.cs#L73-L127)
+4. **이 구조도 비용을 낸다 — 재사용이 끝나는 지점부터**
+   - 한계① : 기존 부품으로 표현되지 않는 새 패턴이 필요하면 결국 부품 클래스를 새로 짜야 한다.
+   - 한계② : asset이 쌓일수록 네이밍 · 중복 · 참조 추적이 새로운 관리 비용이 된다.
+   - 두 한계를 인지한 채로, 지금 규모(asset 54개)에서는 조합의 이득이 관리 비용을 상회한다고 판단해 유지.
 
 **✅ 결과**
-- **레이스 컨디션 제거**: PlayerLoop 기반 UniTask로 씬 전환과 리소스 로드/해제 타이밍 보장
-- **안전한 생명주기 제어**: `destroyCancellationToken`으로 파괴된 객체 참조 예외 원천 차단
-- **GC 스파이크 억제**: 구조체 기반 `UniTask<T>`로 참조 타입 `Task<T>` 대비 힙 할당 감소
-- **간결한 다중 대기 처리**: `UniTask.WhenAll()`로 다수 에셋의 I/O 대기를 동시에 중첩시켜 총 로딩 시간 단축
+- 발동 경로 **3갈래 → `AbilityRunner` 1곳**으로 수렴.
+- Effect 부품 15벌 조합으로 **어빌리티 asset 54개(신규 코드 0줄)**.
+- 보스 이관으로 `BossSkillBase` 파생 **6종 328줄 소멸**(8파일 436줄).
+
+**관련 코드**
+- [[📄AbilityRunner.cs (단일 게이트)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Ability/AbilityRunner.cs)
+- [[📄AbilityData.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Data/Ability/AbilityData.cs)
+- [[📄RepeatEffect.cs (컨테이너 부품)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Data/Ability/Effects/Pattern/RepeatEffect.cs)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -586,34 +581,41 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 <hr>
 <br>
 
-### 3️⃣ 대규모 데이터 관리의 한계 극복 및 파이프라인 이원화 (Excel/JSON)<a name="data-driven-trouble"></a>
+### 3️⃣ 2버킷 구조의 한계와 수명 스코프 도입<a name="resource-lifetime-trouble"></a>
 
-> **🚨 배경 및 문제 상황**
+> **🚨 문제 상황: `Global` / `Scene` 2개 버킷만으로는 리소스 수명을 담을 수 없었다**
 >
-> - 데이터가 늘어날수록 ScriptableObject(SO)를 인스펙터에 수동 할당하는 방식은 참조 누락 에러를 유발. 이를 피해 모든 데이터를 JSON으로 분리.
-> - 그러나 '레벨별 스탯 성장치'나 '드랍 테이블' 등 기획자의 수식 연산과 밸런싱이 필수적인 데이터까지 JSON으로 수기 작성하는 것은 생산성 저하 유발.
+> - 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유하는 구조에서, 재로딩을 없애려 핸들을 캐싱해 보관하기 시작.
+> - 담는 통이 `Global` · `Scene` 2개뿐이라, "팝업이 열려 있는 동안만"처럼 수명이 애매한 리소스가 전부 안전한 쪽인 `Global`로 도피해 영구 상주.
+> - Addressables는 자체 refCount를 갖지만 증감의 짝맞춤 책임을 호출자에게 위임한다 — 실제 호출부는 46개 파일 · 130곳이라, "누가 언제 Release를 부르는가"가 정해지지 않으면 그대로 새는 구조.
 
 **💡 해결 과정**
 
-1. **왜 데이터 포맷을 이원화(Excel/JSON) 했는가?**
-- 기획 편의성을 위해 모든 것을 Excel로 통합할 수도 있었으나, 구역별 스포너(배열 안에 배열이 있는 형태) 정보처럼 **계층적 깊이(Depth)가 깊은 데이터는 2차원 표 형태인 엑셀로 표현하기가 더 비효율적임**을 인지.
-- 따라서 수식 연산과 교차 참조가 필요한 스탯/아이템은 **Excel**로, 계층적 구조화가 필요한 스포너 등은 **JSON** 포맷으로 유지하는 **데이터 특성 기반 이원화 전략** 채택.
+1. **책임을 3층으로 분리 (Manager / Scope / Registry)**
+   - `ResourceManager`(라우팅) → `ResourceScope`(수명 티켓 · 키 집합) → `ResourceRegistry`(핸들 · refCount) → `Addressables`(실제 I/O).
+   - 실제 로드는 레지스트리 한 곳에서만 일어나고 같은 키의 재요청은 캐시에서 반환 — 요청이 늘어도 늘어나는 것은 로드가 아니라 refCount.
 
-2. **왜 런타임에 파싱하지 않고 Editor Time에 SO로 굽는가(Baking)?**
-- 초기에는 NPOI 라이브러리를 활용해 런타임에 엑셀을 직접 파싱했으나, 방대한 셀을 순회하며 발생하는 막대한 GC 할당과 렉(Spike) 확인.
-- 이를 해결하기 위해 무거운 파싱 로직을 런타임에서 에디터 타임으로 이전. 기획자가 Excel을 수정하면 클릭 한 번으로 모든 시트를 파싱하여 가벼운 **`ScriptableObject` 에셋으로 자동 변환(Baking)하는 커스텀 에디터 툴** 개발.
-- | **약 5,600개 데이터 베이킹 후 캐싱** | **약 10,600개 데이터 베이킹 후 캐싱 (스트레스 테스트)** |
-  | :---: | :---: |
-  | <img width="600" height="260" alt="image" src="https://github.com/user-attachments/assets/456c463b-8de5-4106-825d-a78f3b0aaf19" /> | <img width="600" height="260" alt="image" src="https://github.com/user-attachments/assets/aac554af-1480-4cd6-9724-ff32afa6b318"/> |
+2. **수명 스코프를 2종 → 4종으로 확장**
+   - `Global`(종료까지) · `Scene`(씬 전환) · `Party`(씬 전환을 넘어 생존) · `Popup`(스택 0→1 생성, 1→0 Dispose).
+   - 각 스코프는 자기가 잡은 키만 `Dispose()` 시점에 -1 — 팝업을 모두 닫으면 `Popup Scope`가 소멸하며 자신이 가진 키만 정산되고, 다른 스코프가 같은 키를 아직 쥐고 있으면 메모리가 유지된다.
 
-3. **DataManager 통합 및 $O(1)$ 캐싱**
-- 베이킹된 SO 에셋과 JSON 데이터들을 게임 초기화 시점에 `DataManager`가 일괄 로드하여 ID(Key) 기반 딕셔너리로 캐싱. 배열 순회 없이 $O(1)$ 속도로 데이터 조회 지원.
+3. **"Addressables가 이미 세는데 왜 카운트를 하나 더 뒀는가"**
+   - 세는 것은 Addressables가 하지만, **언제 줄일지는 사람이 직접 작성해야 한다.** 스코프 층은 "이제 필요 없다"는 도메인 신호를 refCount 감소로 번역하는 역할.
+   - 결과적으로 해제 짝맞춤 지점이 **호출부 130곳 → 수명 경계(씬 전환 · 팝업 스택 0 · 파티 해체) 개수**로 압축됨.
 
-**✅ 결과**
-- "기획자는 수식 기반의 엑셀로 편하게 밸런싱하고, 클라이언트는 가볍게 구워진 SO로 빠르게 읽어 들이는" **실무형 데이터 주도 설계(Data-Driven) 파이프라인** 구축 완료.
+4. **오브젝트 풀 · 아틀라스 캐시까지 수명 통합**
+   - 풀이 원본 프리팹의 refCount 티켓을 직접 획득(`AcquirePoolRef`)하여, 씬 전환 시 원본이 언로드되어 풀 인스턴스가 깨지는 창을 구조적으로 차단.
+   - 아틀라스에서 뽑은 클론 Sprite 캐시를 레지스트리의 `OnReleased` 이벤트에 맞춰 함께 파기 — 캐시가 핸들을 붙잡아 회수가 무효화되는 것 방지.
+
+**✅ 결과 (실측)**
+- 왕복 메모리 flat : `GameScene → 팝업 5종 → BossDungeon → GameScene` 전환 후 **358.6MB → 359.1MB**(+0.5MB 노이즈) — 누수 없음 확인.
+- 풀 티켓 정산 실측 : Global 프리로드 프리팹이 게임 중 **`ref 1 → 3 → 1`** 로 정확히 획득 · 반납(`Global 1` + `Scene 스코프 1` + `풀 티켓 1`).
+- 해제 짝맞춤 지점 : 호출부 **130곳 → 수명 경계 개수**로 압축.
 
 **관련 코드**
-- [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Editor/ItemExcelImporter.cs)
+- [[📄ResourceScope.cs (수명 티켓)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceScope.cs)
+- [[📄ResourceRegistry.cs (핸들 · refCount)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceRegistry.cs)
+- [[📄ResourceManager.cs (스코프 라우팅)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceManager.cs)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
