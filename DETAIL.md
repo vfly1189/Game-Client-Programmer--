@@ -226,9 +226,6 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 <img width="958" height="312" alt="스크린샷 2026-09-04 002529" src="https://github.com/user-attachments/assets/969b4880-9268-4b30-9b80-ae2825da814b" />
 
-
-<p><em>같은 부품을 다시 끼워 플레이어 8연사와 보스 장판 파도를 구성 — 코드 추가 0줄</em></p>
-
 </div>
 
 > **🚀 기술 도입 배경**:
