@@ -59,12 +59,12 @@
     *   Excel/JSON 이원화 기반 데이터 주도 설계 및 `DataManager` 통합 조회 시스템 구축
     *   `Action`/`Delegate` 이벤트 구독 방식으로 데이터-UI 분리
 *   **Optimization & Memory Management**
-    *   `Addressables` 기반 글로벌/씬 단위 핸들 분리 및 명시적 Release 구조 설계
-    *   `UniTask` 기반 비동기 파이프라인 구축
-    *   오브젝트 풀링 시스템 구현
+    *   `Addressables` 위에 수명 스코프(Global/Scene/Party/Popup) 4종을 얹어 리소스 해제 책임을 호출부에서 구조로 이전
+    *   `UniTask` 기반 비동기 로딩 파이프라인 구축
+    *   오브젝트 풀 · 아틀라스 캐시까지 스코프 수명에 동행시킨 풀링 시스템 구현
 *   **Gameplay & Combat**
     *   파티 기반의 실시간 캐릭터 교체 전투 시스템
-    *   인터페이스(`IDamageable`)와 다형성을 활용하여 결합도를 낮춘 공용 데미지 연산 파이프라인 설계
+    *   플레이어·몬스터·보스 3진영의 흩어진 공격 발동을 `AbilityRunner` 단일 게이트로 통합하고, 스킬을 데이터(Effect) 조합으로 설계하는 AbilitySystem 구축
     *   메인/서브 옵션 무작위 부여 방식의 호요버스 스타일 장비 스탯 시스템 구현
     *   `Behavior Tree`와 Unity `Timeline`을 연동하여 보스 몬스터의 다양한 공격 패턴 제어
 
@@ -72,11 +72,11 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 주요 개발 기능** <br>
+&nbsp;&nbsp; └ [전투 아키텍처 : 데이터 주도 AbilitySystem](DETAIL.md#ability-bluearchive) <br>
 &nbsp;&nbsp; └ [Sector 기반 플레이어 위치 추적형 존 로딩 시스템](DETAIL.md#optimization-bluearchive) <br>
-&nbsp;&nbsp; └ [비동기 로딩 및 Addressables 파이프라인](DETAIL.md#async-pipeline-bluearchive) <br>
+&nbsp;&nbsp; └ [리소스 수명 관리 : 수명 스코프와 레지스트리](DETAIL.md#resource-lifetime-bluearchive) <br>
 &nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 및 에셋 베이킹 자동화](DETAIL.md#data-driven-bluearchive) <br>
 &nbsp;&nbsp; └ [다형성과 Timeline을 활용한 객체지향적 몬스터 아키텍처 설계](DETAIL.md#behavior-tree-ai) <br>
-&nbsp;&nbsp; └ [인터페이스(Interface) 기반 공용 데미지 파이프라인](DETAIL.md#combat-bluearchive) <br>
 &nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](DETAIL.md#ui-optimization-bluearchive) <br>
 
 <br>
@@ -85,11 +85,11 @@
 &nbsp;&nbsp; └ **[기획 변경에 따른 AI·렌더링 연산 병목 해소: Sector 기반 존 로딩 시스템](DETAIL.md#optimization-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Sector` 기반 시야 컬링과 비동기 생명주기 제어로 해결하여 **안정적인 프레임 방어 성공**
 
-&nbsp;&nbsp; └ **[동기식 하드코딩 탈피 및 UniTask 비동기 파이프라인 구축](DETAIL.md#async-unitask-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 씬 전환 시 발생하는 `Task` 스레드풀의 `AssetBundle.Unload` 충돌을 `UniTask` 메인 스레드 동기화로 해결
+&nbsp;&nbsp; └ **[흩어진 공격 발동과 데이터 주도 AbilitySystem 설계](DETAIL.md#ability-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 캐스터마다 따로 구현되던 발동을 `AbilityRunner` 단일 게이트로 통합하고 스킬을 **Effect 조합**으로 재설계
 
-&nbsp;&nbsp; └ **[대규모 데이터 관리의 한계 극복 및 파이프라인 이원화 (Excel/JSON)](DETAIL.md#data-driven-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 런타임 엑셀 파싱의 오버헤드를 에디터 타임 `ScriptableObject` 베이킹으로 이전하고 `DataManager`로 통합하여 **데이터 관리 최적화**
+&nbsp;&nbsp; └ **[2버킷 구조의 한계와 수명 스코프 도입](DETAIL.md#resource-lifetime-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Global`/`Scene` 2버킷에 도피하던 리소스를 **수명 스코프 4종**으로 재설계하여 해제 책임을 구조로 이전
 
 <br>
 
