@@ -402,7 +402,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 
 **관련 코드**
 - [[📄BaseMonsterController.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Controllers/Monster/BaseMonsterController.cs)
-- [[📄NormalMonster 행동트리 제작 함]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Controllers/Monster/NormalMonsterController.cs#L113-L141)
+- [[📄NormalMonster 행동트리 제작 함수]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Controllers/Monster/NormalMonsterController.cs#L113-L141)
 - [[📄원거리 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Controllers/Monster/RangedMonsterController.cs)
 - [[📄보스 몬스터 컨트롤러]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Controllers/Monster/Boss/BossMonsterController.cs)
 
@@ -523,7 +523,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 **관련 코드**
 - [[📄Sector.cs (헤더 설계)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/SectorManager/Sector.cs)
 - [[📄SectorManager.cs (섹터 관리 매니저)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/SectorManager/SectorManager.cs)
-- [[📄섹터내 몬스터 스폰 로]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L147)
+- [[📄섹터 내 몬스터 스폰 로직]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/SectorManager/MonsterSpawner.cs#L85-L147)
 - [[📄오브젝트 풀링]](https://github.com/vfly1189/OperationKivotos-Code/blob/0dbdca5d109dc822a3b99fa0d410c08762ec1331/Assets/Scripts/Managers/Core/PoolManager.cs#L117-L180)
 
 <div align="right">
@@ -676,7 +676,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
 
 &nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](#quadtree-optimization)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53ms → 0.3ms)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  불필요한 연산을 제거하여 충돌 처리 **135.8배 최적화 (53,992μs → 397μs)**
 
 &nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](#fsm-to-bt)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Behavior Tree 도입으로 **복잡한 AI 로직의 유지보수성 확보**
@@ -974,17 +974,17 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 > **🚨 문제 상황: 선형 탐색(Linear Search)으로 인한 병목**
 > 
 > *   **구조적 문제** : 캐릭터가 이동할 때마다 현재 위치를 NavMesh 위의 유효한 지점으로 보정하기 위해 `GetNearestPointOnNavMesh`를 호출.
-> *   **성능 저하** : 별도의 공간 분할 없이 구현된 초기 로직은 맵 전체의 삼각형(20,000개+)을 순차적으로 검사하는 $O(N)$ 비용 발생 [file:48]
+> *   **성능 저하** : 별도의 공간 분할 없이 구현된 초기 로직은 맵 전체의 삼각형(20,000개+)을 순차적으로 검사하는 $O(N)$ 비용 발생
 > *   **코드 병목** : `GetNearestPointOnNavMesh` 내부에서 모든 삼각형과의 거리를 계산하는 반복문이 매 프레임 실행됨. [[📄GetNearestPointOnNavMesh()]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L93-L129)
 
 **💡 해결 과정**
 
 1.  **공간 분할(Spatial Partitioning) 도입**
-    *   맵 전체를 일정 크기의 **그리드(Grid)** 형태로 분할하고, 각 셀에 포함된 삼각형을 HashMap에 저장
+    *   맵 전체를 일정 크기의 **그리드(Grid)** 형태로 분할하고, 각 셀에 포함된 삼각형을 `unordered_map`에 저장
     *   [[📄NavMesh.h :: SpatialGrid]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.h#L31-L81)
 
 2.  **검색 알고리즘 최적화 ( $O(N) \rightarrow O(k)$, $k \ll N$ )**
-    *   **해시맵(HashMap) 활용** : 입력된 월드 좌표를 키(Key)로 변환하여 셀에 즉시 접근하고, 해당 셀에 등록된 소수의 삼각형(k개, $k \ll N$)만 검사하도록 로직 변경
+    *   **해시맵(`unordered_map`) 활용** : 입력된 월드 좌표를 키(Key)로 변환하여 셀에 즉시 접근하고, 해당 셀에 등록된 소수의 삼각형(k개, $k \ll N$)만 검사하도록 로직 변경
     *   **탐색 범위 축소** : 전체 삼각형을 순회하는 대신, 해당 셀에 등록된 **소수의 삼각형만 검사** 하도록 로직 변경
       *   | **Grid** |
           | :---: |
@@ -1160,7 +1160,7 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하여 전투를 진행�
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  비트맵 베이킹(Baking) 기법으로 **Draw Call 99.9% 감소 (1,296회 → 1회)**
 
 &nbsp;&nbsp; └ **[이벤트 시스템 자료구조 개선](#event-queue-system)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `unordered_set` 도입으로 **삭제 중복 요청(Double Free) 및 순환 참조 해결**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `unordered_set` 도입으로 **삭제 중복 요청(Double Free)으로 인한 크래시 해결**
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>

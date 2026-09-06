@@ -148,7 +148,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Spatial Grid` 도입으로 **탐색 속도 21.5배 가속 (301μs → 14μs)**
 
 &nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#quadtree-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 불필요한 연산을 제거하여 **충돌 처리 135.8배 최적화 (53ms → 0.3ms)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 불필요한 연산을 제거하여 **충돌 처리 135.8배 최적화 (53,992μs → 397μs)**
 
 &nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#fsm-to-bt)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Behavior Tree` 도입으로 복잡한 AI 로직의 **유지보수성 확보**
