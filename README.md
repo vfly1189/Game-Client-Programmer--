@@ -42,7 +42,7 @@
 
 ## 🎮 블루아카이브 팬메이드 프로젝트 - OperationKivotos ([상세내용](DETAIL.md#bluearchive-main))
 
-> ( 2026.01 ~ 2026.04 ) ( 4개월 ) ( 1인 )
+> ( 2026.01 ~ 2026.09 ) ( 9개월 · 진행 중 ) ( 1인 )
 
 <img width="700" height="400" alt="블루아카이브 프로젝트 스크린샷" src="https://github.com/user-attachments/assets/127ef1e4-c683-425a-a1f7-4bcc25107fc0" />
 
