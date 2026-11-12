@@ -6,6 +6,12 @@
 
 ### 개발자로서의 이형규.
 
+<div align="center">
+
+## 타협하지 않고 집요하게.
+
+</div>
+
 <br>
 
 <div align="center">
@@ -42,7 +48,7 @@
 
 ## 🎮 블루아카이브 팬메이드 프로젝트 - OperationKivotos ([상세내용](DETAIL.md#bluearchive-main))
 
-> ( 2026.01 ~ 2026.09 ) ( 9개월 · 진행 중 ) ( 1인 )
+> ( 2026.01 ~ 진행 중 ) ( 1인 )
 
 <img width="700" height="400" alt="블루아카이브 프로젝트 스크린샷" src="https://github.com/user-attachments/assets/127ef1e4-c683-425a-a1f7-4bcc25107fc0" />
 
@@ -50,6 +56,7 @@
 - **Environment**: Unity 
 - **Language**: C#
 - **Library/Package**: `Addressables`, `UniTask`, `Newtonsoft.Json`, `NPOI`
+- **Tool**: Claude
 
 ### 📌 담당 업무 및 경험
 > **이전 프로젝트들을 회고하며 느낀 구조적 아쉬움을 개선하고, 확장성 높은 아키텍처를 연구 및 적용**
@@ -59,37 +66,38 @@
     *   Excel/JSON 이원화 기반 데이터 주도 설계 및 `DataManager` 통합 조회 시스템 구축
     *   `Action`/`Delegate` 이벤트 구독 방식으로 데이터-UI 분리
 *   **Optimization & Memory Management**
-    *   `Addressables` 위에 수명 스코프(Global/Scene/Party/Popup) 4종을 얹어 리소스 해제 책임을 호출부에서 구조로 이전
+    *   7가지 활성화 방식을 같은 조건에서 실측 비교해 **거리 기반 활성화 + 화면 밖 갱신 LOD** 도입 (가장 느린 1% 프레임 ▼47%)
+    *   `Addressables` 위에 수명 스코프(Global/Scene/Party/Popup) 4종을 얹어 리소스 해제 책임을 호출부에서 구조로 이전 (Global 상주 메모리 ▼60%)
     *   `UniTask` 기반 비동기 로딩 파이프라인 구축
     *   오브젝트 풀 · 아틀라스 캐시까지 스코프 수명에 동행시킨 풀링 시스템 구현
 *   **Gameplay & Combat**
-    *   파티 기반의 실시간 캐릭터 교체 전투 시스템
-    *   플레이어·몬스터·보스 3진영의 흩어진 공격 발동을 `AbilityRunner` 단일 게이트로 통합하고, 스킬을 데이터(Effect) 조합으로 설계하는 AbilitySystem 구축
-    *   메인/서브 옵션 무작위 부여 방식의 호요버스 스타일 장비 스탯 시스템 구현
-    *   `Behavior Tree`와 Unity `Timeline`을 연동하여 보스 몬스터의 다양한 공격 패턴 제어
+    *   파티 4인 태그 기반의 실시간 캐릭터 교체 전투 시스템
+    *   흐름(Timeline)과 행동(Event)을 분리한 **SkillSystem** 설계 — 일반몹과 보스가 같은 구조 위에서 조립과 값만 다르게 동작
+    *   메인/서브 옵션 무작위 부여 방식의 장비 스탯 시스템 구현
+    *   다형성 계층형 `Behavior Tree`와 Unity `Timeline`을 연동하여 보스 몬스터의 다양한 공격 패턴 제어
 
 ### 🚀 Highlights & 목차
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 주요 개발 기능** <br>
-&nbsp;&nbsp; └ [전투 아키텍처 : 데이터 주도 AbilitySystem](DETAIL.md#ability-bluearchive) <br>
-&nbsp;&nbsp; └ [Sector 기반 플레이어 위치 추적형 존 로딩 시스템](DETAIL.md#optimization-bluearchive) <br>
+&nbsp;&nbsp; └ [필드 몬스터 관리 : 거리 기반 활성화와 갱신 LOD](DETAIL.md#optimization-bluearchive) <br>
+&nbsp;&nbsp; └ [전투 행동 설계 : 흐름과 행동을 분리한 SkillSystem](DETAIL.md#ability-bluearchive) <br>
 &nbsp;&nbsp; └ [리소스 수명 관리 : 수명 스코프와 레지스트리](DETAIL.md#resource-lifetime-bluearchive) <br>
 &nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 및 에셋 베이킹 자동화](DETAIL.md#data-driven-bluearchive) <br>
-&nbsp;&nbsp; └ [다형성과 Timeline을 활용한 객체지향적 몬스터 아키텍처 설계](DETAIL.md#behavior-tree-ai) <br>
+&nbsp;&nbsp; └ [다형성 계층형 몬스터 AI (Behavior Tree + SkillSystem)](DETAIL.md#behavior-tree-ai) <br>
 &nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](DETAIL.md#ui-optimization-bluearchive) <br>
 
 <br>
 
 **2. 🛠️ 문제 해결 (Troubleshooting)** <br>
-&nbsp;&nbsp; └ **[기획 변경에 따른 AI·렌더링 연산 병목 해소: Sector 기반 존 로딩 시스템](DETAIL.md#optimization-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Sector` 기반 시야 컬링과 비동기 생명주기 제어로 해결하여 **안정적인 프레임 방어 성공**
+&nbsp;&nbsp; └ **[필드 몬스터 관리 : 거리 기반 활성화와 갱신 LOD 도입](DETAIL.md#optimization-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 가까운 몬스터만 켜고, 화면 밖은 덜 갱신 → **가장 느린 1% 프레임 ▼47% (4.68 → 2.50ms)**
 
-&nbsp;&nbsp; └ **[흩어진 공격 발동과 데이터 주도 AbilitySystem 설계](DETAIL.md#ability-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 캐스터마다 따로 구현되던 발동을 `AbilityRunner` 단일 게이트로 통합하고 스킬을 **Effect 조합**으로 재설계
+&nbsp;&nbsp; └ **[전투 행동 설계 : 흐름과 행동 분리를 통한 확장](DETAIL.md#ability-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 흐름은 Timeline, 행동은 조합 → **일반몹 · 보스가 같은 SkillSystem 구조**
 
-&nbsp;&nbsp; └ **[2버킷 구조의 한계와 수명 스코프 도입](DETAIL.md#resource-lifetime-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Global`/`Scene` 2버킷에 도피하던 리소스를 **수명 스코프 4종**으로 재설계하여 해제 책임을 구조로 이전
+&nbsp;&nbsp; └ **[리소스 수명 관리 : 2버킷 구조의 한계와 수명 스코프 도입](DETAIL.md#resource-lifetime-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Addressables 리소스를 수명 스코프 단위로 관리 → **Global 상주 메모리 ▼60% (513 → 205MB)**
 
 <br>
 
@@ -99,7 +107,7 @@
 <hr>
 <br>
 
-## 🎮 Eternal Return (이터널리턴) ([상세내용](DETAIL.md#-이터널-리턴-모작))
+## 🎮 Eternal Return (이터널리턴) ([상세내용](DETAIL.md#eternal-return-main))
 
 > ( 2025.07 ~ 2025.09 ) ( 2개월 ) ( 2인 )
 
@@ -123,7 +131,7 @@
     *   `GPU Instancing` 기반 대규모 환경 오브젝트 렌더링
     *   `Quad Tree` 공간 분할을 이용한 렌더링(Culling) 및 피킹 최적화
 *   **Gameplay & AI**
-    *   `NavMesh` & `NavMeshAgent` 길찾기 시스템 구현 및 최적화
+    *   `NavMesh` & `NavMeshAgent` 길찾기 시스템 구현 및 최적화 (Funnel + Bezier 경로 스무딩)
     *   몬스터 생성 및 AI 패턴 로직 구현
     *   플레이어 캐릭터(니키) 스킬 및 기본 공격 로직 구현
     *   아이템 시스템 (제작, 등급, 레시피, 스탯 적용) 구현
@@ -141,14 +149,17 @@
 <br>
 
 **2. 🛠️ 문제 해결 (Troubleshooting)** <br> 
-&nbsp;&nbsp; └ **[Forward → Deferred 전환](DETAIL.md#deferred-rendering-trouble)** <br>
+&nbsp;&nbsp; └ **[Hybrid 렌더링 (Forward → Deferred 전환)](DETAIL.md#deferred-rendering-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 다중 광원과 반투명 객체를 동시 처리하는 **Hybrid 파이프라인 구축**
+
+&nbsp;&nbsp; └ **[NavMesh 경로 스무딩](DETAIL.md#navmesh-smoothing)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Funnel + Bezier`로 **코너 끼임 93쌍 → 0, 최대 회전 78.6° → 15.8°**
+
+&nbsp;&nbsp; └ **[마우스 Picking + 충돌 처리 최적화 (Quad Tree)](DETAIL.md#quadtree-optimization)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 검사할 후보만 남겨 **충돌 처리 135.8배 단축 (53,922μs → 397μs)**
 
 &nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#navmesh-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Spatial Grid` 도입으로 **탐색 속도 21.5배 가속 (301μs → 14μs)**
-
-&nbsp;&nbsp; └ **[Quad Tree 충돌 최적화](DETAIL.md#quadtree-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 불필요한 연산을 제거하여 **충돌 처리 135.8배 최적화 (53,992μs → 397μs)**
 
 &nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#fsm-to-bt)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Behavior Tree` 도입으로 복잡한 AI 로직의 **유지보수성 확보**
@@ -161,7 +172,7 @@
 <hr>
 <br>
 
-## 🎮 Brotato ([상세내용](DETAIL.md#-brotato-모작))
+## 🎮 Brotato ([상세내용](DETAIL.md#brotato-main))
 
 > ( 2025.02 ~ 2025.03 ) ( 3주 ) ( 2인 )
 
@@ -200,7 +211,7 @@
 
 **2. 🛠️ 문제 해결 (Troubleshooting)** <br>
 &nbsp;&nbsp; └ **[Direct2D 하드웨어 가속 전환](DETAIL.md#direct2d-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `GDI+` 대비 렌더링 성능 **10배 향상 (20 FPS → 200+ FPS, GPU 가속)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - GPU 하드웨어 가속으로 **대규모 웨이브에서도 평균 150 ~ 250 FPS** (`GDI+`는 소수 객체에서도 20 ~ 40 FPS)
 
 &nbsp;&nbsp; └ **[타일맵 렌더링 최적화](DETAIL.md#tilemap-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 오프스크린 베이킹으로 `DrawCall` **99.9% 절감 (1,296회 → 1회)**
