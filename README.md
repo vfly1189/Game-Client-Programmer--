@@ -46,6 +46,8 @@
 
 # 💻 프로젝트
 
+> 📎 DETAIL.md 문제 해결 파트의 도식은 깃헙용으로 새로 그린 것입니다. 실측 데이터와 코드 구조를 PDF 포트폴리오보다 자세히 담았고, [도식 모음 PDF](diagrams/GitHub_Diagrams.pdf)로도 볼 수 있습니다.
+
 ## 🎮 블루아카이브 팬메이드 프로젝트 - OperationKivotos ([상세내용](DETAIL.md#bluearchive-main))
 
 > ( 2026.01 ~ 진행 중 ) ( 1인 )

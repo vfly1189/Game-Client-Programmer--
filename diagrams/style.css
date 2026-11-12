@@ -1,0 +1,34 @@
+/* 깃헙 전용 도식 공통 스타일 — figs/*.svg 가 이 클래스를 쓴다 */
+:root {
+  --ink: #1a1c22; --muted: #5b6270; --faint: #8a91a0; --line: #d5d9e2; --panel: #f6f7fb;
+  --navy: #1f3a5f; --blue: #3b5bdb; --orange: #e8590c; --red: #e03131; --green: #2b8a3e; --purple: #6741d9;
+  --red-t: #fff0f0; --green-t: #ebfbee; --blue-t: #edf2ff; --orange-t: #fff4e6; --purple-t: #f3f0ff;
+}
+html, body { margin: 0; padding: 0; background: #fff; }
+body { font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; color: var(--ink); }
+svg { display: block; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; }
+svg text { fill: var(--ink); font-size: 16px; }
+svg .h1 { font-size: 24px; font-weight: 700; }
+svg .h2 { font-size: 19px; font-weight: 700; }
+svg .h3 { font-size: 16px; font-weight: 700; }
+svg .s { font-size: 14px; }
+svg .xs { font-size: 12.5px; }
+svg .b { font-weight: 700; }
+svg .m { fill: var(--muted); }
+svg .f { fill: var(--faint); }
+svg .w { fill: #fff; }
+svg .c-red { fill: var(--red); } svg .c-green { fill: var(--green); } svg .c-blue { fill: var(--blue); }
+svg .c-orange { fill: var(--orange); } svg .c-navy { fill: var(--navy); } svg .c-purple { fill: var(--purple); }
+svg .mono { font-family: Consolas, 'D2Coding', monospace; }
+svg .mid { text-anchor: middle; } svg .end { text-anchor: end; }
+svg .panel { fill: var(--panel); stroke: var(--line); stroke-width: 1.2; }
+svg .card { fill: #fff; stroke: var(--line); stroke-width: 1.2; }
+svg .p-red { fill: var(--red-t); stroke: #f1aeb5; stroke-width: 1.2; }
+svg .p-green { fill: var(--green-t); stroke: #8ce99a; stroke-width: 1.2; }
+svg .p-blue { fill: var(--blue-t); stroke: #a5b4fc; stroke-width: 1.2; }
+svg .p-orange { fill: var(--orange-t); stroke: #ffc078; stroke-width: 1.2; }
+svg .p-purple { fill: var(--purple-t); stroke: #c0b3f5; stroke-width: 1.2; }
+svg .ln { stroke: var(--line); stroke-width: 1.2; fill: none; }
+svg .ln-m { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+svg .ln-ink { stroke: var(--ink); stroke-width: 2; fill: none; }
+svg .dash { stroke-dasharray: 6 5; }

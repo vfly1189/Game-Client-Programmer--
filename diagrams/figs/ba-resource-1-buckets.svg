@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620">
+  <defs>
+    <marker id="r1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#5b6270"/></marker>
+    <marker id="r1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#e03131"/></marker>
+  </defs>
+  <rect width="1200" height="620" fill="#fff"/>
+  <text x="40" y="46" class="h1">2버킷 구조 — 수명이 애매한 리소스는 전부 Global로 도피했다</text>
+  <text x="40" y="78" class="s m">재로딩을 없애려고 핸들을 캐싱하기 시작했는데, 담는 통이 Global · Scene 두 개뿐이었다. Global은 해제 경로가 없어 세션 내내 상주한다</text>
+
+  <!-- 단계 -->
+  <g>
+    <rect x="40" y="100" width="356" height="44" rx="8" class="panel"/><text x="218" y="128" class="s mid">① 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유</text>
+    <path d="M398 122 H418" class="ln-m" marker-end="url(#r1)"/>
+    <rect x="422" y="100" width="356" height="44" rx="8" class="panel"/><text x="600" y="128" class="s mid">② 재로딩을 없애려고 핸들을 캐싱해 보관</text>
+    <path d="M780 122 H800" class="ln-m" marker-end="url(#r1)"/>
+    <rect x="804" y="100" width="356" height="44" rx="8" class="panel"/><text x="982" y="128" class="s mid">③ 담는 통은 <tspan class="b">Global · Scene 2개뿐</tspan></text>
+  </g>
+
+  <!-- 실제 수명 -->
+  <text x="40" y="184" class="h3">실제 수명은 다섯 가지였다</text>
+  <g>
+    <rect x="40" y="198" width="214" height="108" rx="10" class="card"/>
+    <text x="56" y="224" class="s b">앱 전체</text><text x="56" y="248" class="xs m">SceneTable · 공용 이펙트</text><text x="56" y="270" class="xs m">토스트 UI 아이콘</text>
+    <rect x="266" y="198" width="214" height="108" rx="10" class="card"/>
+    <text x="282" y="224" class="s b">씬 하나</text><text x="282" y="248" class="xs m">씬 UI · 맵 · 필드 몬스터</text>
+    <rect x="492" y="198" width="214" height="108" rx="10" class="p-red"/>
+    <text x="508" y="224" class="s b c-red">씬을 넘어 파티 동안</text><text x="508" y="248" class="xs">캐릭터 인게임 프리팹</text><text x="508" y="270" class="xs">스킬 아이콘 · 엠블럼 아틀라스</text>
+    <rect x="718" y="198" width="214" height="108" rx="10" class="p-red"/>
+    <text x="734" y="224" class="s b c-red">팝업이 열린 동안</text><text x="734" y="248" class="xs">캐릭터 스탠딩 이미지</text><text x="734" y="270" class="xs">메뉴 데코 스프라이트</text>
+    <rect x="944" y="198" width="216" height="108" rx="10" class="p-red"/>
+    <text x="960" y="224" class="s b c-red">던전 입장 ~ 퇴장</text><text x="960" y="248" class="xs">보스 · 던전 전용 에셋</text>
+  </g>
+  <path d="M147 306 C 147 360, 760 360, 760 400" fill="none" stroke="#5b6270" stroke-width="1.6" marker-end="url(#r1)"/>
+  <path d="M373 306 V 400" fill="none" stroke="#5b6270" stroke-width="1.6" marker-end="url(#r1)"/>
+  <path d="M599 306 C 599 350, 800 350, 820 400" fill="none" stroke="#e03131" stroke-width="1.8" marker-end="url(#r1r)"/>
+  <path d="M825 306 C 825 350, 860 350, 870 400" fill="none" stroke="#e03131" stroke-width="1.8" marker-end="url(#r1r)"/>
+  <path d="M1052 306 C 1052 350, 940 350, 920 400" fill="none" stroke="#e03131" stroke-width="1.8" marker-end="url(#r1r)"/>
+  <text x="1000" y="372" class="xs c-red b">애매하면 안전한 쪽으로</text>
+
+  <!-- 버킷 -->
+  <path d="M250 404 V560 H500 V404" fill="none" stroke="#1a1c22" stroke-width="3"/>
+  <rect x="258" y="520" width="234" height="34" rx="4" fill="#4f74c9"/><text x="375" y="543" class="s w mid">씬 에셋</text>
+  <text x="375" y="590" class="s mid"><tspan class="b">Scene 버킷</tspan> — 씬 전환 때 Clear</text>
+  <path d="M600 404 V560 H1160 V404" fill="none" stroke="#1a1c22" stroke-width="3"/>
+  <rect x="608" y="406" width="544" height="34" rx="4" fill="#ffe3e3" stroke="#e03131"/><text x="880" y="429" class="s mid c-red">던전 에셋</text>
+  <rect x="608" y="444" width="544" height="34" rx="4" fill="#ffe3e3" stroke="#e03131"/><text x="880" y="467" class="s mid c-red">팝업 에셋</text>
+  <rect x="608" y="482" width="544" height="34" rx="4" fill="#ffe3e3" stroke="#e03131"/><text x="880" y="505" class="s mid c-red">파티 에셋</text>
+  <rect x="608" y="520" width="544" height="34" rx="4" fill="#4f74c9"/><text x="880" y="543" class="s w mid">공용 · 영구 에셋</text>
+  <text x="880" y="590" class="s mid"><tspan class="b c-red">Global 버킷</tspan> — 해제 경로 없음 → 계속 쌓인다 (진입 직후 상주 513MB)</text>
+  <text x="40" y="440" class="xs m">Addressables는 refCount를 세지만</text>
+  <text x="40" y="462" class="xs m">Release 짝맞춤은 호출자 책임 —</text>
+  <text x="40" y="484" class="xs m">호출부는 46개 파일 · 130곳</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620">
+  <rect width="1200" height="620" fill="#fff"/>
+  <text x="40" y="46" class="h1">같은 코너, 네 가지 경로 — 끼임 0 · 꺾임은 가장 작고 · 벽 여유는 가장 크다</text>
+  <text x="40" y="78" class="s m">같은 무작위 1,000쌍으로 비교. Funnel + Bezier를 최종 채택해 몬스터 이동에도 그대로 적용했다</text>
+
+  <rect x="40" y="104" width="520" height="490" rx="14" class="panel"/>
+  <rect x="60" y="124" width="480" height="450" fill="#fff"/>
+  <path d="M60 300 H330 V574 H60 Z" fill="#ced4da"/>
+  <circle cx="330" cy="300" r="6" fill="#e03131"/><text x="318" y="322" class="xs b c-red end">V</text>
+  <!-- LOS 후한 -->
+  <polyline points="80,240 200,300" fill="none" stroke="#e64980" stroke-width="3"/>
+  <polyline points="200,300 330,365" fill="none" stroke="#e64980" stroke-width="3" stroke-dasharray="3 4"/>
+  <polyline points="330,365 400,400 390,560" fill="none" stroke="#e64980" stroke-width="3"/>
+  <!-- LOS 엄격 -->
+  <polyline points="80,240 470,240 390,560" fill="none" stroke="#15aabf" stroke-width="3"/>
+  <!-- Funnel -->
+  <polyline points="80,240 375,255 390,560" fill="none" stroke="#f59f00" stroke-width="3"/>
+  <!-- Funnel + Bezier -->
+  <path d="M80 240 H235 Q390 240 390 395 V560" fill="none" stroke="#2b8a3e" stroke-width="4.2"/>
+  <circle cx="80" cy="240" r="8" fill="#1f3a5f"/><text x="80" y="224" class="s b mid">S</text>
+  <circle cx="390" cy="560" r="8" fill="#1f3a5f"/><text x="408" y="566" class="s b">G</text>
+  <text x="200" y="420" class="s m mid">벽</text>
+
+  <!-- 표 -->
+  <rect x="580" y="104" width="580" height="490" rx="14" class="card"/>
+  <g class="xs m b"><text x="600" y="140">방식</text><text x="820" y="140" class="mid">끼임</text><text x="910" y="140" class="mid">최대 회전</text><text x="1010" y="140" class="mid">벽 여유 ↑</text><text x="1110" y="140" class="mid">스무딩 1회</text></g>
+  <line x1="600" y1="152" x2="1140" y2="152" class="ln"/>
+  <g class="s">
+    <line x1="600" y1="180" x2="624" y2="180" stroke="#e64980" stroke-width="4"/><text x="632" y="186">LOS (후한)</text>
+    <text x="820" y="186" class="mid b c-red">93쌍</text><text x="910" y="186" class="mid">78.6°</text><text x="1010" y="186" class="mid">0.000</text><text x="1110" y="186" class="mid c-red">16.4ms</text>
+    <line x1="600" y1="226" x2="624" y2="226" stroke="#15aabf" stroke-width="4"/><text x="632" y="232">LOS (엄격)</text>
+    <text x="820" y="232" class="mid">0</text><text x="910" y="232" class="mid c-red b">86.1°</text><text x="1010" y="232" class="mid">0.194</text><text x="1110" y="232" class="mid">11μs</text>
+    <line x1="600" y1="272" x2="624" y2="272" stroke="#f59f00" stroke-width="4"/><text x="632" y="278">Funnel</text>
+    <text x="820" y="278" class="mid">0</text><text x="910" y="278" class="mid">37.7°</text><text x="1010" y="278" class="mid">0.136</text><text x="1110" y="278" class="mid">13μs</text>
+    <rect x="596" y="296" width="548" height="40" rx="6" fill="#ebfbee"/>
+    <line x1="600" y1="318" x2="624" y2="318" stroke="#2b8a3e" stroke-width="4"/><text x="632" y="324" class="b">Funnel + Bezier</text>
+    <text x="820" y="324" class="mid b c-green">0</text><text x="910" y="324" class="mid b c-green">15.8°</text><text x="1010" y="324" class="mid b c-green">0.296</text><text x="1110" y="324" class="mid">45μs</text>
+  </g>
+  <!-- 막대 -->
+  <text x="600" y="380" class="s b">최대 회전 (작을수록 자연스럽다)</text>
+  <g>
+    <rect x="600" y="392" width="460" height="14" fill="#e64980"/><text x="1068" y="404" class="xs">78.6°</text>
+    <rect x="600" y="410" width="504" height="14" fill="#15aabf"/><text x="1112" y="422" class="xs">86.1°</text>
+    <rect x="600" y="428" width="221" height="14" fill="#f59f00"/><text x="829" y="440" class="xs">37.7°</text>
+    <rect x="600" y="446" width="92" height="14" fill="#2b8a3e"/><text x="700" y="458" class="xs b c-green">15.8°</text>
+  </g>
+  <text x="600" y="500" class="s b">벽 여유 (클수록 벽에서 멀다)</text>
+  <g>
+    <rect x="600" y="512" width="2" height="14" fill="#e64980"/><text x="610" y="524" class="xs">0.000 (벽 안)</text>
+    <rect x="600" y="530" width="304" height="14" fill="#15aabf"/><text x="912" y="542" class="xs">0.194</text>
+    <rect x="600" y="548" width="214" height="14" fill="#f59f00"/><text x="822" y="560" class="xs">0.136</text>
+    <rect x="600" y="566" width="464" height="14" fill="#2b8a3e"/><text x="1072" y="578" class="xs b c-green">0.296</text>
+  </g>
+</svg>

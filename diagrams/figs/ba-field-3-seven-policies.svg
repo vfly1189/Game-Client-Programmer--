@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+  <rect width="1200" height="760" fill="#fff"/>
+  <text x="40" y="46" class="h1">켜 둘 범위를 정하는 7가지 방식 — 같은 빌드 · 같은 자동 주행 5분 × 3회</text>
+  <text x="40" y="78" class="s m">탈락 조건 5가지(화면 안 등장 · 화면 안 소멸 · 끌고 온 몹 소실 · 경계 왕복 떨림 · 풀 확장) 중 하나라도 나오면 탈락. 3회 모두 같은 결과</text>
+
+  <!-- ① Sector -->
+  <g transform="translate(40,104)">
+    <rect width="265" height="300" rx="12" class="card"/>
+    <rect x="14" y="14" width="237" height="120" rx="6" fill="#f1f3f5"/>
+    <rect x="14" y="14" width="79" height="120" fill="#e9ecef" stroke="#adb5bd"/><rect x="93" y="14" width="79" height="120" fill="#fff3bf" stroke="#f59f00" stroke-width="1.6"/><rect x="172" y="14" width="79" height="120" fill="#e9ecef" stroke="#adb5bd"/>
+    <circle cx="160" cy="74" r="6" fill="#1f3a5f"/>
+    <text x="14" y="170" class="h3">① Sector</text>
+    <rect x="181" y="152" width="70" height="26" rx="13" fill="#e03131"/><text x="216" y="170" class="xs w mid b">탈락</text>
+    <text x="14" y="204" class="s m">살아 있는 몬스터</text><text x="251" y="204" class="s end b">62마리</text>
+    <text x="14" y="230" class="s m">p99 프레임</text><text x="251" y="230" class="s end b">4.36ms</text>
+    <line x1="14" y1="246" x2="251" y2="246" class="ln"/>
+    <text x="14" y="270" class="xs c-red">화면 안 등장 9</text>
+    <text x="14" y="290" class="xs c-red">경계 왕복 떨림 136</text>
+  </g>
+  <!-- ② Sector + 인접 -->
+  <g transform="translate(325,104)">
+    <rect width="265" height="300" rx="12" class="card"/>
+    <rect x="14" y="14" width="237" height="120" rx="6" fill="#f1f3f5"/>
+    <rect x="14" y="14" width="47.4" height="120" fill="#e9ecef" stroke="#adb5bd"/>
+    <rect x="61.4" y="14" width="47.4" height="120" fill="#fff3bf" stroke="#f59f00"/>
+    <rect x="108.8" y="14" width="47.4" height="120" fill="#fff3bf" stroke="#f59f00" stroke-width="1.6"/>
+    <rect x="156.2" y="14" width="47.4" height="120" fill="#fff3bf" stroke="#f59f00"/>
+    <rect x="203.6" y="14" width="47.4" height="120" fill="#e9ecef" stroke="#adb5bd"/>
+    <circle cx="150" cy="74" r="6" fill="#1f3a5f"/>
+    <text x="14" y="170" class="h3">② Sector + 인접</text>
+    <rect x="181" y="152" width="70" height="26" rx="13" fill="#e03131"/><text x="216" y="170" class="xs w mid b">탈락</text>
+    <text x="14" y="204" class="s m">살아 있는 몬스터</text><text x="251" y="204" class="s end b c-red">187마리</text>
+    <text x="14" y="230" class="s m">p99 프레임</text><text x="251" y="230" class="s end b c-red">4.86ms</text>
+    <line x1="14" y1="246" x2="251" y2="246" class="ln"/>
+    <text x="14" y="270" class="xs c-red">경계 왕복 떨림 114</text>
+    <text x="14" y="290" class="xs c-red">풀 확장 187</text>
+  </g>
+  <!-- ③ 격자 3×3 -->
+  <g transform="translate(610,104)">
+    <rect width="265" height="300" rx="12" class="card"/>
+    <rect x="14" y="14" width="237" height="120" rx="6" fill="#f1f3f5"/>
+    <g stroke="#dee2e6" stroke-width="1"><path d="M48 14 V134 M76 14 V134 M104 14 V134 M132 14 V134 M160 14 V134 M188 14 V134 M216 14 V134 M14 46 H251 M14 74 H251 M14 102 H251"/></g>
+    <rect x="76" y="18" width="84" height="84" fill="#fff3bf" stroke="#f59f00" stroke-width="1.6" opacity=".9"/>
+    <path d="M104 18 V102 M132 18 V102 M76 46 H160 M76 74 H160" stroke="#f59f00" stroke-width="1"/>
+    <circle cx="118" cy="60" r="6" fill="#1f3a5f"/>
+    <text x="14" y="170" class="h3">③ 격자 3×3 (칸 20m)</text>
+    <rect x="181" y="152" width="70" height="26" rx="13" fill="#e03131"/><text x="216" y="170" class="xs w mid b">탈락</text>
+    <text x="14" y="204" class="s m">살아 있는 몬스터</text><text x="251" y="204" class="s end b">46마리</text>
+    <text x="14" y="230" class="s m">p99 프레임</text><text x="251" y="230" class="s end b">2.72ms</text>
+    <line x1="14" y1="246" x2="251" y2="246" class="ln"/>
+    <text x="14" y="270" class="xs c-red">경계 왕복 떨림 77</text>
+  </g>
+  <!-- ④ 격자 5×5 -->
+  <g transform="translate(895,104)">
+    <rect width="265" height="300" rx="12" class="card"/>
+    <rect x="14" y="14" width="237" height="120" rx="6" fill="#f1f3f5"/>
+    <rect x="97" y="39" width="70" height="70" fill="#fff3bf" stroke="#f59f00" stroke-width="1.6"/>
+    <path d="M111 39 V109 M125 39 V109 M139 39 V109 M153 39 V109 M97 53 H167 M97 67 H167 M97 81 H167 M97 95 H167" stroke="#f59f00" stroke-width="1"/>
+    <circle cx="132" cy="74" r="6" fill="#1f3a5f"/>
+    <text x="14" y="170" class="h3">④ 격자 5×5 (칸 10m)</text>
+    <rect x="181" y="152" width="70" height="26" rx="13" fill="#e03131"/><text x="216" y="170" class="xs w mid b">탈락</text>
+    <text x="14" y="204" class="s m">살아 있는 몬스터</text><text x="251" y="204" class="s end b">34마리</text>
+    <text x="14" y="230" class="s m">p99 프레임</text><text x="251" y="230" class="s end b">2.60ms</text>
+    <line x1="14" y1="246" x2="251" y2="246" class="ln"/>
+    <text x="14" y="270" class="xs c-red">경계 왕복 떨림 19</text>
+  </g>
+  <!-- ⑤ 거리 -->
+  <g transform="translate(40,424)">
+    <rect width="265" height="300" rx="12" fill="#fff" stroke="#3b5bdb" stroke-width="2.4"/>
+    <rect x="14" y="14" width="237" height="120" rx="6" fill="#f1f3f5"/>
+    <circle cx="132" cy="74" r="52" fill="#edf2ff" stroke="#3b5bdb" stroke-width="1.4" stroke-dasharray="5 4"/>
+    <circle cx="132" cy="74" r="42" fill="#dbe4ff" stroke="#3b5bdb" stroke-width="1.8"/>
+    <circle cx="132" cy="74" r="6" fill="#1f3a5f"/>
+    <text x="190" y="32" class="xs c-blue">끄기 25m</text><text x="22" y="128" class="xs c-blue">켜기 20m</text>
+    <text x="14" y="170" class="h3">⑤ 거리</text>
+    <rect x="181" y="152" width="70" height="26" rx="13" fill="#1f3a5f"/><text x="216" y="170" class="xs w mid b">채택</text>
+    <text x="14" y="204" class="s m">살아 있는 몬스터</text><text x="251" y="204" class="s end b c-blue">25마리</text>
+    <text x="14" y="230" class="s m">p99 프레임</text><text x="251" y="230" class="s end b c-blue">2.54ms</text>
+    <line x1="14" y1="246" x2="251" y2="246" class="ln"/>
+    <text x="14" y="270" class="xs c-green">탈락 조건 0</text>
+    <text x="14" y="290" class="xs m">스포너 중심 ↔ 플레이어 거리만 본다</text>
+  </g>
+  <!-- ⑥ 격자 + 거리 -->
+  <g transform="translate(325,424)">
+    <rect width="265" height="300" rx="12" class="card"/>
+    <rect x="14" y="14" width="237" height="120" rx="6" fill="#f1f3f5"/>
+    <rect x="76" y="18" width="112" height="112" fill="none" stroke="#adb5bd" stroke-width="1"/>
+    <path d="M98.4 18 V130 M120.8 18 V130 M143.2 18 V130 M165.6 18 V130 M76 40.4 H188 M76 62.8 H188 M76 85.2 H188 M76 107.6 H188" stroke="#ced4da" stroke-width="1"/>
+    <circle cx="132" cy="74" r="52" fill="none" stroke="#3b5bdb" stroke-width="1.4" stroke-dasharray="5 4"/>
+    <circle cx="132" cy="74" r="42" fill="#dbe4ff" fill-opacity=".8" stroke="#3b5bdb" stroke-width="1.8"/>
+    <circle cx="132" cy="74" r="6" fill="#1f3a5f"/>
+    <text x="14" y="170" class="h3">⑥ 격자 + 거리</text>
+    <rect x="181" y="152" width="70" height="26" rx="13" fill="#2b8a3e"/><text x="216" y="170" class="xs w mid b">통과</text>
+    <text x="14" y="204" class="s m">살아 있는 몬스터</text><text x="251" y="204" class="s end b">25마리</text>
+    <text x="14" y="230" class="s m">p99 프레임</text><text x="251" y="230" class="s end b">2.54ms</text>
+    <line x1="14" y1="246" x2="251" y2="246" class="ln"/>
+    <text x="14" y="270" class="xs c-green">탈락 조건 0</text>
+    <text x="14" y="290" class="xs m">격자로 후보만 추린 뒤 거리 판정</text>
+  </g>
+  <!-- ⑦ CullingGroup -->
+  <g transform="translate(610,424)">
+    <rect width="265" height="300" rx="12" class="card"/>
+    <rect x="14" y="14" width="237" height="120" rx="6" fill="#f1f3f5"/>
+    <circle cx="132" cy="74" r="52" fill="none" stroke="#3b5bdb" stroke-width="1.4" stroke-dasharray="5 4"/>
+    <circle cx="132" cy="74" r="42" fill="#dbe4ff" stroke="#3b5bdb" stroke-width="1.8"/>
+    <g fill="none" stroke="#1f3a5f" stroke-width="1.2"><circle cx="100" cy="56" r="8"/><circle cx="160" cy="92" r="8"/><circle cx="196" cy="40" r="8"/><circle cx="60" cy="104" r="8"/></g>
+    <circle cx="132" cy="74" r="6" fill="#1f3a5f"/>
+    <text x="14" y="170" class="h3">⑦ CullingGroup</text>
+    <rect x="181" y="152" width="70" height="26" rx="13" fill="#2b8a3e"/><text x="216" y="170" class="xs w mid b">통과</text>
+    <text x="14" y="204" class="s m">살아 있는 몬스터</text><text x="251" y="204" class="s end b">25마리</text>
+    <text x="14" y="230" class="s m">p99 프레임</text><text x="251" y="230" class="s end b">2.55ms</text>
+    <line x1="14" y1="246" x2="251" y2="246" class="ln"/>
+    <text x="14" y="270" class="xs c-green">탈락 조건 0</text>
+    <text x="14" y="290" class="xs m">엔진 컬링 단계가 거리 계산 · 1프레임 늦음</text>
+  </g>
+  <!-- 결론 -->
+  <g transform="translate(895,424)">
+    <rect width="265" height="300" rx="12" class="p-blue"/>
+    <text x="20" y="40" class="h3 c-blue">왜 ⑤ 거리인가</text>
+    <text x="20" y="72" class="s">⑤ ⑥ ⑦이 켜는 스포너는</text>
+    <text x="20" y="96" class="s"><tspan class="b">100% 동일</tspan> (결과 · 비용 같음)</text>
+    <text x="20" y="126" class="s">→ <tspan class="b">가장 단순</tspan>하고</text>
+    <text x="20" y="150" class="s">카메라 · 렌더링에 의존하지</text>
+    <text x="20" y="174" class="s">않는 <tspan class="b c-blue">⑤ 거리 채택</tspan></text>
+    <line x1="20" y1="192" x2="245" y2="192" stroke="#a5b4fc"/>
+    <text x="20" y="216" class="xs">거리형 셋만 떨림 0인 이유</text>
+    <text x="20" y="236" class="xs">= 켜기 20m · 끄기 25m 히스테리시스</text>
+    <text x="20" y="262" class="xs m">⑦은 순간이동 직후 화면 안 등장 10</text>
+    <text x="20" y="282" class="xs m">(컬링 결과를 다음 프레임에 읽어서 · 참고)</text>
+  </g>
+</svg>

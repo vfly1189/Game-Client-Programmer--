@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680">
+  <defs>
+    <marker id="s3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#5b6270"/></marker>
+  </defs>
+  <rect width="1200" height="680" fill="#fff"/>
+  <text x="40" y="46" class="h1">고르는 곳과 실행하는 곳을 나눴다 — 층마다 아는 것이 하나</text>
+  <text x="40" y="78" class="s m">선택기 = 무엇을 쓸까 / SkillSystem = 써도 되나 · 실행 / PatternEnded = 끝났다. SkillSystem은 누가 부르는지 모른다</text>
+
+  <!-- 왼쪽 : 한 패턴의 일생 -->
+  <rect x="40" y="104" width="640" height="550" rx="14" class="panel"/>
+  <text x="62" y="138" class="h3">한 패턴의 일생</text>
+  <g>
+    <circle cx="84" cy="182" r="14" fill="#1f3a5f"/><text x="84" y="187" class="xs w mid b">1</text>
+    <rect x="110" y="160" width="546" height="46" rx="8" class="card"/>
+    <text x="126" y="189" class="s"><tspan class="b">언제</tspan> · 컨트롤러 BT — 행동 중이 아니고 사거리 안이면</text>
+    <circle cx="84" cy="240" r="14" fill="#e8590c"/><text x="84" y="245" class="xs w mid b">2</text>
+    <rect x="110" y="218" width="546" height="46" rx="8" class="p-orange"/>
+    <text x="126" y="247" class="s"><tspan class="b">무엇을</tspan> · 선택기 <tspan class="mono xs">TryPick</tspan> — 후보를 CanUse로 거른 뒤 하나 확정</text>
+    <circle cx="84" cy="298" r="14" fill="#3b5bdb"/><text x="84" y="303" class="xs w mid b">3</text>
+    <rect x="110" y="276" width="546" height="46" rx="8" class="p-blue"/>
+    <text x="126" y="305" class="s"><tspan class="b">써도 되나</tspan> · <tspan class="mono xs">SkillSystem.TryUseSkill</tspan> — 보유 · 쿨다운 · 태그</text>
+    <circle cx="84" cy="356" r="14" fill="#1f3a5f"/><text x="84" y="361" class="xs w mid b">4</text>
+    <rect x="110" y="334" width="546" height="46" rx="8" class="card"/>
+    <text x="126" y="363" class="s"><tspan class="b">순서</tspan> · <tspan class="mono xs">Runner.Start</tspan> (memo 비움) → 첫 Tick에 Action.Begin</text>
+    <circle cx="84" cy="414" r="14" fill="#5c7cfa"/><text x="84" y="419" class="xs w mid b">5</text>
+    <rect x="110" y="392" width="546" height="46" rx="8" class="card"/>
+    <text x="126" y="421" class="s"><tspan class="b">신호</tspan> · 클립 / 타임라인 태그 → <tspan class="mono xs">SS.SendTag</tspan> → Task.Matches</text>
+    <circle cx="84" cy="472" r="14" fill="#e8590c"/><text x="84" y="477" class="xs w mid b">6</text>
+    <rect x="110" y="450" width="546" height="46" rx="8" class="card"/>
+    <text x="126" y="479" class="s"><tspan class="b">행동</tspan> · <tspan class="mono xs">Event.Fire</tspan> — DamageSpec 1번 계산 → 점마다 결과</text>
+    <circle cx="84" cy="530" r="14" fill="#2b8a3e"/><text x="84" y="535" class="xs w mid b">7</text>
+    <rect x="110" y="508" width="546" height="46" rx="8" class="p-green"/>
+    <text x="126" y="537" class="s"><tspan class="b">끝</tspan> · 끝 태그 → 다음 Action … 마지막이면 <tspan class="mono xs">PatternEnded</tspan></text>
+  </g>
+  <path d="M640 531 C 672 531, 672 183, 660 183" fill="none" stroke="#5b6270" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#s3)"/>
+  <text x="62" y="590" class="xs m">끊기 : 사망 · 회수 → SS.Cancel (끊긴 패턴은 PatternEnded를 보내지 않는다)</text>
+  <text x="62" y="614" class="xs m">새 생애 : OnSpawn → SS.ResetState(쿨) · 선택기 ResetState</text>
+  <text x="62" y="638" class="xs m">선택기가 CanUse로 거른 것과 SS가 받는 조건이 같은 프레임 · 같은 함수라 어긋나지 않는다</text>
+
+  <!-- 오른쪽 : 선택기 둘 -->
+  <rect x="700" y="104" width="460" height="230" rx="14" class="card"/>
+  <text x="722" y="138" class="h3">보스 선택기</text>
+  <text x="1138" y="138" class="xs m end mono">BossMonsterPatternSelector</text>
+  <rect x="722" y="156" width="416" height="70" rx="8" class="p-purple"/>
+  <text x="738" y="184" class="s b c-purple">HP선을 넘으면 → 기믹 (한 번만)</text>
+  <text x="738" y="208" class="xs">쓴 기믹은 기록해 두고, 새 생애에 비운다</text>
+  <rect x="722" y="236" width="416" height="76" rx="8" class="p-orange"/>
+  <text x="738" y="264" class="s b c-orange">평소 → 가중치 추첨</text>
+  <text x="738" y="290" class="xs">CanUse(쿨다운)를 통과한 일반 패턴만 후보로</text>
+
+  <rect x="700" y="350" width="460" height="214" rx="14" class="card"/>
+  <text x="722" y="384" class="h3">일반몹 선택기</text>
+  <text x="1138" y="384" class="xs m end mono">AmmoPatternSelector</text>
+  <rect x="722" y="402" width="200" height="70" rx="8" class="p-orange"/>
+  <text x="738" y="430" class="s b c-orange">탄 있으면 → 공격</text><text x="738" y="454" class="xs">탄 −1</text>
+  <rect x="938" y="402" width="200" height="70" rx="8" class="p-blue"/>
+  <text x="954" y="430" class="s b c-blue">탄 없으면 → 재장전</text><text x="954" y="454" class="xs">탄 채움</text>
+  <text x="722" y="500" class="xs">탄 수는 패턴을 넘어 남는 상태라 선택기가 든다</text>
+  <text x="722" y="522" class="xs m">(memo는 패턴마다 비워지므로)</text>
+  <text x="722" y="546" class="xs m">리쉬 귀환 · 새 생애 → 탄약 원복</text>
+
+  <rect x="700" y="580" width="460" height="74" rx="12" fill="#1f3a5f"/>
+  <text x="930" y="612" class="s w mid b">두 선택기 모두 같은 SkillSystem을 부른다</text>
+  <text x="930" y="638" class="xs w mid">다른 것은 '무엇을 고르는가'의 규칙뿐</text>
+</svg>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660">
+  <rect width="1200" height="660" fill="#fff"/>
+  <text x="40" y="46" class="h1">행동 하나 = 무엇을 + 횟수 · 간격 + 어디에</text>
+  <text x="40" y="78" class="s m">Event는 상속 한 번으로 '무엇을'만 정하고, 위치 · 간격 · 데미지 · 판정은 필드 조합으로 정한다 — 하나를 바꿔도 나머지는 그대로</text>
+
+  <!-- 공식 -->
+  <rect x="40" y="104" width="340" height="176" rx="12" fill="#e8590c"/>
+  <text x="60" y="136" class="h2 w">무엇을</text><text x="360" y="136" class="xs w end mono">PatternEvent</text>
+  <text x="60" y="170" class="s w">Strike (내려치기) · Field (장판)</text>
+  <text x="60" y="196" class="s w">Projectile (발사) · Summon (소환)</text>
+  <text x="60" y="222" class="s w">Activation (켜기 · 끄기) · Choose (고르기)</text>
+  <text x="60" y="258" class="xs w">Event는 무상태 — 같은 Event가 겹쳐 Fire될 수 있다</text>
+  <text x="400" y="200" class="h1 m mid">+</text>
+  <rect x="420" y="104" width="340" height="176" rx="12" fill="#4f74c9"/>
+  <text x="440" y="136" class="h2 w">횟수 · 간격</text><text x="740" y="136" class="xs w end mono">PointEmitter</text>
+  <text x="440" y="170" class="s w">batch — 한 번에 몇 개씩</text>
+  <text x="440" y="196" class="s w">interval — 몇 초마다</text>
+  <text x="440" y="222" class="s w">repeat — 몇 번</text>
+  <text x="440" y="258" class="xs w">saveAs — 점 목록을 memo에 저장 (다음 Task가 재사용)</text>
+  <text x="780" y="200" class="h1 m mid">+</text>
+  <rect x="800" y="104" width="360" height="176" rx="12" fill="#2b8a3e"/>
+  <text x="820" y="136" class="h2 w">어디에</text><text x="1140" y="136" class="xs w end mono">Placement</text>
+  <text x="820" y="170" class="s w">Point (한 점) · Circle (원)</text>
+  <text x="820" y="196" class="s w">RandomInRing (고리 안 무작위)</text>
+  <text x="820" y="222" class="s w">Sockets (지정 위치)</text>
+  <text x="820" y="258" class="xs w">기준점은 Anchor (시전자 · 타겟 · 소켓)</text>
+  <rect x="40" y="292" width="1120" height="40" rx="8" class="panel"/>
+  <text x="60" y="318" class="s"><tspan class="b">결과</tspan> — <tspan class="mono xs">DamageSpec.Pack</tspan>은 Fire 때 1번 (공격력 스냅샷) → 점마다 <tspan class="mono xs">HitShape</tspan> 판정 → <tspan class="mono xs">Health.TakeDamage</tspan></text>
+
+  <!-- 예 1 -->
+  <rect x="40" y="350" width="360" height="290" rx="12" class="card"/>
+  <text x="58" y="380" class="h3">예1 · 조여오는 번개</text>
+  <text x="58" y="404" class="xs m">내려치기 + 12개씩 · 0.15초 + 원 · 반경 8 → 0</text>
+  <g transform="translate(220,512) scale(0.74)">
+    <g fill="#ffc078"><circle cx="100" cy="0" r="5"/><circle cx="86.6" cy="50" r="5"/><circle cx="50" cy="86.6" r="5"/><circle cx="0" cy="100" r="5"/><circle cx="-50" cy="86.6" r="5"/><circle cx="-86.6" cy="50" r="5"/><circle cx="-100" cy="0" r="5"/><circle cx="-86.6" cy="-50" r="5"/><circle cx="-50" cy="-86.6" r="5"/><circle cx="0" cy="-100" r="5"/><circle cx="50" cy="-86.6" r="5"/><circle cx="86.6" cy="-50" r="5"/></g>
+    <g fill="#ff922b"><circle cx="66" cy="0" r="5"/><circle cx="57.2" cy="33" r="5"/><circle cx="33" cy="57.2" r="5"/><circle cx="0" cy="66" r="5"/><circle cx="-33" cy="57.2" r="5"/><circle cx="-57.2" cy="33" r="5"/><circle cx="-66" cy="0" r="5"/><circle cx="-57.2" cy="-33" r="5"/><circle cx="-33" cy="-57.2" r="5"/><circle cx="0" cy="-66" r="5"/><circle cx="33" cy="-57.2" r="5"/><circle cx="57.2" cy="-33" r="5"/></g>
+    <g fill="#e8590c"><circle cx="33" cy="0" r="5"/><circle cx="28.6" cy="16.5" r="5"/><circle cx="16.5" cy="28.6" r="5"/><circle cx="0" cy="33" r="5"/><circle cx="-16.5" cy="28.6" r="5"/><circle cx="-28.6" cy="16.5" r="5"/><circle cx="-33" cy="0" r="5"/><circle cx="-28.6" cy="-16.5" r="5"/><circle cx="-16.5" cy="-28.6" r="5"/><circle cx="0" cy="-33" r="5"/><circle cx="16.5" cy="-28.6" r="5"/><circle cx="28.6" cy="-16.5" r="5"/></g>
+    <circle cx="0" cy="0" r="8" fill="#1f3a5f"/>
+  </g>
+  <text x="58" y="626" class="xs m">회차마다 같은 12개가 안쪽으로 — 연발은 PointEmitter 한 곳</text>
+
+  <!-- 예 2 -->
+  <rect x="420" y="350" width="360" height="290" rx="12" class="card"/>
+  <text x="438" y="380" class="h3">예2 · 몬스터 소환</text>
+  <text x="438" y="404" class="xs m">소환 + 1마리씩 · 0.3초 + 지정 위치 4곳</text>
+  <circle cx="600" cy="505" r="18" fill="#1f3a5f"/><text x="600" y="510" class="xs w mid b">보스</text>
+  <g>
+    <circle cx="510" cy="450" r="16" fill="#e8590c"/><text x="510" y="455" class="xs w mid b">1</text><text x="510" y="484" class="xs m mid">0초</text>
+    <circle cx="690" cy="450" r="16" fill="#e8590c"/><text x="690" y="455" class="xs w mid b">2</text><text x="690" y="484" class="xs m mid">0.3초</text>
+    <circle cx="510" cy="556" r="16" fill="#e8590c"/><text x="510" y="561" class="xs w mid b">3</text><text x="510" y="592" class="xs m mid">0.6초</text>
+    <circle cx="690" cy="556" r="16" fill="#e8590c"/><text x="690" y="561" class="xs w mid b">4</text><text x="690" y="592" class="xs m mid">0.9초</text>
+  </g>
+  <text x="438" y="626" class="xs m">소환된 몹은 보스가 ISummonRegistry로 기억</text>
+
+  <!-- 예 3 -->
+  <rect x="800" y="350" width="360" height="290" rx="12" class="card"/>
+  <text x="818" y="380" class="h3">예3 · Tank 포격 (경고 → 지연 → 타격)</text>
+  <text x="818" y="404" class="xs m">새 Event가 아니라 StrikeEvent의 옵션 하나</text>
+  <line x1="830" y1="500" x2="1130" y2="500" stroke="#adb5bd" stroke-width="2"/>
+  <rect x="840" y="470" width="90" height="60" rx="8" fill="#fff0f0" stroke="#e03131" stroke-dasharray="5 4"/>
+  <text x="885" y="505" class="xs mid c-red b">경고 데칼</text>
+  <rect x="946" y="482" width="80" height="36" rx="18" class="panel"/><text x="986" y="505" class="xs mid">_delay</text>
+  <rect x="1042" y="470" width="90" height="60" rx="8" fill="#e8590c"/>
+  <text x="1087" y="505" class="xs w mid b">타격 · 판정</text>
+  <text x="980" y="566" class="xs mid">점마다 따로 기다려 같은 자리를 친다</text>
+  <rect x="818" y="584" width="324" height="40" rx="8" class="p-green"/>
+  <text x="980" y="609" class="xs mid c-green b">옵션을 추가하자 보스도 같은 기능을 얻었다</text>
+</svg>

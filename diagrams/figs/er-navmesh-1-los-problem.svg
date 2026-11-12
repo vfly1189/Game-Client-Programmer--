@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620">
+  <rect width="1200" height="620" fill="#fff"/>
+  <text x="40" y="46" class="h1">LOS 스무딩이 코너에서 벽 안을 지나는 이유 — 1,000쌍 중 93쌍이 끼였다</text>
+  <text x="40" y="78" class="s m">A* 경로(삼각형 중심점 연결)에서 '직선으로 볼 수 있는 가장 먼 점'으로 건너뛴다. 코너를 끼고 돌게 하려고 판정에 허용 오차를 줬더니, 그 띠가 벽 안까지 통과시켰다</text>
+
+  <!-- 지형 -->
+  <rect x="40" y="104" width="620" height="470" rx="14" class="panel"/>
+  <rect x="60" y="124" width="580" height="430" fill="#ced4da"/>
+  <path d="M60 124 H640 V554 H420 V300 H60 Z" fill="#fff"/>
+  <!-- 허용 오차 띠 -->
+  <path d="M60 300 H420 V554 H380 V340 H60 Z" fill="#ffc9c9" opacity=".7"/>
+  <!-- 삼각형 -->
+  <g stroke="#dee2e6" stroke-width="1.2" fill="none">
+    <path d="M60 124 L200 300 L200 124 L340 300 L340 124 L420 300 L500 124 L640 230 L420 300 L640 380 L420 430 L640 554 M500 124 L420 300 M640 230 L640 380 M420 430 L640 380 M420 554 L420 430"/>
+  </g>
+  <text x="250" y="420" class="s m mid">벽 (NavMesh 밖)</text>
+  <text x="250" y="320" class="xs c-red mid">허용 오차 띠</text>
+  <!-- A* 경로 -->
+  <polyline points="96,200 150,250 200,180 270,250 340,180 410,220 500,190 560,270 520,330 580,400 520,450 560,520" fill="none" stroke="#f59f00" stroke-width="2.6"/>
+  <g fill="#fff" stroke="#f59f00" stroke-width="2"><circle cx="150" cy="250" r="5"/><circle cx="200" cy="180" r="5"/><circle cx="270" cy="250" r="5"/><circle cx="340" cy="180" r="5"/><circle cx="410" cy="220" r="5"/><circle cx="500" cy="190" r="5"/><circle cx="560" cy="270" r="5"/><circle cx="520" cy="330" r="5"/><circle cx="580" cy="400" r="5"/><circle cx="520" cy="450" r="5"/></g>
+  <!-- LOS 경로 -->
+  <line x1="96" y1="200" x2="292.6" y2="300" stroke="#15aabf" stroke-width="3"/>
+  <line x1="292.6" y1="300" x2="420" y2="364.8" stroke="#e64980" stroke-width="4"/>
+  <line x1="420" y1="364.8" x2="520" y2="415.6" stroke="#15aabf" stroke-width="3"/>
+  <line x1="520" y1="415.6" x2="560" y2="520" stroke="#15aabf" stroke-width="3"/>
+  <circle cx="520" cy="415.6" r="7" fill="#15aabf"/><text x="532" y="420" class="xs b" style="fill:#0b7285">P6 ✓</text>
+  <circle cx="420" cy="364.8" r="11" fill="none" stroke="#e03131" stroke-width="2.4"/>
+  <text x="300" y="352" class="s b c-red end">끼임</text>
+  <circle cx="96" cy="200" r="9" fill="#1f3a5f"/><text x="96" y="186" class="s b mid">S</text>
+  <circle cx="560" cy="520" r="9" fill="#1f3a5f"/><text x="580" y="526" class="s b">G</text>
+  <!-- 범례 -->
+  <g class="xs">
+    <line x1="62" y1="600" x2="90" y2="600" stroke="#f59f00" stroke-width="3"/><text x="96" y="604">A* 경로</text>
+    <line x1="170" y1="600" x2="198" y2="600" stroke="#15aabf" stroke-width="3"/><text x="204" y="604">LOS 경로</text>
+    <line x1="284" y1="600" x2="312" y2="600" stroke="#e64980" stroke-width="4"/><text x="318" y="604">NavMesh 밖</text>
+  </g>
+
+  <!-- 설명 -->
+  <rect x="680" y="104" width="480" height="470" rx="14" class="card"/>
+  <text x="702" y="140" class="h3">S에서 '볼 수 있는' 가장 먼 점 찾기</text>
+  <g class="s">
+    <text x="702" y="176">G · P8 · P7</text><text x="1138" y="176" class="end c-red b">✕ 직선이 벽을 크게 지남</text>
+    <text x="702" y="206">P6</text><text x="1138" y="206" class="end b" style="fill:#0b7285">✓ 벽을 지나지만 띠 안</text>
+  </g>
+  <line x1="702" y1="224" x2="1138" y2="224" class="ln"/>
+  <text x="702" y="256" class="s">판정 = 직선 위 점을 일정 간격으로 찍어</text>
+  <text x="702" y="282" class="s">모두 NavMesh 위(허용 오차 포함)인지 검사</text>
+  <rect x="702" y="300" width="436" height="64" rx="8" fill="#1a1c22"/>
+  <text x="718" y="326" class="xs mono" style="fill:#fff">HasLineOfSight(a, b)</text>
+  <text x="718" y="350" class="xs mono" style="fill:#fff">  → IsLineOnNavMesh(a, b, step) · tolerance</text>
+  <rect x="702" y="384" width="436" height="80" rx="10" class="p-red"/>
+  <text x="718" y="412" class="s b c-red">→ 경로가 벽 안을 지나간다</text>
+  <text x="718" y="438" class="xs">캐릭터가 NavMesh 밖으로 밀려 코너에서 멈춘다</text>
+  <text x="718" y="458" class="xs m">무작위 시작 · 도착 1,000쌍 중 93쌍</text>
+  <rect x="702" y="478" width="436" height="78" rx="10" class="panel"/>
+  <text x="718" y="506" class="s b">비용도 컸다</text>
+  <text x="718" y="532" class="xs">점을 찍어 검사하므로 스무딩 1회 16.4ms</text>
+</svg>

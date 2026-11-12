@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5b6270"/></marker>
+    <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b8a3e"/></marker>
+  </defs>
+  <rect width="1200" height="600" fill="#fff"/>
+  <text x="40" y="46" class="h1">보완해도 한쪽을 고치면 다른 쪽이 나빠졌다 — 원인은 두 가지</text>
+  <text x="40" y="78" class="s m">원인 1은 활성화 방식과 상관없는 규칙 문제라 공통 규칙으로 고치고, 원인 2는 판정 단위 자체를 바꿔야 풀린다</text>
+
+  <!-- 원인 1 -->
+  <rect x="40" y="104" width="550" height="470" rx="14" class="panel"/>
+  <text x="64" y="138" class="h2">원인 1 · 회수 규칙</text>
+  <text x="64" y="166" class="s m">구역이 꺼지면 싸우던 몬스터도 바로 회수했다</text>
+  <!-- 그림 -->
+  <rect x="110" y="250" width="160" height="120" rx="8" fill="#fff3bf" stroke="#f59f00" stroke-width="1.6"/>
+  <text x="120" y="272" class="xs b" style="fill:#b35c00">켜진 범위</text>
+  <circle cx="190" cy="318" r="8" fill="none" stroke="#1f3a5f" stroke-width="2.4"/>
+  <text x="190" y="348" class="xs c-navy mid">스폰 지점</text>
+  <circle cx="190" cy="318" r="122" fill="none" stroke="#2b8a3e" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="96" y="430" class="xs c-green b">리쉬 반경</text>
+  <circle cx="400" cy="280" r="11" fill="#1f3a5f"/><text x="400" y="312" class="xs c-navy mid b">플레이어</text>
+  <circle cx="370" cy="280" r="8" fill="#e8590c"/>
+  <text x="370" y="258" class="xs mid b c-orange">교전 중 → 유지</text>
+  <path d="M206 308 C 260 284, 310 278, 358 280" class="ln-m dash" marker-end="url(#ar)"/>
+  <circle cx="500" cy="390" r="8" fill="#e8590c" opacity=".55"/>
+  <path d="M488 388 C 400 386, 280 364, 204 326" fill="none" stroke="#2b8a3e" stroke-width="1.8" marker-end="url(#arg)"/>
+  <text x="430" y="420" class="xs c-green mid">리쉬를 넘으면 귀환</text>
+  <rect x="64" y="452" width="502" height="98" rx="10" class="p-green"/>
+  <text x="84" y="482" class="h3 c-green">모든 방식에 공통 규칙 : 교전 유지 + 리쉬</text>
+  <text x="84" y="508" class="s">교전 중인 몬스터는 범위를 벗어나도 유지하고,</text>
+  <text x="84" y="532" class="s">스폰 지점에서 리쉬 반경을 넘으면 돌아간다</text>
+
+  <!-- 원인 2 -->
+  <rect x="610" y="104" width="550" height="470" rx="14" class="panel"/>
+  <text x="634" y="138" class="h2">원인 2 · 판정 단위</text>
+  <text x="634" y="166" class="s m">모든 문제가 '구역 크기' 하나에 묶여 있었다</text>
+  <!-- 저울 -->
+  <rect x="805" y="210" width="160" height="56" rx="28" fill="#1f3a5f"/>
+  <text x="885" y="245" class="h3 w mid">구역 크기</text>
+  <path d="M800 238 L700 238" class="ln-m" marker-end="url(#ar)"/>
+  <path d="M970 238 L1070 238" class="ln-m" marker-end="url(#ar)"/>
+  <text x="742" y="226" class="s m mid">키우면</text>
+  <text x="1028" y="226" class="s m mid">줄이면</text>
+  <rect x="634" y="290" width="244" height="132" rx="10" class="p-red"/>
+  <text x="756" y="324" class="h3 c-red mid">활성 몬스터 증가</text>
+  <text x="756" y="352" class="s mid">멀리 있는 몬스터까지 켜짐</text>
+  <text x="756" y="380" class="xs m mid">예) ② Sector + 인접 : 187마리</text>
+  <text x="756" y="402" class="xs m mid">→ 풀 확장 187회</text>
+  <rect x="892" y="290" width="244" height="132" rx="10" class="p-red"/>
+  <text x="1014" y="324" class="h3 c-red mid">경계 깜빡임 증가</text>
+  <text x="1014" y="352" class="s mid">경계를 더 자주 넘나듦</text>
+  <text x="1014" y="380" class="xs m mid">예) ① Sector : 왕복 떨림 136회</text>
+  <text x="1014" y="402" class="xs m mid">③ 격자 3×3 : 77회</text>
+  <rect x="634" y="452" width="502" height="98" rx="10" class="p-blue"/>
+  <text x="654" y="482" class="h3 c-blue">→ 크기를 조절할 게 아니라, 판정 단위를 바꾼다</text>
+  <text x="654" y="508" class="s">'어느 구역에 있나' 대신 '얼마나 가까운가'로 판정하는 방식까지</text>
+  <text x="654" y="532" class="s">7가지를 같은 조건에서 측정해 비교했다</text>
+</svg>

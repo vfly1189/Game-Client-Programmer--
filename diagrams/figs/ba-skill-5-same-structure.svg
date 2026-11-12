@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640">
+  <rect width="1200" height="640" fill="#fff"/>
+  <text x="40" y="46" class="h1">결과 — 일반몹과 보스가 같은 구조 위에서 돈다</text>
+  <text x="40" y="78" class="s m">Pattern → Action → Task → Event. 다른 것은 조립(에셋)과 값뿐이고, 새 몬스터를 옮길 때 필요한 코드는 0~1개였다</text>
+
+  <!-- Tank -->
+  <rect x="40" y="104" width="360" height="510" rx="14" class="panel"/>
+  <text x="62" y="138" class="h2">일반몹 · Tank</text>
+  <text x="62" y="162" class="xs m">선택기 : AmmoPatternSelector (탄 수)</text>
+  <g>
+    <rect x="62" y="180" width="316" height="40" rx="8" fill="#1f3a5f"/><text x="78" y="206" class="s w b">Pattern : 포격</text>
+    <rect x="82" y="230" width="296" height="40" rx="8" fill="#4f74c9"/><text x="98" y="256" class="s w">Action : AnimationAction (포격 클립)</text>
+    <rect x="102" y="280" width="276" height="40" rx="8" class="card"/><text x="118" y="306" class="s">Task : 발사 태그</text>
+    <rect x="122" y="330" width="256" height="56" rx="8" fill="#e8590c"/><text x="138" y="354" class="s w b">StrikeEvent</text><text x="138" y="376" class="xs w">경고 → 지연 → 타격</text>
+    <rect x="62" y="408" width="316" height="40" rx="8" fill="#1f3a5f"/><text x="78" y="434" class="s w b">Pattern : 재장전</text>
+    <rect x="82" y="458" width="296" height="40" rx="8" fill="#4f74c9"/><text x="98" y="484" class="s w">Action : AnimationAction (장전 클립)</text>
+  </g>
+  <text x="62" y="540" class="xs m">흐름 = 애니메이션 클립의 이벤트 신호</text>
+  <text x="62" y="562" class="xs m">컨트롤러가 아는 것 = '사거리 안이면 시도'뿐</text>
+
+  <!-- 보스 -->
+  <rect x="420" y="104" width="400" height="510" rx="14" class="panel"/>
+  <text x="442" y="138" class="h2">보스 · Hieronymus</text>
+  <text x="442" y="162" class="xs m">선택기 : BossMonsterPatternSelector (HP선 · 가중치)</text>
+  <g>
+    <rect x="442" y="180" width="356" height="40" rx="8" fill="#1f3a5f"/><text x="458" y="206" class="s w b">Pattern : 유물 포격 · 조여오는 번개 · 소환</text>
+    <rect x="462" y="230" width="336" height="40" rx="8" fill="#4f74c9"/><text x="478" y="256" class="s w">Action : TimelineAction (연출 타임라인)</text>
+    <rect x="482" y="280" width="316" height="40" rx="8" class="card"/><text x="498" y="306" class="s">Task : 태그 + memo 조건</text>
+    <rect x="502" y="330" width="296" height="56" rx="8" fill="#e8590c"/><text x="518" y="354" class="s w b">Strike · Summon · Activation · Choose</text><text x="518" y="376" class="xs w">점 목록은 PointEmitter + Placement</text>
+    <rect x="442" y="408" width="356" height="40" rx="8" fill="#6741d9"/><text x="458" y="434" class="s w b">Pattern (기믹) : HP 50% 성 · 악 탄막</text>
+    <rect x="462" y="458" width="336" height="40" rx="8" fill="#4f74c9"/><text x="478" y="484" class="s w">Action → Task → ProjectileEvent</text>
+  </g>
+  <text x="442" y="540" class="xs m">흐름 = Timeline 마커(TagMarker) 신호</text>
+  <text x="442" y="562" class="xs m">보스가 아는 것 = '언제 터지는가'뿐, '무엇이'는 에셋이 소유</text>
+
+  <!-- 이관 기록 -->
+  <rect x="840" y="104" width="320" height="510" rx="14" class="card"/>
+  <text x="862" y="138" class="h2">이관 기록 = 확장 증거</text>
+  <text x="862" y="162" class="xs m">몬스터를 SkillSystem으로 옮길 때 바뀐 .cs</text>
+  <g>
+    <rect x="862" y="182" width="276" height="96" rx="10" class="panel"/>
+    <text x="878" y="210" class="s b">AR · 공용화</text><text x="1122" y="210" class="s end b">여러 개</text>
+    <text x="878" y="236" class="xs">SS 생애를 Base로 · 애니 신호 ·</text>
+    <text x="878" y="258" class="xs">끝 태그 · ProjectileEvent · 탄 선택기</text>
+    <rect x="862" y="290" width="276" height="96" rx="10" class="p-green"/>
+    <text x="878" y="318" class="s b">RL</text><text x="1122" y="318" class="h2 end c-green">0개</text>
+    <text x="878" y="344" class="xs">프리팹 · 클립만 바꿔서 이관</text>
+    <text x="878" y="366" class="xs m">새로 생긴 것 없음</text>
+    <rect x="862" y="398" width="276" height="96" rx="10" class="p-blue"/>
+    <text x="878" y="426" class="s b">Tank</text><text x="1122" y="426" class="h2 end c-blue">1개</text>
+    <text x="878" y="452" class="xs">StrikeEvent에 경고 · 지연 옵션</text>
+    <text x="878" y="474" class="xs m">→ 보스도 같은 옵션을 쓸 수 있다</text>
+  </g>
+  <text x="862" y="530" class="xs">'공용으로 만들려면 SS로 무엇을 올려야</text>
+  <text x="862" y="552" class="xs">했나' = 사망 이벤트 · 생애 처리 · ctx 조립 ·</text>
+  <text x="862" y="574" class="xs">애니 이벤트 신호 · 태그로 끝나는 Action</text>
+</svg>

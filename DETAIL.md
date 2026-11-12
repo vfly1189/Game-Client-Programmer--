@@ -7,6 +7,8 @@
 
 </div>
 
+> 📎 문제 해결 파트의 도식은 깃헙용으로 새로 그린 것입니다. 실측 데이터와 코드 구조를 PDF 포트폴리오보다 자세히 담았고, [도식 모음 PDF](diagrams/GitHub_Diagrams.pdf)로도 볼 수 있습니다.
+
 ---
 
 ### 🎮 게임플레이 — "머릿속 아이디어가 코드를 통해 실제로 플레이가 될 때 가장 재밌습니다"
@@ -506,44 +508,57 @@ classDiagram
 > - **맵마다 구역을 손으로 나눔** : 구역 분할 · 스포너 배정을 맵마다 다시 작업
 
 <div align="center">
-<img width="900" alt="Sector 방식의 문제" src="images/ba-field-1-sector-problem.jpg" />
+<img width="900" alt="Sector 방식의 문제" src="images/ba-field-1-sector-problem.png" />
 </div>
 
 **🔍 원인 분석 : 보완해도 한쪽을 고치면 다른 쪽이 나빠졌다**
-- **원인 1 · 회수 규칙** : 구역이 꺼지면 싸우던 몬스터도 바로 회수 → 모든 방식에 공통 규칙으로 **교전 유지 + 리쉬(귀환)** 를 추가
-- **원인 2 · 판정 단위** : 모든 문제가 "구역 크기" 하나에 묶여 있음 — 구역을 키우면 활성 객체가 늘고, 줄이면 깜빡임이 늘어남 → **판정 단위 자체를 바꿔야 한다**
+
+구역을 인접 구역까지 넓히거나, 더 잘게 나누는 식으로 보완해 봤지만 문제가 자리만 옮겨 다녔습니다. 원인을 두 갈래로 나눠 보니 성격이 달랐습니다.
+
+- **원인 1 · 회수 규칙** — 구역이 꺼지면 싸우던 몬스터도 바로 회수했습니다. 이건 활성화 방식과 상관없는 **규칙**의 문제라, 어떤 방식을 쓰든 공통으로 **"교전 중이면 유지 + 스폰 지점에서 리쉬 반경을 넘으면 귀환"** 규칙을 적용했습니다.
+- **원인 2 · 판정 단위** — 남은 문제는 전부 **'구역 크기' 하나에 묶여** 있었습니다. 키우면 멀리 있는 몬스터까지 켜지고(② Sector + 인접 : 187마리 · 풀 확장 187회), 줄이면 경계를 더 자주 넘나들어 깜빡임이 늘었습니다(① 136회 · ③ 77회). **크기를 조절할 게 아니라 판정 단위 자체를 바꿔야** 했습니다.
 
 <div align="center">
-<img width="900" alt="원인 분석" src="images/ba-field-2-root-cause.jpg" />
+<img width="900" alt="원인 분석" src="images/ba-field-2-root-cause.png" />
 </div>
 
 **💡 해결 과정**
 
 1. **켜 둘 범위를 정하는 방법 7가지를 같은 조건에서 측정**
-   - 판정 방식을 `ActivationPolicy`로 추상화하고, 같은 빌드 · 같은 자동 주행 5분 × 3회로 비교
+   - 판정 방식을 `ActivationPolicy`로 추상화해 7가지를 같은 인터페이스(`SelectSpawners`)로 갈아 끼우고, **같은 빌드 · 같은 자동 주행 경로 5분 × 3회**로 비교했습니다. 측정 하네스가 플레이어를 정해진 경로로 움직이며 프레임 로그를 남기므로, 손으로 플레이할 때의 편차가 들어가지 않습니다.
+   - **탈락 조건 5가지** — 화면 안 등장 · 화면 안 소멸 · 끌고 온 몹 소실 · 경계 왕복 떨림 · 풀 확장. 하나라도 나오면 탈락이고, 3회 모두 결과가 같았습니다.
 
-   | 방식 | 살아 있는 몬스터 | 가장 느린 1% 프레임(p99) | 비고 | 판정 |
+   | 방식 | 살아 있는 몬스터 | 가장 느린 1% 프레임(p99) | 탈락 사유 | 판정 |
    |:---|:---:|:---:|:---|:---:|
-   | ① Sector | 62마리 | 4.36ms | 깜빡임 136 · 등장 9 | 탈락 |
-   | ② Sector + 인접 | 187마리 | 4.86ms | 깜빡임 114 · 풀 부족 | 탈락 |
-   | ③ 격자 3×3 | 46마리 | 2.72ms | 깜빡임 77 | 탈락 |
-   | ④ 격자 5×5 | 34마리 | 2.60ms | 깜빡임 19 | 탈락 |
-   | **⑤ 거리** | **25마리** | **2.54ms** | **문제 없음** | **채택** |
-   | ⑥ 격자 + 거리 | 25마리 | 2.54ms | 문제 없음 | 통과 |
-   | ⑦ CullingGroup | 25마리 | 2.55ms | 문제 없음 | 통과 |
-
-   - 통과한 ⑤ ⑥ ⑦은 켜는 스포너가 100% 동일(결과 · 비용 같음) → **가장 단순하고 카메라에 의존하지 않는 ⑤ 거리 채택** (켜기 20m / 끄기 25m)
+   | ① Sector | 62마리 | 4.36ms | 화면 안 등장 9 · 왕복 떨림 136 | 탈락 |
+   | ② Sector + 인접 | 187마리 | 4.86ms | 왕복 떨림 114 · 풀 확장 187 | 탈락 |
+   | ③ 격자 3×3 (칸 20m) | 46마리 | 2.72ms | 왕복 떨림 77 | 탈락 |
+   | ④ 격자 5×5 (칸 10m) | 34마리 | 2.60ms | 왕복 떨림 19 | 탈락 |
+   | **⑤ 거리** | **25마리** | **2.54ms** | **없음** | **채택** |
+   | ⑥ 격자 + 거리 | 25마리 | 2.54ms | 없음 | 통과 |
+   | ⑦ CullingGroup | 25마리 | 2.55ms | 없음 (순간이동 직후 화면 안 등장 10 · 참고) | 통과 |
 
 <div align="center">
-<img width="900" alt="7가지 방식 비교" src="images/ba-field-3-seven-policies.jpg" />
+<img width="900" alt="7가지 방식 비교" src="images/ba-field-3-seven-policies.png" />
 </div>
 
-2. **갱신 LOD : 화면 밖에서 가만히 있는 몬스터는 덜 돌린다**
-   - 살아 있는 몬스터의 **87%가 화면 밖** → 그중 **교전 중이 아닌 몬스터만** HP바 끔 · Behavior Tree 8프레임에 1번 · Animator 끔
-   - 몬스터가 많을수록 효과가 커짐 — 밀도 ×4에서 −10%, ×8에서 −17%
+2. **⑤ 거리를 고른 이유 — 결과가 같으면 가장 단순한 것**
+   - 통과한 ⑤ ⑥ ⑦은 매 프레임 **켜는 스포너 집합이 100% 동일**했습니다(⑤를 실제로 돌리면서 ⑥ ⑦을 그림자로 함께 판정해 비교). 결과도 비용도 같다면 남는 기준은 단순함입니다.
+   - ⑥은 격자로 후보를 추리는 단계가 하나 더 있고, ⑦ CullingGroup은 거리 계산을 엔진 컬링 단계에 맡겨 **결과를 다음 프레임에 읽으므로 1프레임 늦고, 카메라가 렌더링하지 않으면 갱신도 멈춥니다.** 그래서 **카메라 · 렌더링에 의존하지 않는 ⑤ 거리**를 채택했습니다.
+   - 거리형 셋만 떨림이 0인 이유는 **히스테리시스**입니다. 켜기 반경(20m)과 끄기 반경(25m)을 나눠, 그 사이에서는 이전 상태를 유지합니다. 판정선이 하나면 경계에서 1m씩 왕복할 때마다 켜졌다 꺼졌다 합니다.
 
 <div align="center">
-<img width="900" alt="갱신 LOD" src="images/ba-field-5-update-lod.jpg" />
+<img width="900" alt="거리 기반 활성화와 히스테리시스" src="images/ba-field-4-hysteresis.png" />
+</div>
+
+3. **갱신 LOD : 화면 밖에서 가만히 있는 몬스터는 덜 돌린다**
+   - 존재 판정이 **'누구를 켤지'** 를 정했다면, 갱신 LOD는 켜 둔 몬스터를 **'얼마나 자주 돌릴지'** 를 정합니다. 살아 있는 몬스터의 **87%가 화면 밖**이었습니다.
+   - 대상은 **화면 밖이면서 교전 중이 아닌 몬스터**만입니다. HP바 끔 · Behavior Tree **8프레임에 1번** · Animator 끔. 교전 중이면 줄이지 않습니다 — 화면 밖에서 쏘는 몬스터의 공격 타이밍이 늦어지면 안 되기 때문입니다.
+   - 줄인 몬스터의 판단이 한 프레임에 몰리지 않도록 몬스터마다 실행 프레임을 엇갈리게(`(frameCount + phase) % 8 == 0`) 두었고, Animator를 다시 켤 때 등장 연출이 재생되지 않도록 상태를 보존합니다.
+   - 몬스터가 많을수록 효과가 커집니다 — 밀도 ×4에서 −10%, ×8에서 −17%.
+
+<div align="center">
+<img width="900" alt="갱신 LOD" src="images/ba-field-6-update-lod.png" />
 </div>
 
 **✅ 결과 (최종 빌드 · 같은 경로 3회씩 재측정)**
@@ -558,15 +573,19 @@ classDiagram
 | 보통 프레임 (밀도 ×8, 갱신 LOD) | 4.12ms | 3.43ms | **▼17%** |
 | 144fps 예산 안 몬스터 수 (×8) | 430마리 | 514마리 | **약 1.2배** |
 
+아래는 같은 5분 주행의 실측 로그입니다. Sector에서 프레임이 튀는 구간이 **구역 경계를 왕복하는 구간(초록)** 과 겹치고, 거리 방식에서는 그 튐이 사라진 것을 볼 수 있습니다.
+
 <div align="center">
-<img width="900" alt="Sector vs 거리 결과" src="images/ba-field-4-sector-vs-distance.jpg" />
+<img width="900" alt="5분 자동 주행 실측" src="images/ba-field-5-timeline.png" />
 </div>
 
 **관련 코드**
-- [[📄DistanceActivation.cs (⑤ 거리 판정)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/DistanceActivation.cs)
+- [[📄DistanceActivation.cs (⑤ 거리 판정 · 히스테리시스)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/DistanceActivation.cs)
 - [[📄ActivationPolicies.cs (7가지 방식 생성)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/ActivationPolicies.cs)
 - [[📄ActivationManager.cs (판정 실행 · 방식 간 결과 비교)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/ActivationManager.cs)
+- [[📄CullingGroupActivation.cs (⑦ 비교 대상)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/CullingGroupActivation.cs)
 - [[📄SpawnerManager.cs (활성화 · 갱신 LOD 적용)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Field/SpawnerManager.cs)
+- [[📄측정 문서 (정책 비교 · 갱신 LOD 결과)]](https://github.com/vfly1189/OperationKivotos-Code/tree/main/docs/FieldEntity)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -581,57 +600,88 @@ classDiagram
 
 > **🚨 문제 상황: 흐름까지 부품으로 만들어서, 분기가 생길 때마다 새 클래스가 필요했다**
 >
-> - **기존 AbilitySystem** : 캐스터마다 흩어져 있던 공격 발동을 `AbilityRunner` 한 곳으로 모으고, 공격을 부품(SO)으로 조립하는 구조. 다만 **흐름(순서 · 대기 · 분기)도 행동(발사 · 장판 · 소환)도 같은 부품**이었다.
-> - **흐름과 행동은 다르다** : 행동은 한 순간에 끝나지만, 흐름은 시간과 상태를 가진다.
-> - **흐름을 부품으로 만들면** : ① 블록 코딩이 되어 **분기 키워드마다 새 부품 클래스**가 필요하고, ② 분기 결과(고른 색 등)를 저장할 곳이 없어 **부품 밖 컨트롤러**에 두게 된다.
-> - 예) 보스의 유물 포격 — 트리를 펼쳐 보면 `if (색 == 빨강) for (안쪽 8발) … else for (바깥 70발) …` 과 같은, **트리가 곧 코드**인 상태
+> - **기존 AbilitySystem** : 캐스터마다 흩어져 있던 공격 발동을 `AbilityRunner` 한 곳으로 모으고, 공격을 Effect(SO) 목록으로 조립하는 구조. 러너는 `foreach (effect) await effect.ExecuteAsync(ctx)` 만 수행한다.
+> - **플레이어 스킬에는 잘 맞았다** : 몹 5연사와 히나 8연사는 `RepeatEffect`의 값만 다르고 코드 차이는 0줄.
+> - **보스 패턴에서 막혔다** : `Delay` · `Repeat`처럼 **흐름도 부품**이고, 흐름은 순서대로 await 하는 한 줄뿐이라 선택 · 분기를 담을 수 없었다.
+>   1. 분기를 넣으려면 `SelectRandomChoice` · `BranchByChoice` 같은 **흐름 부품이 분기 종류마다 새 클래스**로 늘어난다 (블록 코딩)
+>   2. 고른 색 같은 **분기 결과를 둘 곳이 없어** 부품 밖 `BossRelicController`가 `IChoiceHandler`로 들고 있었다
 
 <div align="center">
-<img width="900" alt="흐름까지 부품으로 만든 구조의 문제" src="images/ba-skill-1-problem.jpg" />
+<img width="900" alt="흐름까지 부품으로 만든 구조의 문제" src="images/ba-skill-1-problem.png" />
 </div>
 
 **💡 해결 과정**
 
-1. **흐름은 Timeline 위에, 행동은 그 순간에만**
-   - 흐름 = 애니메이션 · Timeline + 태그 신호, 행동 = Event 하나 — **행동은 흐름을 품지 않는다**
-   - `Runner`(수명 : 패턴의 시작 → 끝 · 사망 / 회수 시 취소) ➔ `Action`(흐름 : Timeline) ➔ `Task`(신호 : 태그 · 조건이 맞을 때만) ➔ `Event`(행동)
-   - 분기 결과는 `PatternMemo`(칠판)에 — 고른 색 · 경고 위치를 패턴 동안 기억하고, 패턴마다 비움
+1. **흐름과 행동은 다르다 — 흐름은 Timeline 위에, 행동은 그 순간에만**
+   - 행동(발사 · 장판 · 소환)은 **한 순간**에 끝나지만, 흐름(순서 · 대기 · 분기 · 끝)은 **시간과 상태**를 가집니다. 둘을 같은 부품으로 만든 것이 문제였습니다.
+   - 흐름은 이미 시간 축을 가진 도구인 **애니메이션 · Timeline**에 맡기고, 연출 도중 지정한 프레임에 **태그 신호**를 보내게 했습니다. 행동은 신호를 받는 순간 실행되는 **Event 하나**이고, 흐름을 품지 않습니다.
+   - 분기는 '부품'이 아니라 **'조건'** 이 됩니다. 같은 Strike 신호에 Task 두 개가 걸려 있고, 칠판(`PatternMemo`)의 `색 == 빨강` / `색 == 초록` 조건이 맞는 쪽만 Event를 실행합니다. 칠판은 패턴이 시작될 때마다 비우고 재사용합니다(할당 0).
 
 <div align="center">
-<img width="900" alt="흐름과 행동의 분리" src="images/ba-skill-2-flow-vs-action.jpg" />
+<img width="900" alt="흐름과 행동의 분리" src="images/ba-skill-2-layers.png" />
 </div>
 
-2. **고르는 곳과 실행하는 곳을 나눴다**
-   - 선택기 = 무엇을 쓸까 → `SkillSystem` = 쓸 수 있나? → 시작 → `Runner` 실행 → `PatternEnded` = 끝났다 → 다음 패턴
-   - 보스 선택기(HP선을 넘으면 기믹 한 번 · 평소 가중치 추첨)와 일반몹 선택기(탄 있으면 공격 · 없으면 재장전)만 다르고, **SkillSystem은 같은 코드**
+2. **고르는 곳과 실행하는 곳을 나눴다 — 층마다 아는 것이 하나**
+   - GAS(Unreal Gameplay Ability System)를 모티브로 "언제 / 무엇을 / 써도 되나 / 순서 / 신호 / 행동 / 결과"를 층으로 나눴습니다. 아래층은 `PatternContext`(시전자 · 타겟 · 소켓 · memo · 스탯 · 토큰)만 읽습니다.
+
+   | 층 | 질문 | 담당 | 아는 것 |
+   |---|---|---|---|
+   | 언제 | 지금 행동할까 | 컨트롤러 BT | 사망 · 리쉬 · 사거리 · 간격 |
+   | 무엇을 | 어떤 패턴 | 선택기 (`BossMonsterPatternSelector` · `AmmoPatternSelector`) | HP선 · 가중치 / 탄 수 |
+   | 써도 되나 · 실행 | 허락 · 실행 | `SkillSystem` | 보유 목록 · 쿨다운 · 태그 |
+   | 순서 | 무엇 다음 무엇 | `PatternRunner` → `PatternAction` | Action 순서 · 현재 Action |
+   | 신호 | 언제 반응 | `TagMarker` / 애니 이벤트 → `PatternTask` | 태그 + memo 조건 |
+   | 행동 | 결과 하나 | `PatternEvent` 파생 | 점 하나에 무엇을 |
+   | 어디에 · 간격 | 점 목록 | `PointEmitter` · `Placement` | 기준점 · 모양 · 간격 · 회차 |
+
+   - 보스 선택기는 **HP선을 넘으면 기믹(한 번), 평소에는 가중치 추첨**, 일반몹 선택기는 **탄이 있으면 공격(탄 −1), 없으면 재장전**. 탄 수는 패턴을 넘어 남는 상태라 칠판이 아니라 선택기가 듭니다. **SkillSystem은 누가 부르는지 모릅니다.**
 
 <div align="center">
-<img width="900" alt="선택기와 SkillSystem" src="images/ba-skill-3-selector.jpg" />
+<img width="900" alt="선택기와 SkillSystem" src="images/ba-skill-3-selector.png" />
 </div>
 
 3. **행동 하나 = 무엇을 + 횟수 · 간격 + 어디에**
-   - 세 가지를 따로 정해서 조합 — **하나를 바꿔도 나머지는 그대로**
-   - 예1) 조여오는 번개 = 내려치기 + 12개씩 · 0.15초 + 원 · 반경 8 → 0
-   - 예2) 몬스터 소환 = 소환 + 1마리씩 · 0.3초 + 지정 위치 4곳
+   - Event는 **상속 한 번**으로 '무엇을'만 정하고, 위치 · 간격 · 데미지 · 판정은 **필드 조합**(`PointEmitter` · `Placement` · `DamageSpec` · `HitShape`)으로 정합니다. 하나를 바꿔도 나머지는 그대로입니다.
+   - 예) 조여오는 번개 = 내려치기 + 12개씩 · 0.15초 + 원 · 반경 8 → 0 / 몬스터 소환 = 소환 + 1마리씩 · 0.3초 + 지정 위치 4곳
+   - Tank의 '경고 → 지연 → 타격'은 새 Event가 아니라 **`StrikeEvent`의 옵션 하나**로 추가했고, 그 결과 보스도 같은 기능을 얻었습니다.
 
 <div align="center">
-<img width="900" alt="행동의 조합" src="images/ba-skill-4-event-compose.jpg" />
+<img width="900" alt="행동의 조합" src="images/ba-skill-4-compose.png" />
 </div>
 
 **✅ 결과 — 일반몹과 보스가 같은 구조 위에서 돈다**
-- 일반몹(Tank)과 보스(Hieronymus) 모두 `Pattern → Action → Task → Event` — **다른 것은 조립과 값뿐**
-- 새 분기 종류가 생겨도 부품 클래스가 아니라 **Timeline의 신호와 Task 조건**으로 표현
+- 일반몹(AR · RL · Tank)과 보스(Hieronymus)가 모두 `Pattern → Action → Task → Event` 구조 위에서 동작하고, **다른 것은 조립(에셋)과 값뿐**입니다.
+- 몬스터를 옮길 때 바뀐 `.cs` 수가 확장성의 증거입니다 — AR(공용화) 여러 개 → **RL 0개**(프리팹 · 클립만) → **Tank 1개**(`StrikeEvent` 옵션).
+- 플레이어 캐릭터는 아직 기존 AbilitySystem을 쓰지만, 데미지 이음새(`BaseStat.BuildOutgoingDamage` → `Health`)가 이미 같아 그 위에서 이관할 수 있습니다.
 
 <div align="center">
-<img width="900" alt="일반몹과 보스의 같은 구조" src="images/ba-skill-5-same-structure.jpg" />
+<img width="900" alt="일반몹과 보스의 같은 구조" src="images/ba-skill-5-same-structure.png" />
 </div>
+
+<details>
+<summary><b>📎 참고 — AbilitySystem · SkillSystem · GAS 대조</b></summary>
+
+| 항목 | AbilitySystem (플레이어) | SkillSystem (몬스터 · 보스) | GAS (Unreal) |
+|---|---|---|---|
+| 단위 | `AbilityData`(SO) = Effect 목록 | `Pattern` = Action 목록 | `GameplayAbility` |
+| 무엇을 쓸까 | 입력 (Q · E · 평타) | 선택기 (HP선 · 가중치 / 탄 수) | AI · 입력 바인딩 |
+| 써도 되나 | `AbilityRunner.Commit` — 쿨 · Required/Blocked 태그 | `SkillSystem.CanUse` — 보유 · 쿨 · 태그(자리) | `CanActivateAbility` |
+| 흐름 | Effect를 순서대로 await | Action 순서 + Task 신호 반응 | Ability 그래프 + AbilityTask |
+| 타이밍 | 애니 비트 번호 | 태그 (TagMarker · 애니 이벤트) | AnimNotify → GameplayEvent |
+| 분기 · 선택 | 없음 (선형) | ChooseEvent + Task 조건(memo) | 그래프 분기 |
+| 위치 | `Anchor` | `Placement` · `Anchor` · `PointEmitter` | TargetActor · TargetData |
+
+AbilitySystem은 GAS의 **'허락' 층**(태그 게이트 · Commit/Fire 분리)에 가깝고, SkillSystem은 **'흐름 · 신호 · 타게팅' 층**에 가깝습니다. 상태 태그 게이트를 SkillSystem으로 옮기는 것이 다음 단계입니다.
+
+</details>
 
 **관련 코드**
 - [[📄SkillSystem.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/SkillSystem.cs)
 - [[📄PatternRunner.cs (Action 진행 · 신호 → Task)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/PatternRunner.cs)
 - [[📄TimelineAction.cs (흐름 = Timeline)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/TimelineAction.cs)
 - [[📄PatternMemo.cs (칠판)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/PatternMemo.cs)
-- [[📄StrikeEvent.cs (행동 예 : 내려치기)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Pattern/Event/StrikeEvent.cs)
+- [[📄StrikeEvent.cs (행동 예 : 내려치기 · 경고 · 지연)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Pattern/Event/StrikeEvent.cs)
+- [[📄설계 문서 (SkillSystem 전체 구조)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/docs/CombatAbility/08_SkillSystem_Overview.md)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -646,37 +696,55 @@ classDiagram
 > **🚨 문제 상황: 버킷이 2개뿐이라, 수명이 애매한 리소스는 전부 Global에 쌓인다**
 >
 > - 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유하는 구조에서, 재로딩을 없애려 핸들을 캐싱해 보관하기 시작.
-> - 담는 통이 `Global` · `Scene` 2개뿐이라, 파티 · 팝업 · 던전처럼 수명이 애매한 리소스가 전부 안전한 쪽인 `Global`로 도피 — **Global은 해제 경로가 없어 세션 내내 상주**.
+> - 담는 통이 `Global` · `Scene` 2개뿐이라, 파티 · 팝업 · 던전처럼 수명이 애매한 리소스가 전부 안전한 쪽인 `Global`로 도피 — **Global은 해제 경로가 없어 세션 내내 상주** (진입 직후 513MB).
 > - Addressables는 자체 refCount를 갖지만 증감의 짝맞춤 책임을 호출자에게 위임한다 — 실제 호출부는 46개 파일 · 130곳이라, "누가 언제 Release를 부르는가"가 정해지지 않으면 그대로 새는 구조.
 
 <div align="center">
-<img width="900" alt="2버킷 구조의 한계" src="images/ba-resource-1-two-buckets.jpg" />
+<img width="900" alt="2버킷 구조의 한계" src="images/ba-resource-1-buckets.png" />
 </div>
 
 **💡 해결 과정**
 
 1. **책임을 3층으로 분리 (Manager / Scope / Registry)**
    - `ResourceManager`(라우팅) → `ResourceScope`(수명 티켓 · 키 집합) → `ResourceRegistry`(핸들 · refCount) → `Addressables`(실제 I/O).
-   - 실제 로드는 레지스트리 한 곳에서 첫 요청 1번만 일어나고, 같은 키의 재요청은 캐시에서 반환 — 요청이 늘어도 늘어나는 것은 로드가 아니라 refCount.
+   - 실제 로드는 레지스트리 한 곳에서 **첫 요청 1번**만 일어나고, 같은 키의 재요청은 캐시에서 반환합니다. refCount는 요청 수가 아니라 **이 키를 쥔 스코프의 수**입니다(같은 스코프의 재요청은 +0).
+
+```mermaid
+sequenceDiagram
+    participant C as 호출부
+    participant M as ResourceManager
+    participant S as ResourceScope
+    participant R as ResourceRegistry
+    participant A as Addressables
+    Note over C,A: ① 첫 요청
+    C->>M: Load(key, Scene)
+    M->>S: Scene 스코프에 key 등록
+    M->>R: 조회 — 없음 (miss)
+    R->>A: 로드 요청 (실제 I/O 1회)
+    A-->>R: 핸들 생성 · refCount 1
+    R-->>C: 에셋 반환
+    Note over C,A: ② 다른 스코프의 재요청
+    C->>M: Load(같은 key, Party)
+    M->>S: Party 스코프에 key 등록
+    M->>R: 조회 — 있음 (hit)
+    R-->>C: 같은 핸들 반환 · refCount +1 (로드 0회)
+```
+
+2. **수명 스코프를 2종 → 4종으로 확장 — 수명 경계가 곧 해제 시점**
+   - `Global`(종료까지) · `Scene`(씬 전환) · `Party`(씬 전환을 넘어 생존) · `Popup`(팝업 스택 0→1 생성, 1→0 Dispose).
+   - 로드할 때 스코프만 고르면 끝입니다. 스코프가 사라지는 순간 **자기가 쥔 키만 -1** 하고, 0이 된 키만 `Addressables.Release` 됩니다. 다른 스코프가 같은 키를 아직 쥐고 있으면 메모리는 유지됩니다.
+   - 팝업 프리팹 · 슬롯은 **Scene 스코프**에 두어 다시 열 때 로드 없이 즉시 뜨게 하고, 스탠딩 이미지 같은 **대형 콘텐츠만 Popup 스코프**에 담아 팝업을 모두 닫는 순간 회수합니다.
 
 <div align="center">
-<img width="900" alt="재요청은 캐시에서 반환" src="images/ba-resource-3-registry-cache.jpg" />
-</div>
-
-2. **수명 스코프를 2종 → 4종으로 확장**
-   - `Global`(종료까지) · `Scene`(씬 전환) · `Party`(씬 전환을 넘어 생존) · `Popup`(스택 0→1 생성, 1→0 Dispose).
-   - 각 스코프는 자기가 잡은 키만 `Dispose()` 시점에 -1 — 팝업을 모두 닫으면 `Popup Scope`가 소멸하며 자신이 가진 키만 정산되고, 다른 스코프가 같은 키를 아직 쥐고 있으면 메모리가 유지된다.
-
-<div align="center">
-<img width="900" alt="스코프 소멸 시 refCount 정산" src="images/ba-resource-2-scope-release.jpg" />
+<img width="900" alt="수명 스코프 타임라인과 정산" src="images/ba-resource-2-scope-timeline.png" />
 </div>
 
 3. **"Addressables가 이미 세는데 왜 카운트를 하나 더 뒀는가"**
-   - 세는 것은 Addressables가 하지만, **언제 줄일지는 사람이 직접 작성해야 한다.** 스코프 층은 "이제 필요 없다"는 도메인 신호를 refCount 감소로 번역하는 역할.
-   - 결과적으로 해제 짝맞춤 지점이 **호출부 130곳 → 수명 경계(씬 전환 · 팝업 스택 0 · 파티 해체) 개수**로 압축됨.
+   - 세는 것은 Addressables가 하지만, **언제 줄일지는 사람이 직접 작성해야 합니다.** 스코프 층은 "이제 필요 없다"는 도메인 신호(씬 전환 · 팝업 스택 0 · 파티 해체)를 refCount 감소로 번역하는 역할입니다.
+   - 결과적으로 해제 짝맞춤 지점이 **호출부 130곳 → 수명 경계의 개수**로 압축됐습니다.
 
 <div align="center">
-<img width="900" alt="왜 카운트를 하나 더 두었는가" src="images/ba-resource-5-why-scope.jpg" />
+<img width="900" alt="왜 스코프 층을 두었는가" src="images/ba-resource-3-why-scope.png" />
 </div>
 
 4. **오브젝트 풀 · 아틀라스 캐시까지 수명 통합**
@@ -692,17 +760,18 @@ classDiagram
 | 던전 왕복 후 남는 메모리 | +18.7MB | ≈0MB | **쌓이지 않음** |
 | 대가 : 팝업 첫 오픈 | — | +14 ~ 20ms | 다시 열 때는 그대로 |
 
-- 개발 빌드 텍스처 메모리 : 팝업 5종 첫 오픈 **+28.1MB** → 던전 왕복 후 **−26.7MB 반납** → 다시 열고 다시 오가도 **증가 0MB**
-- 해제 짝맞춤 지점 : 호출부 **130곳 → 수명 경계 개수**로 압축.
+- 개발 빌드 텍스처 메모리 : 팝업 5종 첫 오픈 **+28.1MB**(프리팹 · 슬롯이 Scene 스코프에 등록) → 던전 왕복 후 **−26.7MB 반납**(Scene 스코프 소멸) → 다시 열고 다시 오가도 **증가 0MB**
+- 풀 티켓 정산 실측 : Global 프리로드 프리팹이 게임 중 **`ref 1 → 3 → 1`** 로 정확히 획득 · 반납(`Global 1` + `Scene 스코프 1` + `풀 티켓 1`)
 
 <div align="center">
-<img width="900" alt="수명 스코프 도입 결과" src="images/ba-resource-4-result.jpg" />
+<img width="900" alt="수명 스코프 도입 결과" src="images/ba-resource-4-result.png" />
 </div>
 
 **관련 코드**
 - [[📄ResourceScope.cs (수명 티켓)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceScope.cs)
 - [[📄ResourceRegistry.cs (핸들 · refCount)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceRegistry.cs)
 - [[📄ResourceManager.cs (스코프 라우팅)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceManager.cs)
+- [[📄UIManager.cs (Popup 스코프 생성 · Dispose 지점)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/UIManager.cs)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -1060,38 +1129,35 @@ classDiagram
 
 > **🚨 문제 상황: 코너에서 캐릭터가 멈춘다 (1,000쌍 중 93쌍)**
 >
-> - **구조** : A* 경로는 삼각형 중심점을 잇는 지그재그라, `Line-of-Sight`(시야 판정)로 "통과하는 가장 먼 점"까지 건너뛰어 경로를 폈다.
-> - **원인** : 코너를 끼고 돌도록 판정을 **후하게(허용 오차 띠)** 잡았더니, 띠 안이라는 이유로 통과 판정이 나 **경로가 벽 안을 지나감** → NavMesh 밖으로 나간 캐릭터가 코너에서 끼임
-> - 무작위 시작 · 도착 1,000쌍 중 **93쌍**에서 발생
+> - **구조** : A* 경로는 삼각형 중심점을 잇는 지그재그라, `Line-of-Sight`(시야 판정)로 "직선으로 볼 수 있는 가장 먼 경로점"까지 건너뛰어 경로를 폈다.
+> - **원인** : 판정은 직선 위에 일정 간격으로 점을 찍어 모두 NavMesh 위인지 보는 방식인데, 코너를 끼고 돌게 하려고 **허용 오차(띠)** 를 줬더니 띠 안이라는 이유로 통과 판정이 나 **경로가 벽 안을 지나갔다** → NavMesh 밖으로 밀린 캐릭터가 코너에서 멈춤
+> - 무작위 시작 · 도착 **1,000쌍 중 93쌍**에서 발생. 점을 찍어 검사하는 방식이라 **스무딩 1회 16.4ms**로 비용도 컸다.
 
 <div align="center">
-<img width="900" alt="LOS 스무딩의 코너 끼임" src="images/er-navmesh-1-problem.jpg" />
+<img width="900" alt="LOS 스무딩의 코너 끼임" src="images/er-navmesh-1-los-problem.png" />
 </div>
 
 **💡 해결 과정**
 
 1. **시도 : 같은 규칙 그대로, 판정만 엄격하게 하면?**
-   - 직선이 A* 통로 삼각형 안에만 있어야 통과하도록 판정을 바꿨다 → **끼임은 0이 됐지만** 중심점에서 꺾여 최대 회전이 **86°** 로 부자연스러운 이동
+   - 직선이 **A* 통로 삼각형 안에만** 있어야 통과하도록 판정을 바꿨습니다. 끼임은 0이 되고 비용도 11μs로 줄었지만, 최대 회전이 **86°** 로 오히려 커졌습니다.
+   - 판정을 바꿔도 건너뛸 **후보는 여전히 삼각형 중심점**이었기 때문입니다. 중심점은 코너가 어디 있는지 모르므로, 코너에서 먼 중심점에서 급하게 꺾입니다.
 
 <div align="center">
-<img width="900" alt="엄격한 LOS 판정" src="images/er-navmesh-2-strict-los.jpg" />
+<img width="900" alt="엄격한 LOS 판정" src="images/er-navmesh-2-strict-los.png" />
 </div>
 
 2. **왜 Funnel + Bezier로 갔는가**
-   - 판정을 바꿔도 후보는 여전히 **삼각형 중심점** — 중심점에 얽매여 있었다
-   - 목표는 최단 경로가 아니라 **자연스러운 이동** → 코너를 가깝게 돌아야 하는데, **중심점에는 코너 정보가 없다** → 코너를 직접 찾아야 한다
-
-<div align="center">
-<img width="900" alt="Funnel + Bezier를 택한 이유" src="images/er-navmesh-3-why-funnel.jpg" />
-</div>
+   - 목표는 최단 경로가 아니라 **자연스러운 이동**이었습니다. 그러려면 코너를 가깝게 돌아야 하는데, 중심점에는 코너 정보가 없으니 **코너를 직접 찾아야** 합니다.
+   - **Funnel(String Pulling)** 이 A* 통로에서 경로가 꺾이는 **벽 꼭짓점**을 찾고, **Bezier**가 그 꼭짓점을 기준으로 **어떻게 돌지**를 정합니다.
 
 3. **코너 꼭짓점 V를 기준으로 Bezier 곡선을 만든다**
-   - **Funnel** : 벽 쪽 통로 끝을 R(= 몸 반경 r × 1.5)만큼 줄여, 경로가 코너 꼭짓점 V에서 R 떨어진 곳에서 꺾이게 한다
-   - **새 점 A** : Funnel이 낸 꺾인 점은 버리고, 진입 · 진출 방향으로 새 점 A를 정한다
-   - **곡선** : A 앞뒤 직선 위 d 지점을 곡선의 시작 · 끝으로 잡고, 곡선의 한가운데가 V에서 r(몸 반경)만큼 떨어지도록 d를 정한다 — A는 곡선을 당기기만 하고 지나지 않는다
+   - **① 통로를 R만큼 줄여 Funnel** : 벽 쪽 통로 끝을 R(= 몸 반경 r × 1.5)만큼 줄여, 경로가 V에서 R 떨어진 곳에서 꺾이게 합니다.
+   - **② 꺾인 점 대신 새 점 A** : Funnel이 낸 꺾인 점은 버리고, 진입 · 진출 방향으로 새 점 A를 정합니다.
+   - **③ A 앞뒤로 곡선** : A 앞뒤 직선 위 d 지점을 곡선의 시작 · 끝으로 잡는 2차 Bezier(A는 제어점이라 곡선을 당기기만 하고 지나지 않습니다). 곡선의 한가운데는 `A + d/4 · (진출 방향 − 진입 방향)`이므로, **이 점이 V에서 정확히 r이 되도록 d를 정하면** 벽에서 몸 반경만큼 띄운 채 코너를 가깝고 둥글게 돕니다.
 
 <div align="center">
-<img width="900" alt="Funnel + Bezier 구성" src="images/er-navmesh-4-funnel-bezier.jpg" />
+<img width="900" alt="Funnel + Bezier 구성" src="images/er-navmesh-3-funnel-bezier.png" />
 </div>
 
 **✅ 결과 — 끼임 0, 꺾임은 가장 작고 벽 여유는 가장 크다 (몬스터 이동에도 그대로 적용)**
@@ -1103,8 +1169,11 @@ classDiagram
 | Funnel | 0 | 37.7° | 0.136 | 13μs |
 | **Funnel + Bezier** | **0** | **15.8°** | **0.296** | **45μs** |
 
+- Funnel만 쓰면 꺾임은 줄지만 코너 꼭짓점에 바짝 붙어(벽 여유 0.136) 몸이 벽을 스칩니다. Bezier를 더하면 **벽 여유가 가장 크면서(0.296) 꺾임은 가장 작습니다(15.8°).**
+- 곡선 계산이 더해져 45μs로 Funnel보다 느리지만, 처음 LOS 방식(16.4ms)보다 여전히 **약 360배 빠릅니다.**
+
 <div align="center">
-<img width="900" alt="네 가지 경로 비교" src="images/er-navmesh-5-result.jpg" />
+<img width="900" alt="네 가지 경로 비교" src="images/er-navmesh-4-compare.png" />
 </div>
 
 <div align="right">
@@ -1126,7 +1195,7 @@ classDiagram
 **💡 해결 과정**
 
 1.  **쿼드 트리(Quad Tree) 도입 이유 (Why?)**
-    *   **2D 기반 최적화** : 게임 시점이 **쿼터뷰(Quarter View)** 고정형이므로, 높이(Y축)에 대한 복잡한 분할(Octree) 대신 평면 분할만으로 충분
+    *   **2D 기반 최적화** : 게임 시점이 **쿼터뷰(Quarter View)** 고정형이므로, 높이 축에 대한 복잡한 분할(Octree) 대신 평면 분할만으로 충분
     *   **게임 기획 특성** : 근접 전투 중심이며 원거리 투사체 · 맵 전체 스킬이 없어, 화면 내 로직 처리에 집중하는 것이 효율적
     *   **개발 자원** : 난이도 · 일정 대비 충분한 효과
 
@@ -1155,10 +1224,6 @@ classDiagram
 **🤔 남은 한계 → 개선 방향**
 - **빌드 비용 역전** : 객체가 많을수록 트리 빌드 비용이 탐색 비용을 넘어서고, 잦은 할당 / 해제가 발생 → **정적 / 동적 트리 분리**, **메모리 풀링으로 재할당 제거**
 - **화면 밖 충돌 누락** : 화면 밖 로직을 정지하면 그쪽 충돌도 무시됨 → **Frustum 영역만 렌더링 검색**, **활성 청크 기반 시뮬레이션**
-
-<div align="center">
-<img width="900" alt="Quad Tree 선택 이유와 남은 한계" src="images/er-quadtree-why-and-limits.jpg" />
-</div>
 
 <div align="right">
   <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -1550,7 +1615,7 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 > **"동일 프레임 내 중복된 삭제 요청으로 인한 Double Free 크래시 발생"**
 >
 > - **상황** : 안전한 객체 관리를 위해 `DELETE_OBJECT` 이벤트를 즉시 처리하지 않고 `vector` 컨테이너에 담아 지연 처리(Deferred Deletion) 수행.
-> - **문제** : 다수의 투사체가 동시에 하나의 몬스터를 타격하는 난전 상황에서, **동일한 몬스터 객체 주소에 대한 삭제 요청**이 큐에 여러 번 중복 등록됨.
+> - **문제** : 다수의 투사체가 같은 프레임에 같은 대상(플레이어)을 동시에 타격하는 상황에서, **동일한 객체 주소에 대한 삭제 요청**이 큐에 여러 번 중복 등록됨.
 > - **결과** : 메모리 해제 시, 이미 해제된 주소를 다시 해제하려는 **Double Free 오류** 및 댕글링 포인터 접근으로 인한 프로그램 강제 종료(Crash) 발생.
 
 **💡 해결 과정** [[📄객체 삭제 이벤트 처리]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L61-L69)
