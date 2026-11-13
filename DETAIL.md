@@ -603,7 +603,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 > - **구조** : 매니저 한 곳이 로드 · 핸들 · 수명 전부 소유 · 재로딩 방지용 핸들 캐싱
 > - **버킷 부족** : `Global` · `Scene` 2개뿐 → 파티 · 팝업 · 던전 리소스가 `Global`로 도피
 > - **해제 경로 없음** : `Global`은 세션 내내 상주 (진입 직후 **513MB**)
-> - **Release 책임 분산** : Addressables refCount 짝맞춤 = 호출자 책임 → **46개 파일 · 130곳**
+> - **수명 결정 분산** : 호출부 **46개 파일 · 130곳**이 각자 `isGlobal`로 수명 결정 → 애매하면 `Global`
 
 | **2버킷 구조 — Global 버킷은 해제 경로 없이 계속 쌓인다** |
 | :---: |
@@ -638,7 +638,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 3. **Addressables가 이미 세는데 왜 카운트를 하나 더?**
    - **Addressables** = 몇 번 로드했나 / **수명 스코프** = 언제 줄일지
    - 도메인 신호(씬 전환 · 팝업 스택 0 · 파티 해체) → refCount 감소로 번역
-   - 해제 짝맞춤 지점 : 호출부 $`\color{#E8352E}\textbf{130곳 → 수명 경계 수}`$
+   - 수명 결정 지점 : 호출부 $`\color{#E8352E}\textbf{130곳 → 수명 경계 수}`$
 
 4. **오브젝트 풀 · 아틀라스 캐시 통합**
    - **풀** : 원본 프리팹 ref 티켓 직접 획득(`AcquirePoolRef`) → 씬 전환 시 풀 인스턴스 깨짐 차단
@@ -651,7 +651,9 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 | Global 상주 메모리 (진입 직후) | 513MB | $`\color{#E8352E}\textbf{205MB}`$ | **▼60%** |
 | 전체 리소스 메모리 (진입 직후) | 617MB | $`\color{#E8352E}\textbf{363MB}`$ | **▼41%** |
 | 던전 왕복 후 남는 메모리 | +18.7MB | $`\color{#E8352E}\textbf{≈0MB}`$ | **쌓이지 않음** |
-| 대가 : 팝업 첫 오픈 | — | +14 ~ 20ms | 다시 열 때는 그대로 |
+| 대가 : 팝업 첫 오픈 | — | +14 ~ 20ms | 재오픈은 추가 지연 없음 |
+
+> Global · 전체 = 에디터 계측(Use Existing Build · 실제 번들)의 버킷별 핸들 메모리 / 아래 그래프 = 개발 빌드 텍스처 메모리 — 서로 다른 지표
 
 - **팝업 5종 첫 오픈** : $`\color{#E8352E}\textbf{+28.1MB}`$ → 던전 왕복 후 $`\color{#E8352E}\textbf{−26.7MB}`$ 반납 → 재오픈 · 재왕복 시 증가 $`\color{#E8352E}\textbf{0MB}`$
 - **풀 티켓 정산** : Global 프리팹 `ref 1 → 3 → 1` (Global + Scene 스코프 + 풀 티켓)
@@ -1073,7 +1075,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 1. **시도 : 같은 규칙, 판정만 엄격하게**
    - 직선이 **A\* 통로 삼각형 안에만** 있어야 통과 → 끼임 $`\color{#E8352E}\textbf{93쌍 → 0}`$
-   - 하지만 후보가 여전히 **삼각형 중심점** → 코너에서 먼 중심점에서 급히 꺾임 (최대 회전 $`\color{#E8352E}\textbf{78.6° → 86.1°}`$ 오히려 증가)
+   - 하지만 후보가 여전히 **삼각형 중심점** → 코너에서 먼 중심점에서 급히 꺾임 (최대 회전 중앙값 $`\color{#E8352E}\textbf{78.6° → 86.1°}`$ 오히려 증가)
 
 | **엄격한 판정의 LOS 경로** |
 | :---: |
@@ -1091,10 +1093,12 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 **✅ 결과 — 끼임 0 · 꺾임 최소 · 벽 여유 최대 (몬스터 이동에도 그대로 적용)**
 
+> 같은 1,000쌍(시작 · 도착) 자동 측정 · 끼임은 합계, 나머지는 **1,000쌍 중앙값** (최대 회전 = 경로 하나에서 가장 크게 꺾인 각도 · 벽 여유 = 경로가 벽에 가장 가까워진 거리, 몸 반경 r = 0.3)
+
 - **코너 끼임** : $`\color{#E8352E}\textbf{93쌍 → 0}`$
-- **최대 회전** : $`\color{#E8352E}\textbf{78.6° → 15.8°}`$
-- **벽 여유** : $`\color{#E8352E}\textbf{0.000 → 0.296}`$ (몸 반경만큼 띄워서 이동)
-- **스무딩 1회** : $`\color{#E8352E}\textbf{16.4ms → 45μs}`$ (약 **360배** 빠름)
+- **최대 회전 (중앙값)** : $`\color{#E8352E}\textbf{78.6° → 15.8°}`$
+- **벽 여유 (중앙값)** : $`\color{#E8352E}\textbf{0.000 → 0.296}`$ (몸 반경만큼 띄워서 이동)
+- **스무딩 1회 (중앙값)** : $`\color{#E8352E}\textbf{16.4ms → 45μs}`$ (약 **360배** 빠름)
 
 | 방식 | 끼임 | 최대 회전 | 벽 여유 ↑ | 스무딩 1회 |
 |:---|:---:|:---:|:---:|:---:|
@@ -1201,7 +1205,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  GPU 하드웨어 가속으로 **대규모 웨이브에서도 평균 150 ~ 250 FPS** (GDI+는 소수 객체에서도 20 ~ 40 FPS)
 
 &nbsp;&nbsp; └ **[타일맵 렌더링 최적화](#tilemap-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  비트맵 베이킹(Baking) 기법으로 **Draw Call 99.9% 감소 (1,296회 → 1회)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  비트맵 베이킹(Baking) 기법으로 **DrawCall 99.9% 감소 (1,296회 → 1회)**
 
 &nbsp;&nbsp; └ **[이벤트 처리 안정성](#event-queue-system)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `unordered_set` 도입으로 **삭제 중복 요청(Double Free)으로 인한 크래시 해결**
@@ -1327,14 +1331,14 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 
 **Direct2D 기반 렌더링 파이프라인**
 - **하드웨어 가속** : GDI+의 CPU 렌더링 방식이 가진 성능 한계를 극복하기 위해, GPU 가속을 지원하는 Direct2D로 렌더링 파이프라인 교체
-- **더블 버퍼링 (Double Buffering)** : 렌더 타겟(Back Buffer)에 모든 오브젝트를 먼저 그린 후, 화면(Front Buffer)과 교체(Present)하여 깜빡임(Flickering) 현상 차단
+- **더블 버퍼링 (Double Buffering)** : `ID2D1HwndRenderTarget`이 `BeginDraw` ~ `EndDraw` 사이의 그리기를 백 버퍼에 모은 뒤 `EndDraw`에서 한 번에 화면에 표시
 - [[📄Direct2D.h]](https://github.com/HyangRim/BrotatoClone/blob/master/Client/Direct2DMgr.h)
 
 **대규모 리소스 관리 및 최적화**
 - **리소스 매니저** : `unordered_map`을 활용한 텍스처(비트맵) 캐싱 시스템을 구축하여 중복 로딩 방지 및 빠른 리소스 접근 지원
-- **타일맵 렌더링 최적화 (Batching)** : 
+- **타일맵 렌더링 최적화 (오프스크린 베이킹)** : 
     - 32x32 타일 1,296개(36x36)를 매 프레임 개별 렌더링하던 방식을 개선
-    - 1,296회의 개별 드로우 콜을 하나의 비트맵 렌더링으로 병합(Batching) **DrawCall을 1,296회 → 1회로 감소**
+    - 로딩 시 1,296장을 비트맵 한 장으로 미리 합성(Baking) → **DrawCall을 1,296회 → 1회로 감소**
       - [[📄오프스크린 비트맵]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
 
 > **🚀 성능 개선 사례**:
@@ -1367,7 +1371,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 - **안전한 생명주기 관리** : 모든 로직 업데이트가 끝난 후 이벤트를 일괄 처리하여, 반복문 순회 중 객체 삭제로 인한 `Iterator Invalidated` 에러 방지
   - [[📄이벤트 처리 로직]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L44-L92)
 
-> **🚀 구조적 문제 해결**: 반복문 순회 중 객체 삭제로 인한 런타임 에러를 해결한 **[이벤트 큐 시스템 도입]** 과정은 하단 **[🛠️ 문제 해결](#event-queue-system)**에서 자세히 다룹니다.
+> **🚀 구조적 문제 해결**: 같은 프레임의 중복 삭제 요청으로 생긴 **Double Free 크래시**를 `unordered_set`으로 해결한 과정은 하단 **[🛠️ 문제 해결](#event-queue-system)**에서 자세히 다룹니다.
 
 </details>
 
@@ -1414,12 +1418,11 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 
 > **🚨 문제 상황: CPU 기반 렌더링의 한계**
 > 
-> *   **GDI/GDI+의 구조적 문제** : 픽셀 연산을 CPU가 전담하는 소프트웨어 렌더링이라 하드웨어 가속을 쓰지 못해, **소수 객체에서도 FPS 20~40**
-> *   **화면 품질 저하** : 단일 버퍼 렌더링으로 인한 플리커링(Flickering)과 낮은 주사율로 시각적 품질 저하.
+> *   **GDI+의 구조적 문제** : 픽셀 연산을 CPU가 전담하는 소프트웨어 렌더링이라 하드웨어 가속을 쓰지 못해, **소수 객체에서도 FPS 20~40**
 
 **💡 해결 과정** [[📄Direct2D 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L15-L59)
 - **하드웨어 가속 파이프라인** : CPU 의존적인 GDI+를 버리고, GPU 가속을 활용하는 Direct2D(`ID2D1HwndRenderTarget`)로 엔진 코어 교체
-- **렌더링 아키텍처 개선** : `CreateCompatibleRenderTarget()`을 이용한 **Back Buffer 기반의 더블 버퍼링 아키텍처**를 구축하여 프레임 안정성 확보.
+- **프레임 단위 그리기** : 한 프레임을 `BeginDraw` ~ `EndDraw`로 묶어 백 버퍼에 그린 뒤 `EndDraw`에서 한 번에 표시 (`ID2D1HwndRenderTarget` 내장 더블 버퍼링)
 
 **✅ 결과**
 - **성능 향상** : 소수 객체에서도 20~40 FPS였던 GDI+와 달리, 수백 개 객체가 등장하는 **대규모 웨이브에서도 평균 150~250 FPS** 유지
@@ -1438,7 +1441,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 <hr>
 <br>
 
-### 2️⃣ 타일맵 렌더링 최적화 : Draw Call 병목 해결<a name="tilemap-optimization"></a>
+### 2️⃣ 타일맵 렌더링 최적화 : DrawCall 병목 해결<a name="tilemap-optimization"></a>
 
 > **🚨 문제 상황**
 >
@@ -1463,7 +1466,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 
 - | 성능 지표 | 최적화 전 (Before) | 최적화 후 (After) | 개선율 |
   | :--- | :---: | :---: | :---: |
-  |  **Draw Calls** | 1,296 회 | **1 회** | **99.9% 감소** |
+  |  **DrawCall** | 1,296 회 | **1 회** | **99.9% 감소** |
   | **FPS (Avg)** | ~650 | **~1,400** | **약 2.15배 증가** |
   | **Frame Time** | 1.54 ms | **0.71 ms** | **약 0.8ms 단축** |
 - | **Before (최적화 전)** | **After (최적화 후)** |
