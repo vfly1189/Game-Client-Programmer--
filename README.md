@@ -81,10 +81,9 @@
 
 **1. 🔨 주요 개발 기능** <br>
 &nbsp;&nbsp; └ [필드 몬스터 관리 : 거리 기반 활성화와 갱신 LOD](DETAIL.md#optimization-bluearchive) <br>
-&nbsp;&nbsp; └ [전투 행동 설계 : 흐름과 행동을 분리한 SkillSystem](DETAIL.md#ability-bluearchive) <br>
+&nbsp;&nbsp; └ [전투 행동 설계 : SkillSystem + 다형성 계층형 몬스터 AI](DETAIL.md#ability-bluearchive) <br>
 &nbsp;&nbsp; └ [리소스 수명 관리 : 수명 스코프와 레지스트리](DETAIL.md#resource-lifetime-bluearchive) <br>
 &nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 및 에셋 베이킹 자동화](DETAIL.md#data-driven-bluearchive) <br>
-&nbsp;&nbsp; └ [다형성 계층형 몬스터 AI (Behavior Tree + SkillSystem)](DETAIL.md#behavior-tree-ai) <br>
 &nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](DETAIL.md#ui-optimization-bluearchive) <br>
 
 <br>
