@@ -7,28 +7,26 @@
 
 </div>
 
-> 📎 문제 해결 파트의 도식은 깃헙용으로 새로 그린 것입니다. 실측 데이터와 코드 구조를 PDF 포트폴리오보다 자세히 담았고, [도식 모음 PDF](diagrams/GitHub_Diagrams.pdf)로도 볼 수 있습니다.
-
 ---
 
 ### 🎮 게임플레이 — "머릿속 아이디어가 코드를 통해 실제로 플레이가 될 때 가장 재밌습니다"
-- 기획서의 아이디어가 플레이어에게 어떻게 느껴질지를 먼저 고민하고, 직접 플레이하며 의도대로 전달되는지 확인합니다.
+- 플레이어가 느낄 경험을 먼저 고민 → 직접 플레이하며 의도대로 전달되는지 확인
   - [포탈 없는 단일 필드 — 7가지 활성화 방식을 실측 비교해 거리 기반으로 전환, 가장 느린 1% 프레임 ▼47%](#optimization-trouble)
   - [최단 경로보다 자연스러운 이동 — Funnel + Bezier 스무딩으로 코너 끼임 93쌍 → 0](#navmesh-smoothing)
 
 ---
 
 ### 🏗️ 아키텍처 — "하나를 고칠 때 다른 곳을 건드리지 않아도 되는 구조"
-- 기능 하나를 수정했을 때 연쇄적으로 손봐야 할 곳이 최소화되는 설계를 우선합니다.
-- 직접 만든 구조에서 한계가 보이면, 동작하더라도 고칩니다.
+- 기능 하나를 고칠 때 연쇄 수정이 최소화되는 설계 우선
+- 직접 만든 구조라도 한계가 보이면, 동작하더라도 개선
   - [흐름까지 부품으로 만든 AbilitySystem의 한계를 겪고 흐름(Timeline) · 행동(Event)을 나눈 SkillSystem으로 재설계](#ability-trouble)
   - [FSM 상태 폭증의 유지보수 한계를 겪고 Behavior Tree로 구조 개선](#fsm-to-bt)
 
 ---
 
 ### 🚀 도전 — "재밌을 것 같으면 일단 뛰어드는 사람"
-- 낯선 기술이나 어려운 문제도 "배울 수 있는 기회"로 보고 즐겁게 도전합니다.
-- 개발 중 마주하는 벽도 끝까지 파고들어 해결합니다.
+- 낯선 기술 · 어려운 문제 = 배울 수 있는 기회
+- 개발 중 마주한 벽은 끝까지 파고들어 해결
   - [GDI+의 한계를 느끼고 하드웨어 가속(Direct2D) 시스템으로 전면 교체](#direct2d-optimization)
   - [Addressables 수동 해제의 한계를 겪고 익숙지 않았던 Scope 기반 수명 관리 구조에 도전](#resource-lifetime-trouble)
 
@@ -68,9 +66,7 @@
         <b><a href="#troubleshooting-eternal-return">🛠️ 문제 해결</a></b><br>
         &nbsp;&nbsp; └ <a href="#deferred-rendering-trouble">Hybrid 렌더링</a><br>
         &nbsp;&nbsp; └ <a href="#navmesh-smoothing">NavMesh 경로 스무딩</a><br>
-        &nbsp;&nbsp; └ <a href="#quadtree-optimization">Picking · 충돌 처리 최적화</a><br>
-        &nbsp;&nbsp; └ <a href="#navmesh-optimization">NavMesh 검색 최적화</a><br>
-        &nbsp;&nbsp; └ <a href="#fsm-to-bt">FSM → BT 리팩토링</a>
+        &nbsp;&nbsp; └ <a href="#quadtree-optimization">Picking · 충돌 처리 최적화</a>
       </td>
       <td valign="top">
         <br>
@@ -130,32 +126,29 @@
 
 **4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-bluearchive)** <br>
 &nbsp;&nbsp; └ **[필드 몬스터 관리 : 거리 기반 활성화와 갱신 LOD 도입](#optimization-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 가까운 몬스터만 켜고, 화면 밖은 덜 갱신 → **가장 느린 1% 프레임 ▼47% (4.68 → 2.50ms)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  가까운 몬스터만 켜고, 화면 밖은 덜 갱신 → **가장 느린 1% 프레임 ▼47% (4.68 → 2.50ms)**
 
 &nbsp;&nbsp; └ **[전투 행동 설계 : 흐름과 행동 분리를 통한 확장](#ability-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 흐름은 Timeline, 행동은 조합 → **일반몹 · 보스가 같은 SkillSystem 구조**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  흐름은 Timeline, 행동은 조합 → **일반몹 · 보스가 같은 SkillSystem 구조**
 
 &nbsp;&nbsp; └ **[리소스 수명 관리 : 2버킷 구조의 한계와 수명 스코프 도입](#resource-lifetime-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Addressables 리소스를 수명 스코프 단위로 관리 → **Global 상주 메모리 ▼60% (513 → 205MB)**
-
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Addressables 리소스를 수명 스코프 단위로 관리 → **Global 상주 메모리 ▼60% (513 → 205MB)**
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
 </div>
 
+<br>
 
 ## 📖 게임 개요<a name="overview-bluearchive"></a>
 
 **장르** : 쿼터뷰 액션 RPG (4인 태그)
 
-OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액션 RPG입니다. 5,000개 이상의 게임 데이터를 효율적으로 관리하고, 맵 규모와 몬스터 수가 늘어도 런타임 성능을 지킬 수 있는 구조를 만드는 데 집중한 프로젝트입니다.
-
 **🔄 핵심 루프 (Core Loop)**
-1. **탐험 & 전투** : 포탈 없이 이어진 필드를 탐험하며 적을 처치
-2. **재화 획득** : 처치 보상과 드롭 아이템 수집
-3. **장비 / 스탯 강화** : 캐릭터 스탯과 무작위 옵션 장비를 강화
-4. **상위 던전 공략** : 고유 패턴을 가진 보스를 공략하여 상위 난이도로 진입
+1. **탐험 & 전투** : 포탈 없이 이어진 필드 탐험 · 전투
+2. **재화 획득** : 처치 보상 · 드롭 아이템 수집
+3. **장비 / 스탯 강화** : 캐릭터 스탯 · 무작위 옵션 장비 강화
+4. **상위 던전 공략** : 고유 패턴 보스 공략 → 상위 난이도
 
 **🎯 중점 목표**
 
@@ -165,9 +158,15 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 | **2. 몬스터 · 보스 행동 설계** | 흐름(Timeline) / 행동(Event) 분리 · 일반몹과 보스가 같은 SkillSystem | 일반몹 · 보스 **같은 구조** |
 | **3. 리소스 수명 관리** | Addressables Release 일원화 · 수명 스코프 → 자동 해제 | Global 상주 메모리 **▼60%** |
 
-**🧩 그 외 구현**
-- **SYSTEM & DATA** : Addressables 캐싱 · UniTask 비동기 파이프라인 / NPOI 엑셀 → ScriptableObject 데이터 주도 설계 / Action · Delegate 구독으로 데이터 · UI 분리
-- **GAMEPLAY & AI** : 다형성 계층형 Behavior Tree · Timeline 보스 스킬 / 파티 4인 태그 · 무작위 옵션 장비
+**🖼️ 플레이 화면**
+
+| **필드 전투** | **보스 패턴 · 조여오는 번개** |
+| :---: | :---: |
+| <img width="500" alt="필드 전투" src="images/ba-play-field.jpg" /> | <img width="500" alt="보스 패턴" src="images/ba-play-boss-lightning.jpg" /> |
+| **보스 기믹 · HP 50% 탄막** | **소환된 탱크 · 포격 경고** |
+| <img width="500" alt="보스 기믹" src="images/ba-play-boss-gimmick.jpg" /> | <img width="500" alt="소환된 탱크" src="images/ba-play-tank.jpg" /> |
+| **인벤토리 팝업** | **던전 클리어 · 보상** |
+| <img width="500" alt="인벤토리" src="images/ba-play-inventory.jpg" /> | <img width="500" alt="던전 클리어" src="images/ba-play-clear.jpg" /> |
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -179,25 +178,30 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 
 ## 📌 학습 목표 및 달성<a name="goals-bluearchive"></a>
 
-> **"이전 프로젝트들을 회고하며 느낀 구조적 아쉬움을 개선하고, 확장성 높은 아키텍처를 연구 및 적용"**
-
-과거 프로젝트(이터널 리턴 모작, Brotato 모작)에서 겪었던 로딩 병목, 데이터 하드코딩 등 구조적 문제를 식별하고 이를 객체지향 패턴으로 리팩토링하는 과정을 학습했습니다.
+> **"이전 프로젝트의 구조적 아쉬움 개선 → 확장성 높은 아키텍처 연구 · 적용"**
 
 ### 1️⃣ 리소스 로드 방식의 현대화 (UniTask)
-- **과거의 한계** : 소규모 시연 목적의 개발로 인해 프로그램 시작 시 모든 리소스를 동기식으로 일괄 로딩함. 데이터 규모가 커질 경우 발생하는 초기 로딩 지연과 메모리 점유 문제를 해결할 필요성 인지
-- **달성 성과** : `Addressables`와 `UniTask`를 결합하여 필요한 시점에 필요한 에셋만 로드하는 비동기 점진적 로딩 구조 구축.
+- **과거의 한계** : 시작 시 전체 리소스 동기 일괄 로딩 → 데이터 증가 시 로딩 지연 · 메모리 점유
+- **달성** : `Addressables` + `UniTask` 비동기 점진 로딩 → 필요한 시점에 필요한 에셋만
 
 ### 2️⃣ 하드코딩 탈피와 데이터 주도 설계 (JSON & Excel)
-- **과거의 한계** : 10~15개 내외의 데이터를 코드 내에 직접 선언하여 관리. 데이터 수정 시마다 재컴파일이 필요하며, 기획 데이터가 늘어날수록 유지보수가 불가능해지는 구조적 취약점 확인
-- **달성 성과** : 모든 수치 데이터를 외부 포맷(Excel/JSON)으로 완전히 분리. 특히 무거운 파싱 로직을 에디터 타임으로 이전하는 SO 베이킹 자동화 툴을 개발하여, 코드 수정 없이 데이터만으로 게임의 밸런스를 제어하는 환경 구축
+- **과거의 한계** : 데이터를 코드에 직접 선언 → 수정마다 재컴파일
+- **달성** : 수치 데이터 Excel / JSON 분리 · 에디터 타임 SO 베이킹 → 코드 수정 없이 밸런스 조정
 
 ### 3️⃣ 결합도 감소를 통한 연쇄 수정 방지 (Decoupling)
-- **과거의 한계** : 객체 간 강한 참조로 인해 기능 하나를 수정하면 수십 개의 파일을 동시에 수정해야 하는 현상 발생. 설계의 부재가 개발 속도를 저해하는 악순환 경험
-- **달성 성과** : **인터페이스(Interface)** 와 이벤트(Observer) 패턴을 적극 도입하여 시스템 간 의존성 최소화. 기능을 수정하거나 추가해도 다른 모듈에 영향을 주지 않는 독립적이고 확장성 있는 아키텍처 설계 역량 확보
+- **과거의 한계** : 객체 간 강한 참조 → 기능 하나 수정에 다수 파일 연쇄 수정
+- **달성** : 인터페이스 · 이벤트(Observer) 패턴 → 모듈 간 의존성 최소화
+
+**🧩 그 외 구현**
+- **SYSTEM & DATA** : Addressables 캐싱 · UniTask 비동기 파이프라인 · NPOI 엑셀 → ScriptableObject · Action / Delegate 데이터 · UI 분리
+- **GAMEPLAY & AI** : 다형성 계층형 Behavior Tree · Timeline 보스 스킬 · 파티 4인 태그 · 무작위 옵션 장비
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
+
+<br>
+<br>
 
 ---
 
@@ -211,33 +215,22 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 
 <br>
 
-**구현 목적**
-- 포탈 없이 하나로 이어진 필드에 약 400마리 규모의 몬스터를 배치하면서, **플레이어 근처 몬스터만 켜고(존재 판정)** · **화면 밖 몬스터는 덜 돌려(갱신 LOD)** AI · 렌더링 비용을 줄이기 위해 도입
+**누구를 켤 것인가 — 거리 기반 활성화**
+- **판정 기준** : 스포너 중심 ↔ 플레이어 바닥(x · z) 거리
+- **히스테리시스** : 켜기 20m / 끄기 25m → 경계 깜빡임 제거
+- **방식 추상화** : `ActivationPolicy` → 7가지 방식을 같은 조건에서 교체 · 실측 후 채택
+- **공통 규칙** : 교전 중이면 범위 밖에서도 유지 · 너무 멀면 스폰 지점 귀환(리쉬)
 
-**주요 구현 내용**
-- **누구를 켤 것인가 — 거리 기반 활성화 (`DistanceActivation`)**
-  - 구역(Sector) 대신 **스포너 중심과 플레이어의 바닥(x · z) 거리**로 판정. 켜기 20m / 끄기 25m로 반경을 나눠, 경계를 오갈 때 켜졌다 꺼졌다 하는 깜빡임을 제거
-  - 판정 방식을 `ActivationPolicy`로 추상화하여 **7가지 방식을 같은 빌드 · 같은 경로에서 교체하며 측정**한 뒤 채택
-  - 모든 방식에 공통 규칙 : **교전 중인 몬스터는 범위를 벗어나도 유지**하고, 너무 멀어지면 스폰 지점으로 귀환(리쉬)
-
-- **얼마나 돌릴 것인가 — 갱신 LOD**
-  - 대상은 **화면 밖이면서 교전 중이 아닌 몬스터**만 (살아 있는 몬스터의 87%가 화면 밖)
-  - HP바 끔 · Behavior Tree **8프레임에 1번** (몬스터마다 실행 프레임을 엇갈리게) · Animator 끔
-  - 교전 중인 몬스터는 줄이지 않음 — 화면 밖에서 쏘는 몬스터의 공격 타이밍이 늦어지면 안 되므로
-
-- **결과 (자동 주행 5분 × 3회 실측)**
-  - 가장 느린 1% 프레임(p99) **4.68 → 2.50ms (▼47%)**, 60fps 미만 프레임 **14 → 0번**
-  - 한 번에 생기는 몬스터 **119 → 17마리**, 경계 왕복 깜빡임 **136 → 0번**
-  - 갱신 LOD : 몬스터 밀도 ×8에서 보통 프레임 **4.12 → 3.43ms (▼17%)**
+**얼마나 돌릴 것인가 — 갱신 LOD**
+- **대상** : 화면 밖 · 교전 아님 (살아 있는 몬스터의 87%가 화면 밖)
+- **줄이는 것** : HP바 끔 · Behavior Tree 8프레임에 1번 · Animator 끔
 
 **관련 코드**
 - [[📄DistanceActivation.cs (거리 판정)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/DistanceActivation.cs)
 - [[📄ActivationPolicy.cs (판정 방식 추상화)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/ActivationPolicy.cs)
 - [[📄SpawnerManager.cs (활성화 · 갱신 LOD 적용)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Field/SpawnerManager.cs)
 
-> **🚀 기술 도입 배경**:
-> 처음 택한 Sector 방식이 경계에서 부딪힌 문제와, 7가지 방식을 비교해 거리 기반으로 바꾼 과정은
-> 하단 **[🛠️ 문제 해결](#optimization-trouble)** 파트에서 다룹니다.
+> **🚀 성능 개선 사례**: 7가지 방식 비교 후 거리 기반으로 바꿔 **가장 느린 1% 프레임 ▼47%** 를 달성한 과정은 하단 **[🛠️ 문제 해결](#optimization-trouble)** 에서 다룹니다.
 
 </details>
 
@@ -255,38 +248,25 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 
 <br>
 
-**구현 목적**
-- 기존 AbilitySystem은 공격을 부품(SO)으로 조립했지만, **흐름(순서 · 대기 · 분기)까지 부품으로 만들어** 분기 종류가 생길 때마다 새 부품 클래스가 필요했음
-- **흐름과 행동을 분리**하여, 몬스터 · 보스의 패턴을 코드 추가 없이 조립과 값으로 늘릴 수 있는 구조가 목적
+**흐름과 행동의 분리**
+- **흐름** : 애니메이션 · Timeline + 태그 신호 (`TimelineAction`, `AnimationAction`)
+- **행동** : `PatternEvent` 하나 — 신호를 받은 순간에만 실행
+- **`PatternMemo`** : 패턴 동안만 쓰는 값(고른 색 · 경고 위치) 보관 · 패턴마다 비움 (할당 0)
 
-**주요 구현 내용**
-- **흐름은 Timeline 위에, 행동은 그 순간에만**
-  - 흐름 = 애니메이션 · Timeline + 태그 신호 (`TimelineAction`, `AnimationAction`)
-  - 행동 = `PatternEvent` 하나 — 흐름을 품지 않음. 신호가 오면 태그와 조건이 맞는 `PatternTask`만 Event를 실행
-  - `PatternMemo` : 고른 색 · 경고 위치처럼 **패턴이 도는 동안만 필요한 값**을 담는 칠판. 패턴이 시작될 때마다 비우고 재사용 (할당 0)
+**고르는 곳과 실행하는 곳의 분리**
+- **선택기** : 무엇을 쓸까 (보스 = HP선 기믹 · 가중치 / 일반몹 = 탄 수)
+- **`SkillSystem`** : 써도 되나(쿨다운 · 태그) · 실행 — 호출자를 모름 → 보스 · 일반몹 같은 코드
 
-- **고르는 곳과 실행하는 곳을 분리**
-  - 선택기 = 무엇을 쓸까 / `SkillSystem` = 써도 되나(쿨다운 · 태그) · 실행 / `PatternEnded` = 끝났다는 알림
-  - 보스 선택기 : HP선을 넘으면 기믹(한 번), 평소에는 가중치 추첨 · 일반몹 선택기 : 탄이 있으면 공격(탄 −1), 없으면 재장전
-  - **SkillSystem은 누가 부르는지 모른다** — 같은 코드를 보스와 일반몹이 함께 사용
-
-- **행동 하나 = 무엇을 + 횟수 · 간격 + 어디에**
-  - Event(내려치기 · 장판 · 발사 · 소환 …) + Emitter(몇 개씩 · 몇 초마다 · 몇 번) + Placement(한 점 · 원 · 무작위 · 지정 위치)를 따로 정해 조합
-  - 예) 조여오는 번개 = 내려치기 + 12개씩 · 0.15초 + 원 · 반경 8 → 0
-
-- **결과** : 일반몹(Tank)과 보스(Hieronymus)가 **같은 `Pattern → Action → Task → Event` 구조** 위에서 동작하고, 다른 것은 조립과 값뿐
-  - 플레이어 캐릭터는 기존 AbilitySystem(`AbilityRunner`)을 유지하고, 몬스터 · 보스를 SkillSystem으로 이관
+**행동의 조합**
+- **Event**(무엇을) + **`PointEmitter`**(횟수 · 간격) + **`Placement`**(어디에)
 
 **관련 코드**
 - [[📄SkillSystem.cs (사용 가능 판정 · 실행 창구)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/SkillSystem.cs)
 - [[📄PatternRunner.cs (패턴 시작 → 끝 · 취소)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/PatternRunner.cs)
-- [[📄PatternMemo.cs (패턴 동안의 칠판)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/PatternMemo.cs)
 - [[📄BossMonsterPatternSelector.cs (보스 선택기)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/BossMonsterPatternSelector.cs) · [[📄AmmoPatternSelector.cs (일반몹 선택기)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/AmmoPatternSelector.cs)
 - [[📄PointEmitter.cs (횟수 · 간격 · 어디에)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Pattern/Event/PointEmitter.cs)
 
-> **🚀 기술 도입 배경**:
-> 흐름까지 부품으로 만든 구조가 어디서 막혔는지와, 흐름 · 행동을 나눈 이유는
-> 하단 **[🛠️ 문제 해결](#ability-trouble)** 파트에서 다룹니다.
+> **🚀 구조 개선 사례**: 흐름까지 부품으로 만든 AbilitySystem의 한계와 SkillSystem으로 재설계한 과정은 하단 **[🛠️ 문제 해결](#ability-trouble)** 에서 다룹니다.
 
 </details>
 
@@ -304,27 +284,17 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 
 <br>
 
-**구현 목적**
-- `Global` / `Scene` **2개 버킷만으로 리소스를 운영**하다 보니, 실제 수명은 그보다 다양해 **수명이 애매한 리소스가 전부 `Global`로 도피**하던 구조 해소
-- **"누가 Release를 호출하는가"** 라는 책임을 호출부(46개 파일 · 130곳)에서 걷어내고, **수명을 코드가 아닌 구조로 표현**
+**책임 3층 분리**
+- `ResourceManager`(라우팅) → `ResourceScope`(수명 · 키 집합) → `ResourceRegistry`(핸들 · refCount) → `Addressables`(실제 I/O)
+- **캐시** : 실제 로드는 첫 요청 1번 · 재요청은 Registry에서 반환
 
-**주요 구현 내용**
-- **책임을 3층으로 분리**
-  - `ResourceManager`(라우팅) ➔ `ResourceScope`(수명 티켓 · 키 집합) ➔ `ResourceRegistry`(핸들 · refCount) ➔ `Addressables`(실제 I/O)
-  - 실제 로드는 레지스트리 한 곳에서 첫 요청 1번만 일어나고 재요청은 캐시에서 반환 — refCount는 요청 수가 아니라 **이 키를 쥔 스코프 수** (같은 스코프의 재요청은 +0)
+**수명 스코프 4종**
+- `Global`(앱 종료) · `Scene`(씬 전환) · `Party`(씬 전환 넘어 생존) · `Popup`(팝업 스택 0 → 1 생성, 1 → 0 Dispose)
+- **자동 해제** : 스코프 소멸 → 자기 키만 −1 → 0이 된 키만 Release (호출부 Release 0줄)
 
-- **수명 스코프 4종 — 수명 경계가 곧 해제 시점**
-  - `Global`(종료까지) · `Scene`(씬 전환) · `Party`(씬 전환을 넘어 생존) · `Popup`(스택 0➔1 생성, 1➔0 Dispose)
-  - 각 스코프는 **자기가 잡은 키만** `Dispose()` 시점에 `-1` 하므로 **호출부는 Release를 기억할 필요가 없음 (호출부에 추가한 Release 0줄)**
-  - 세는 것은 Addressables가 하지만 **'언제 줄일지'는 사람이 직접 작성해야 한다** — 스코프 층이 "이제 필요 없다"는 도메인 신호를 refCount 감소로 번역
-
-- **풀 · 아틀라스 캐시까지 수명 통합**
-  - 풀이 원본 프리팹의 **refCount 티켓을 직접 획득**하여, 씬 전환 시 원본이 언로드되어 풀 인스턴스가 깨지는 창을 차단
-  - 아틀라스에서 뽑은 클론 Sprite를 레지스트리의 `OnReleased`에 맞춰 함께 파기 — 캐시가 핸들을 붙잡아 회수가 무효화되는 것 방지
-
-- **결과 (같은 경로 · 같은 체크포인트 Before / After)**
-  - Global 상주 메모리 **513 → 205MB (▼60%)** · 전체 리소스 메모리 **617 → 363MB (▼41%)**
-  - 던전 왕복 후 남는 메모리 **+18.7 → ≈0MB** — 씬을 오가도 다시 쌓이지 않음
+**풀 · 아틀라스 캐시 수명 통합**
+- **풀** : 원본 프리팹 ref 티켓 직접 획득 → 씬 전환 시 풀 인스턴스 깨짐 차단
+- **아틀라스** : 클론 Sprite를 Registry `OnReleased`에 맞춰 함께 파기
 
 **관련 코드**
 - [[📄ResourceScope.cs (수명 티켓)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceScope.cs)
@@ -332,26 +302,12 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 - [[📄ResourceManager.cs (스코프 라우팅)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceManager.cs)
 
 **관련 이미지**
+| **리소스 로드 흐름** | **refCount 정산** |
+| :---: | :---: |
+| <img width="500" alt="리소스 로드 흐름" src="https://github.com/user-attachments/assets/485f7a3a-5e0c-42f5-a806-5ce52029880c" /> | <img width="500" alt="refCount 정산" src="https://github.com/user-attachments/assets/95f6b83b-6792-4f0c-bd3b-a5e524308bc2" /> |
+| 첫 요청만 실제 로드 · 재요청은 캐시 | 스코프 소멸 → 주인 없는 키만 Release |
 
-<div align="center">
-
-**1️⃣ 리소스 로드 흐름**<br>
-<img width="922" height="276" alt="스크린샷 2026-09-04 002749" src="https://github.com/user-attachments/assets/485f7a3a-5e0c-42f5-a806-5ce52029880c" />
-
-<p><em>첫 요청만 실제 로드가 일어나고, 재요청은 레지스트리 캐시에서 반환된다</em></p>
-
-<br>
-
-**2️⃣ refCount 정산**<br>
-<img width="954" height="349" alt="스크린샷 2026-09-04 002805" src="https://github.com/user-attachments/assets/95f6b83b-6792-4f0c-bd3b-a5e524308bc2" />
-
-<p><em>수명 경계에서 스코프가 사라지면 소유자가 없어진 키만 Release된다</em></p>
-
-</div>
-
-> **🚀 기술 도입 배경**:
-> 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유하던 2버킷 구조가 왜 한계에 부딪혔는지는
-> 하단 **[🛠️ 문제 해결](#resource-lifetime-trouble)** 파트에서 다룹니다.
+> **🚀 메모리 개선 사례**: 2버킷 구조의 한계와 수명 스코프 도입으로 **Global 상주 메모리 ▼60%** 를 달성한 과정은 하단 **[🛠️ 문제 해결](#resource-lifetime-trouble)** 에서 다룹니다.
 
 </details>
 
@@ -369,21 +325,16 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 
 <br>
 
-**구현 목적**
-- **런타임 성능(조회 속도)** 과 **기획자의 작업 편의성(수식 연산)** 이라는 두 마리 토끼를 잡기 위해 데이터 포맷을 Excel과 JSON으로 이원화하고, 로딩 오버헤드를 에디터 타임으로 이전
+**Excel → ScriptableObject 베이킹**
+- **대상** : 캐릭터 스탯 · 성장치 등 수식 연산이 필요한 데이터 (기획 친화 Excel)
+- **베이킹** : 빌드 전 NPOI로 SO 에셋 자동 변환 → 런타임 엑셀 파싱 · GC 할당 제거
+- <img width="380" height="147" alt="엑셀 베이킹 툴" src="https://github.com/user-attachments/assets/4e9c2464-d570-4eca-b778-7d5929bdb959" />
 
-**주요 구현 내용**
-- **대규모 수치 데이터 베이킹 자동화 (Excel ➔ ScriptableObject)**
-  - 캐릭터 스탯, 성장치 등 수식 연산이 필수적인 데이터는 기획 친화적인 **Excel**로 관리
-  - 런타임 엑셀 파싱 시 발생하는 GC 할당을 막기 위해, 빌드 전 NPOI를 활용해 엑셀 데이터를 가벼운 **`ScriptableObject` 에셋으로 자동 변환(Baking)** 하는 에디터 툴 구축
-  - <img width="380" height="147" alt="스크린샷 2026-04-29 232518" src="https://github.com/user-attachments/assets/4e9c2464-d570-4eca-b778-7d5929bdb959" />
-  
-- **계층적 구조 데이터 관리 (JSON)**
-  - 구역별 스포너 위치 등 다단계 깊이(Depth)를 가지는 데이터는 Excel의 2차원 표로 관리하기 부적합하여 **JSON** 포맷 채택
+**JSON 계층 데이터**
+- **대상** : 구역별 스포너 위치 등 깊이(Depth)가 있는 데이터 → 2차원 표 대신 JSON
 
-- **DataManager를 통한 $O(1)$ 통합 조회 시스템**
-  - 베이킹된 SO 에셋과 JSON 데이터를 `DataManager`가 메모리에 일괄 로드하여 캐싱
-  - 인게임 로직에서는 원본 파일 형식에 구애받지 않고 **ID(Key) 기반 $O(1)$ 속도로 데이터를 즉시 조회**
+**DataManager 통합 조회**
+- SO · JSON 일괄 로드 · 캐싱 → 원본 형식과 무관하게 ID 기반 $O(1)$ 조회
 
 **관련 코드**
 - [[📄아이템 정보 엑셀파일 추출 코드]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Editor/ItemExcelImporter.cs)
@@ -404,24 +355,15 @@ OperationKivotos(가제)는 4명의 캐릭터를 태그하며 전투하는 액�
 
 <br>
 
-**구현 목적**
-- 몬스터 타입이 추가될 때마다 컨트롤러에 `if-else`가 누적되는 **God Class 안티패턴 방지**
-- 공통 로직은 상위 클래스에 두고, **"언제 공격하는가"만 하위 클래스로, "무엇을 하는가"는 SkillSystem의 데이터로** 위임
+**계층형 상속 구조**
+- **`BaseMonsterController`** : 스탯 · HP · 사망 · 풀 재사용 · 갱신 LOD (공통 생명주기)
+- **`NormalMonsterController`** : 감지 · 추적 · 리쉬 BT · 전투 노드만 `GetCombatNode()`로 개방
+- **`SkillMonsterController`** : 사거리 안 → 선택기 → SkillSystem 시도 (무기 · 탄 · 발사 = Pattern 에셋)
+- **`BossMonsterController`** : 보스 선택기(HP선 기믹 · 가중치) → 같은 SkillSystem
 
-**주요 구현 내용**
-- **계층형 상속 구조 (`Base ➔ Normal ➔ Skill`, `Base ➔ Boss`)**
-  - `BaseMonsterController` : 스탯 · HP · 사망 · 풀 재사용(`OnSpawn` / `OnDespawn`) · 갱신 LOD 같은 공통 생명주기
-  - `NormalMonsterController` : 감지 · 추적 · 리쉬 귀환을 담은 Behavior Tree. 전투 노드만 **추상 메서드 `GetCombatNode()`** 로 열어 둠
-  - `SkillMonsterController` : "사거리 안이면 선택기에 묻고 SkillSystem에 시도"만 구현 — 무기 · 탄 · 발사 방식은 전부 프리팹의 Pattern 에셋
-  - `BossMonsterController` : 보스 선택기(HP선 기믹 · 가중치 추첨)로 패턴을 골라 같은 SkillSystem에 전달
-
-- **AI 상태 판단의 캡슐화 (Behavior Tree)**
-  - 일반몹 최상위 `Selector` : **리쉬 귀환 ➔ 행동 중 ➔ 전투 ➔ 추적 ➔ 대기** 순으로, 처음 `Running` / `Success`가 나온 곳에서 멈춤
-  - 리쉬가 행동 중 노드보다 앞에 있어 **귀환이 진행 중인 패턴을 끊을 수 있고**, 행동 중이면 뒤의 노드는 평가조차 되지 않음
-
-- **의사 결정(Logic)과 시각적 연출(Timeline)의 분리**
-  - 보스 패턴의 흐름은 `TimelineAction`이 재생하고, 연출 도중 지정된 프레임의 **태그 신호**가 Task를 통해 Event를 실행
-  - **보스는 '언제 터지는가'만 알고, '무엇이 터지는가'는 Pattern 에셋이 소유** — 자세한 구조는 [전투 행동 설계](#ability-bluearchive) 참고
+**Behavior Tree 우선순위**
+- **리쉬 귀환 → 행동 중 → 전투 → 추적 → 대기** (처음 `Running` / `Success`에서 정지)
+- 리쉬가 행동 중보다 앞 → 귀환이 진행 중인 패턴을 끊을 수 있음
 
 ```mermaid
 classDiagram
@@ -464,18 +406,14 @@ classDiagram
 
 <br>
 
-**구현 목적**
-- 매 프레임 UI를 강제 갱신하며 발생하는 CPU 오버헤드와 **Canvas 전체 Rebuild로 인한 Draw Call 문제** 해결
+**Observer 패턴 데이터 · UI 분리**
+- `Action` / `Delegate` → 데이터 변동 순간에만 브로드캐스트
+- UI는 이벤트 수신 시에만 갱신 → 불필요한 `Update()` 제거
 
-**주요 구현 내용**
-- **옵저버(Observer) 패턴 기반 데이터-UI 분리**
-  - C# `Action/Delegate`를 활용하여 체력 변화, 아이템 획득 등 **데이터 변동이 발생한 순간에만 이벤트를 브로드캐스트**
-  - UI는 이벤트 수신 시에만 화면을 갱신하도록 설계하여 불필요한 `Update()` 연산 제거
-
-- **목적별 Canvas 분할 최적화**
-  - 모든 요소를 단일 캔버스에 넣지 않고, 갱신 빈도에 따라 **4개의 Canvas**(`Scene`, `System`, `World`, `Popup`)로 격리
-  - 체력바나 팝업 데미지(`World`)가 매 프레임 위치를 갱신하며 캔버스를 더럽히더라도, 정적인 기본 UI(`Scene`)는 **Rebuild 대상에서 제외되어 렌더링 부하 최소화 및 Draw Call 절약**
-  <img width="478" height="428" alt="image" src="https://github.com/user-attachments/assets/4aeb505b-1aa2-4777-b176-2b99db994853" />
+**목적별 Canvas 분할**
+- 갱신 빈도별 4개 Canvas (`Scene` · `System` · `World` · `Popup`)
+- `World`(체력바 · 데미지)가 매 프레임 갱신돼도 정적 `Scene` UI는 Rebuild 제외
+- <img width="478" height="428" alt="Canvas 분할" src="https://github.com/user-attachments/assets/4aeb505b-1aa2-4777-b176-2b99db994853" />
 
 **관련 코드**
 - [[📄UIManager.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/UIManager.cs)
@@ -487,9 +425,7 @@ classDiagram
 </div>
 
 <br>
-<hr>
 <br>
-
 
 ---
 
@@ -499,67 +435,63 @@ classDiagram
 
 ### 1️⃣ 필드 몬스터 관리 : 거리 기반 활성화와 갱신 LOD 도입<a name="optimization-trouble"></a>
 
-> **🚨 문제 상황: 구역(Sector) 단위로 켜고 끄자, 경계에서 문제가 생겼다**
+> **🚨 문제 상황: 구역(Sector) 단위로 켜고 끄자 경계에서 문제 발생**
 >
-> - **처음 생각** : 포탈 없이 이어진 필드로 전환하며 맵을 구역(Sector)으로 나누고, 구역 Collider로 진입 · 탈출을 판정해 **플레이어가 들어간 구역의 스포너만 켰다.**
-> - **따라오던 몬스터가 사라짐** : 구역 밖으로 나가면 싸우던 몬스터도 즉시 회수
-> - **멀어도 같은 구역이면 켜짐** : 켜 둔 몬스터 중 대부분이 화면 밖에 존재
-> - **경계를 넘는 순간 몰림** : 구역이 바뀌는 순간 **최대 119마리 동시 생성**
-> - **맵마다 구역을 손으로 나눔** : 구역 분할 · 스포너 배정을 맵마다 다시 작업
+> - **처음 설계** : 플레이어가 들어간 구역의 스포너만 활성화 (구역 Collider로 진입 · 탈출 판정)
+> - **따라오던 몬스터 소실** : 구역 밖으로 나가면 교전 중 몬스터도 즉시 회수
+> - **화면 밖 활성화** : 멀어도 같은 구역이면 켜짐 → 대부분 화면 밖
+> - **경계 몰림** : 구역이 바뀌는 순간 **최대 119마리 동시 생성**
+> - **수작업 반복** : 맵마다 구역 분할 · 스포너 배정
 
-<div align="center">
-<img width="900" alt="Sector 방식의 문제" src="images/ba-field-1-sector-problem.png" />
-</div>
+| **Sector 구역 분할 (Scene 뷰)** | **경계를 넘는 순간 (Before)** |
+| :---: | :---: |
+| <img width="450" alt="Sector 구역 분할" src="images/ba-field-sector.jpg" /> | 🎞️ *GIF 자리 — 구역 경계 왕복 시 몰림 · 깜빡임* |
 
-**🔍 원인 분석 : 보완해도 한쪽을 고치면 다른 쪽이 나빠졌다**
-
-구역을 인접 구역까지 넓히거나, 더 잘게 나누는 식으로 보완해 봤지만 문제가 자리만 옮겨 다녔습니다. 원인을 두 갈래로 나눠 보니 성격이 달랐습니다.
-
-- **원인 1 · 회수 규칙** — 구역이 꺼지면 싸우던 몬스터도 바로 회수했습니다. 이건 활성화 방식과 상관없는 **규칙**의 문제라, 어떤 방식을 쓰든 공통으로 **"교전 중이면 유지 + 스폰 지점에서 리쉬 반경을 넘으면 귀환"** 규칙을 적용했습니다.
-- **원인 2 · 판정 단위** — 남은 문제는 전부 **'구역 크기' 하나에 묶여** 있었습니다. 키우면 멀리 있는 몬스터까지 켜지고(② Sector + 인접 : 187마리 · 풀 확장 187회), 줄이면 경계를 더 자주 넘나들어 깜빡임이 늘었습니다(① 136회 · ③ 77회). **크기를 조절할 게 아니라 판정 단위 자체를 바꿔야** 했습니다.
-
-<div align="center">
-<img width="900" alt="원인 분석" src="images/ba-field-2-root-cause.png" />
-</div>
+**🔍 원인 분석**
+- **원인 1 · 회수 규칙** : 구역 off → 교전 몬스터도 회수 → 방식과 무관한 규칙 문제
+  - **공통 규칙 적용** : 교전 중이면 유지 + 리쉬 반경 밖이면 스폰 지점 귀환
+- **원인 2 · 판정 단위** : 나머지 문제 전부 **'구역 크기' 하나에 묶임**
+  - 구역 키우면 → 활성 몬스터 증가 / 줄이면 → 깜빡임 증가
+  - **크기 조절이 아니라 판정 단위 자체를 교체**
 
 **💡 해결 과정**
 
-1. **켜 둘 범위를 정하는 방법 7가지를 같은 조건에서 측정**
-   - 판정 방식을 `ActivationPolicy`로 추상화해 7가지를 같은 인터페이스(`SelectSpawners`)로 갈아 끼우고, **같은 빌드 · 같은 자동 주행 경로 5분 × 3회**로 비교했습니다. 측정 하네스가 플레이어를 정해진 경로로 움직이며 프레임 로그를 남기므로, 손으로 플레이할 때의 편차가 들어가지 않습니다.
-   - **탈락 조건 5가지** — 화면 안 등장 · 화면 안 소멸 · 끌고 온 몹 소실 · 경계 왕복 떨림 · 풀 확장. 하나라도 나오면 탈락이고, 3회 모두 결과가 같았습니다.
+1. **활성화 방식 7가지를 같은 조건에서 실측**
+   - `ActivationPolicy` 추상화 → 같은 빌드 · 같은 자동 주행 경로 **5분 × 3회**
+   - **탈락 조건** : 화면 안 등장 · 화면 안 소멸 · 끌고 온 몹 소실 · 경계 깜빡임 · 풀 확장
 
-   | 방식 | 살아 있는 몬스터 | 가장 느린 1% 프레임(p99) | 탈락 사유 | 판정 |
+   | 방식 | 살아 있는 몬스터 | 가장 느린 1% 프레임 (p99) | 문제 | 판정 |
    |:---|:---:|:---:|:---|:---:|
-   | ① Sector | 62마리 | 4.36ms | 화면 안 등장 9 · 왕복 떨림 136 | 탈락 |
-   | ② Sector + 인접 | 187마리 | 4.86ms | 왕복 떨림 114 · 풀 확장 187 | 탈락 |
-   | ③ 격자 3×3 (칸 20m) | 46마리 | 2.72ms | 왕복 떨림 77 | 탈락 |
-   | ④ 격자 5×5 (칸 10m) | 34마리 | 2.60ms | 왕복 떨림 19 | 탈락 |
-   | **⑤ 거리** | **25마리** | **2.54ms** | **없음** | **채택** |
-   | ⑥ 격자 + 거리 | 25마리 | 2.54ms | 없음 | 통과 |
-   | ⑦ CullingGroup | 25마리 | 2.55ms | 없음 (순간이동 직후 화면 안 등장 10 · 참고) | 통과 |
+   | ① Sector | 62마리 | 4.36ms | 깜빡임 136 · 화면 안 등장 9 | 탈락 |
+   | ② Sector + 인접 | 187마리 | 4.86ms | 깜빡임 114 · 풀 부족 | 탈락 |
+   | ③ 격자 3×3 | 46마리 | 2.72ms | 깜빡임 77 | 탈락 |
+   | ④ 격자 5×5 | 34마리 | 2.60ms | 깜빡임 19 | 탈락 |
+   | **⑤ 거리** | **25마리** | **2.54ms** | **문제 없음** | **채택** |
+   | ⑥ 격자 + 거리 | 25마리 | 2.54ms | 문제 없음 | 통과 |
+   | ⑦ CullingGroup | 25마리 | 2.55ms | 문제 없음 | 통과 |
 
-<div align="center">
-<img width="900" alt="7가지 방식 비교" src="images/ba-field-3-seven-policies.png" />
-</div>
-
-2. **⑤ 거리를 고른 이유 — 결과가 같으면 가장 단순한 것**
-   - 통과한 ⑤ ⑥ ⑦은 매 프레임 **켜는 스포너 집합이 100% 동일**했습니다(⑤를 실제로 돌리면서 ⑥ ⑦을 그림자로 함께 판정해 비교). 결과도 비용도 같다면 남는 기준은 단순함입니다.
-   - ⑥은 격자로 후보를 추리는 단계가 하나 더 있고, ⑦ CullingGroup은 거리 계산을 엔진 컬링 단계에 맡겨 **결과를 다음 프레임에 읽으므로 1프레임 늦고, 카메라가 렌더링하지 않으면 갱신도 멈춥니다.** 그래서 **카메라 · 렌더링에 의존하지 않는 ⑤ 거리**를 채택했습니다.
-   - 거리형 셋만 떨림이 0인 이유는 **히스테리시스**입니다. 켜기 반경(20m)과 끄기 반경(25m)을 나눠, 그 사이에서는 이전 상태를 유지합니다. 판정선이 하나면 경계에서 1m씩 왕복할 때마다 켜졌다 꺼졌다 합니다.
-
-<div align="center">
-<img width="900" alt="거리 기반 활성화와 히스테리시스" src="images/ba-field-4-hysteresis.png" />
-</div>
+2. **⑤ 거리 채택 — 결과가 같으면 가장 단순한 것**
+   - ⑤ ⑥ ⑦ 켜는 스포너 **100% 동일** (결과 · 비용 같음)
+   - ⑥ = 격자 후보 추리기 단계 추가 / ⑦ = 결과 1프레임 지연 · 카메라 미렌더 시 갱신 정지
+   - → 가장 단순하고 **카메라에 의존하지 않는 ⑤ 거리**
+   - **히스테리시스** : 켜기 20m / 끄기 25m → 사이 구간은 이전 상태 유지 → 깜빡임 0
 
 3. **갱신 LOD : 화면 밖에서 가만히 있는 몬스터는 덜 돌린다**
-   - 존재 판정이 **'누구를 켤지'** 를 정했다면, 갱신 LOD는 켜 둔 몬스터를 **'얼마나 자주 돌릴지'** 를 정합니다. 살아 있는 몬스터의 **87%가 화면 밖**이었습니다.
-   - 대상은 **화면 밖이면서 교전 중이 아닌 몬스터**만입니다. HP바 끔 · Behavior Tree **8프레임에 1번** · Animator 끔. 교전 중이면 줄이지 않습니다 — 화면 밖에서 쏘는 몬스터의 공격 타이밍이 늦어지면 안 되기 때문입니다.
-   - 줄인 몬스터의 판단이 한 프레임에 몰리지 않도록 몬스터마다 실행 프레임을 엇갈리게(`(frameCount + phase) % 8 == 0`) 두었고, Animator를 다시 켤 때 등장 연출이 재생되지 않도록 상태를 보존합니다.
-   - 몬스터가 많을수록 효과가 커집니다 — 밀도 ×4에서 −10%, ×8에서 −17%.
+   - **대상** : 화면 밖 · 교전 아님 (살아 있는 몬스터의 87%가 화면 밖)
+   - **HP바 끔 · Behavior Tree 8프레임에 1번 · Animator 끔**
+   - **실행 프레임 분산** : `(frameCount + phase) % 8 == 0` → 한 프레임 몰림 방지
+   - **교전 중 제외** : 화면 밖 공격 타이밍 유지
 
-<div align="center">
-<img width="900" alt="갱신 LOD" src="images/ba-field-6-update-lod.png" />
-</div>
+   | 몬스터 밀도 | ×1 (27마리) | ×2 (54마리) | ×4 (107마리) | ×8 (216마리) |
+   |:---:|:---:|:---:|:---:|:---:|
+   | LOD 끔 | 1.46ms | 1.75ms | 2.44ms | 4.12ms |
+   | LOD 켬 | 1.45ms | 1.70ms | 2.20ms (−10%) | **3.43ms (−17%)** |
+
+| **거리 기반 활성화 (After)** | **갱신 LOD** |
+| :---: | :---: |
+| <img width="450" alt="거리 기반 활성화" src="images/ba-field-distance.jpg" /> | <img width="450" alt="갱신 LOD" src="images/ba-field-update-lod.jpg" /> |
+| 초록 = 켜기 20m · 주황 = 끄기 25m | 주황 = 화면 밖 · 가만히 (LOD 대상) · 초록 = 활성 몬스터 |
+| 🎞️ *GIF 자리 — 거리 기반 이동 (몰림 · 깜빡임 없음)* | |
 
 **✅ 결과 (최종 빌드 · 같은 경로 3회씩 재측정)**
 
@@ -573,17 +505,10 @@ classDiagram
 | 보통 프레임 (밀도 ×8, 갱신 LOD) | 4.12ms | 3.43ms | **▼17%** |
 | 144fps 예산 안 몬스터 수 (×8) | 430마리 | 514마리 | **약 1.2배** |
 
-아래는 같은 5분 주행의 실측 로그입니다. Sector에서 프레임이 튀는 구간이 **구역 경계를 왕복하는 구간(초록)** 과 겹치고, 거리 방식에서는 그 튐이 사라진 것을 볼 수 있습니다.
-
-<div align="center">
-<img width="900" alt="5분 자동 주행 실측" src="images/ba-field-5-timeline.png" />
-</div>
-
 **관련 코드**
 - [[📄DistanceActivation.cs (⑤ 거리 판정 · 히스테리시스)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/DistanceActivation.cs)
 - [[📄ActivationPolicies.cs (7가지 방식 생성)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/ActivationPolicies.cs)
 - [[📄ActivationManager.cs (판정 실행 · 방식 간 결과 비교)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/ActivationManager.cs)
-- [[📄CullingGroupActivation.cs (⑦ 비교 대상)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/CullingGroupActivation.cs)
 - [[📄SpawnerManager.cs (활성화 · 갱신 LOD 적용)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Field/SpawnerManager.cs)
 - [[📄측정 문서 (정책 비교 · 갱신 LOD 결과)]](https://github.com/vfly1189/OperationKivotos-Code/tree/main/docs/FieldEntity)
 
@@ -595,93 +520,72 @@ classDiagram
 <hr>
 <br>
 
-
 ### 2️⃣ 전투 행동 설계 : 흐름과 행동 분리를 통한 확장<a name="ability-trouble"></a>
 
-> **🚨 문제 상황: 흐름까지 부품으로 만들어서, 분기가 생길 때마다 새 클래스가 필요했다**
+> **🚨 문제 상황: 흐름까지 부품으로 만들어 분기마다 새 클래스 필요**
 >
-> - **기존 AbilitySystem** : 캐스터마다 흩어져 있던 공격 발동을 `AbilityRunner` 한 곳으로 모으고, 공격을 Effect(SO) 목록으로 조립하는 구조. 러너는 `foreach (effect) await effect.ExecuteAsync(ctx)` 만 수행한다.
-> - **플레이어 스킬에는 잘 맞았다** : 몹 5연사와 히나 8연사는 `RepeatEffect`의 값만 다르고 코드 차이는 0줄.
-> - **보스 패턴에서 막혔다** : `Delay` · `Repeat`처럼 **흐름도 부품**이고, 흐름은 순서대로 await 하는 한 줄뿐이라 선택 · 분기를 담을 수 없었다.
->   1. 분기를 넣으려면 `SelectRandomChoice` · `BranchByChoice` 같은 **흐름 부품이 분기 종류마다 새 클래스**로 늘어난다 (블록 코딩)
->   2. 고른 색 같은 **분기 결과를 둘 곳이 없어** 부품 밖 `BossRelicController`가 `IChoiceHandler`로 들고 있었다
-
-<div align="center">
-<img width="900" alt="흐름까지 부품으로 만든 구조의 문제" src="images/ba-skill-1-problem.png" />
-</div>
+> - **기존 AbilitySystem** : 공격을 부품(SO)으로 조립 — 흐름(`Delay` · `Repeat`)도 행동도 같은 부품
+> - **플레이어 스킬엔 적합** : 몹 5연사 · 히나 8연사 = `RepeatEffect` 값만 다름 (코드 차이 0줄)
+> - **보스 패턴에서 한계**
+>   1. **블록 코딩** : 분기 종류마다 새 흐름 부품 클래스 (`SelectRandomChoice` · `BranchByChoice` …)
+>   2. **분기 결과 저장 위치 없음** : 고른 색을 부품 밖 `BossRelicController`가 보관
 
 **💡 해결 과정**
 
-1. **흐름과 행동은 다르다 — 흐름은 Timeline 위에, 행동은 그 순간에만**
-   - 행동(발사 · 장판 · 소환)은 **한 순간**에 끝나지만, 흐름(순서 · 대기 · 분기 · 끝)은 **시간과 상태**를 가집니다. 둘을 같은 부품으로 만든 것이 문제였습니다.
-   - 흐름은 이미 시간 축을 가진 도구인 **애니메이션 · Timeline**에 맡기고, 연출 도중 지정한 프레임에 **태그 신호**를 보내게 했습니다. 행동은 신호를 받는 순간 실행되는 **Event 하나**이고, 흐름을 품지 않습니다.
-   - 분기는 '부품'이 아니라 **'조건'** 이 됩니다. 같은 Strike 신호에 Task 두 개가 걸려 있고, 칠판(`PatternMemo`)의 `색 == 빨강` / `색 == 초록` 조건이 맞는 쪽만 Event를 실행합니다. 칠판은 패턴이 시작될 때마다 비우고 재사용합니다(할당 0).
+1. **흐름은 Timeline 위에, 행동은 그 순간에만**
+   - **흐름** : 순서 · 대기 · 분기 · 끝 → 시간 축이 있는 애니메이션 · Timeline + 태그 신호
+   - **행동** : 발사 · 장판 · 소환 → 신호를 받은 순간 실행되는 `PatternEvent` 하나
+   - **분기 = 부품 → 조건** : 같은 Strike 신호에 Task 2개 · `PatternMemo`의 색 조건이 맞는 쪽만 실행
+   - **`PatternMemo`** : 고른 색 · 경고 위치를 패턴 동안 보관 · 패턴마다 비움 (할당 0)
 
-<div align="center">
-<img width="900" alt="흐름과 행동의 분리" src="images/ba-skill-2-layers.png" />
-</div>
+| **빨강이면 → 낙뢰 · 안쪽** | **초록이면 → 낙뢰 · 바깥** |
+| :---: | :---: |
+| <img width="450" alt="빨강 분기" src="images/ba-skill-branch-red.jpg" /> | <img width="450" alt="초록 분기" src="images/ba-skill-branch-green.jpg" /> |
 
-2. **고르는 곳과 실행하는 곳을 나눴다 — 층마다 아는 것이 하나**
-   - GAS(Unreal Gameplay Ability System)를 모티브로 "언제 / 무엇을 / 써도 되나 / 순서 / 신호 / 행동 / 결과"를 층으로 나눴습니다. 아래층은 `PatternContext`(시전자 · 타겟 · 소켓 · memo · 스탯 · 토큰)만 읽습니다.
+2. **고르는 곳과 실행하는 곳의 분리**
+   - **선택기** = 무엇을 쓸까 / **SkillSystem** = 써도 되나 · 실행 / **PatternEnded** = 끝났다
+   - **보스 선택기** : HP선 넘으면 기믹(1회) · 평소 가중치 추첨
+   - **일반몹 선택기** : 탄 있으면 공격(탄 −1) · 없으면 재장전
+   - **SkillSystem은 호출자를 모름** → 보스 · 일반몹 같은 코드
 
-   | 층 | 질문 | 담당 | 아는 것 |
-   |---|---|---|---|
-   | 언제 | 지금 행동할까 | 컨트롤러 BT | 사망 · 리쉬 · 사거리 · 간격 |
-   | 무엇을 | 어떤 패턴 | 선택기 (`BossMonsterPatternSelector` · `AmmoPatternSelector`) | HP선 · 가중치 / 탄 수 |
-   | 써도 되나 · 실행 | 허락 · 실행 | `SkillSystem` | 보유 목록 · 쿨다운 · 태그 |
-   | 순서 | 무엇 다음 무엇 | `PatternRunner` → `PatternAction` | Action 순서 · 현재 Action |
-   | 신호 | 언제 반응 | `TagMarker` / 애니 이벤트 → `PatternTask` | 태그 + memo 조건 |
-   | 행동 | 결과 하나 | `PatternEvent` 파생 | 점 하나에 무엇을 |
-   | 어디에 · 간격 | 점 목록 | `PointEmitter` · `Placement` | 기준점 · 모양 · 간격 · 회차 |
-
-   - 보스 선택기는 **HP선을 넘으면 기믹(한 번), 평소에는 가중치 추첨**, 일반몹 선택기는 **탄이 있으면 공격(탄 −1), 없으면 재장전**. 탄 수는 패턴을 넘어 남는 상태라 칠판이 아니라 선택기가 듭니다. **SkillSystem은 누가 부르는지 모릅니다.**
-
-<div align="center">
-<img width="900" alt="선택기와 SkillSystem" src="images/ba-skill-3-selector.png" />
-</div>
+```mermaid
+flowchart LR
+    SEL["선택기<br/>무엇을"] --> SS["SkillSystem<br/>써도 되나 · 실행"]
+    SS --> RUN["Runner<br/>패턴 시작 → 끝"]
+    RUN --> ACT["Action<br/>Timeline"]
+    ACT -->|태그 신호| TASK["Task<br/>조건 (memo)"]
+    TASK --> EV["Event<br/>행동"]
+    RUN -.->|PatternEnded| SEL
+```
 
 3. **행동 하나 = 무엇을 + 횟수 · 간격 + 어디에**
-   - Event는 **상속 한 번**으로 '무엇을'만 정하고, 위치 · 간격 · 데미지 · 판정은 **필드 조합**(`PointEmitter` · `Placement` · `DamageSpec` · `HitShape`)으로 정합니다. 하나를 바꿔도 나머지는 그대로입니다.
-   - 예) 조여오는 번개 = 내려치기 + 12개씩 · 0.15초 + 원 · 반경 8 → 0 / 몬스터 소환 = 소환 + 1마리씩 · 0.3초 + 지정 위치 4곳
-   - Tank의 '경고 → 지연 → 타격'은 새 Event가 아니라 **`StrikeEvent`의 옵션 하나**로 추가했고, 그 결과 보스도 같은 기능을 얻었습니다.
+   - Event(무엇을) + `PointEmitter`(횟수 · 간격) + `Placement`(어디에) → 하나를 바꿔도 나머지는 그대로
+   - Tank '경고 → 지연 → 타격' = 새 Event가 아닌 `StrikeEvent` 옵션 1개 → 보스도 같은 기능 획득
 
-<div align="center">
-<img width="900" alt="행동의 조합" src="images/ba-skill-4-compose.png" />
-</div>
+   | 예 | 무엇을 | 횟수 · 간격 | 어디에 |
+   |:---:|:---:|:---:|:---:|
+   | 조여오는 번개 | 내려치기 | 12개씩 · 0.15초 | 원 · 반경 8 → 0 |
+   | 몬스터 소환 | 소환 | 1마리씩 · 0.3초 | 지정 위치 4곳 |
 
-**✅ 결과 — 일반몹과 보스가 같은 구조 위에서 돈다**
-- 일반몹(AR · RL · Tank)과 보스(Hieronymus)가 모두 `Pattern → Action → Task → Event` 구조 위에서 동작하고, **다른 것은 조립(에셋)과 값뿐**입니다.
-- 몬스터를 옮길 때 바뀐 `.cs` 수가 확장성의 증거입니다 — AR(공용화) 여러 개 → **RL 0개**(프리팹 · 클립만) → **Tank 1개**(`StrikeEvent` 옵션).
-- 플레이어 캐릭터는 아직 기존 AbilitySystem을 쓰지만, 데미지 이음새(`BaseStat.BuildOutgoingDamage` → `Health`)가 이미 같아 그 위에서 이관할 수 있습니다.
+| **예 1 · 조여오는 번개** | **예 2 · 몬스터 소환** |
+| :---: | :---: |
+| <img width="450" alt="조여오는 번개" src="images/ba-skill-event-lightning.jpg" /> | <img width="450" alt="몬스터 소환" src="images/ba-skill-event-summon.jpg" /> |
 
-<div align="center">
-<img width="900" alt="일반몹과 보스의 같은 구조" src="images/ba-skill-5-same-structure.png" />
-</div>
+**✅ 결과 — 일반몹 · 보스가 같은 구조 위에서 동작**
+- **같은 구조** : 일반몹(Tank) · 보스(Hieronymus) 모두 `Pattern → Action → Task → Event` · 차이는 조립과 값
+- **확장성** : 몬스터 이관 시 수정 `.cs` 수 — AR(공용화) 여러 개 → **RL 0개** → **Tank 1개**
+- **플레이어** : 기존 AbilitySystem 유지 · 데미지 이음새 공유 → 이관 가능
 
-<details>
-<summary><b>📎 참고 — AbilitySystem · SkillSystem · GAS 대조</b></summary>
-
-| 항목 | AbilitySystem (플레이어) | SkillSystem (몬스터 · 보스) | GAS (Unreal) |
-|---|---|---|---|
-| 단위 | `AbilityData`(SO) = Effect 목록 | `Pattern` = Action 목록 | `GameplayAbility` |
-| 무엇을 쓸까 | 입력 (Q · E · 평타) | 선택기 (HP선 · 가중치 / 탄 수) | AI · 입력 바인딩 |
-| 써도 되나 | `AbilityRunner.Commit` — 쿨 · Required/Blocked 태그 | `SkillSystem.CanUse` — 보유 · 쿨 · 태그(자리) | `CanActivateAbility` |
-| 흐름 | Effect를 순서대로 await | Action 순서 + Task 신호 반응 | Ability 그래프 + AbilityTask |
-| 타이밍 | 애니 비트 번호 | 태그 (TagMarker · 애니 이벤트) | AnimNotify → GameplayEvent |
-| 분기 · 선택 | 없음 (선형) | ChooseEvent + Task 조건(memo) | 그래프 분기 |
-| 위치 | `Anchor` | `Placement` · `Anchor` · `PointEmitter` | TargetActor · TargetData |
-
-AbilitySystem은 GAS의 **'허락' 층**(태그 게이트 · Commit/Fire 분리)에 가깝고, SkillSystem은 **'흐름 · 신호 · 타게팅' 층**에 가깝습니다. 상태 태그 게이트를 SkillSystem으로 옮기는 것이 다음 단계입니다.
-
-</details>
+| **일반몹 (Tank)** | **보스 (Hieronymus)** |
+| :---: | :---: |
+| <img width="350" alt="Tank 프리팹 구조" src="images/ba-skill-prefab-tank.png" /> | <img width="350" alt="보스 프리팹 구조" src="images/ba-skill-prefab-boss.png" /> |
 
 **관련 코드**
 - [[📄SkillSystem.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/SkillSystem.cs)
 - [[📄PatternRunner.cs (Action 진행 · 신호 → Task)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/PatternRunner.cs)
 - [[📄TimelineAction.cs (흐름 = Timeline)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/TimelineAction.cs)
 - [[📄PatternMemo.cs (칠판)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/PatternMemo.cs)
-- [[📄StrikeEvent.cs (행동 예 : 내려치기 · 경고 · 지연)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Pattern/Event/StrikeEvent.cs)
-- [[📄설계 문서 (SkillSystem 전체 구조)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/docs/CombatAbility/08_SkillSystem_Overview.md)
+- [[📄StrikeEvent.cs (내려치기 · 경고 · 지연)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Pattern/Event/StrikeEvent.cs)
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -693,65 +597,56 @@ AbilitySystem은 GAS의 **'허락' 층**(태그 게이트 · Commit/Fire 분리)
 
 ### 3️⃣ 리소스 수명 관리 : 2버킷 구조의 한계와 수명 스코프 도입<a name="resource-lifetime-trouble"></a>
 
-> **🚨 문제 상황: 버킷이 2개뿐이라, 수명이 애매한 리소스는 전부 Global에 쌓인다**
+> **🚨 문제 상황: 버킷이 2개뿐이라 수명이 애매한 리소스는 전부 Global에 누적**
 >
-> - 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유하는 구조에서, 재로딩을 없애려 핸들을 캐싱해 보관하기 시작.
-> - 담는 통이 `Global` · `Scene` 2개뿐이라, 파티 · 팝업 · 던전처럼 수명이 애매한 리소스가 전부 안전한 쪽인 `Global`로 도피 — **Global은 해제 경로가 없어 세션 내내 상주** (진입 직후 513MB).
-> - Addressables는 자체 refCount를 갖지만 증감의 짝맞춤 책임을 호출자에게 위임한다 — 실제 호출부는 46개 파일 · 130곳이라, "누가 언제 Release를 부르는가"가 정해지지 않으면 그대로 새는 구조.
-
-<div align="center">
-<img width="900" alt="2버킷 구조의 한계" src="images/ba-resource-1-buckets.png" />
-</div>
+> - **구조** : 매니저 한 곳이 로드 · 핸들 · 수명 전부 소유 · 재로딩 방지용 핸들 캐싱
+> - **버킷 부족** : `Global` · `Scene` 2개뿐 → 파티 · 팝업 · 던전 리소스가 `Global`로 도피
+> - **해제 경로 없음** : `Global`은 세션 내내 상주 (진입 직후 **513MB**)
+> - **Release 책임 분산** : Addressables refCount 짝맞춤 = 호출자 책임 → **46개 파일 · 130곳**
 
 **💡 해결 과정**
 
-1. **책임을 3층으로 분리 (Manager / Scope / Registry)**
-   - `ResourceManager`(라우팅) → `ResourceScope`(수명 티켓 · 키 집합) → `ResourceRegistry`(핸들 · refCount) → `Addressables`(실제 I/O).
-   - 실제 로드는 레지스트리 한 곳에서 **첫 요청 1번**만 일어나고, 같은 키의 재요청은 캐시에서 반환합니다. refCount는 요청 수가 아니라 **이 키를 쥔 스코프의 수**입니다(같은 스코프의 재요청은 +0).
+1. **책임 3층 분리 (Manager / Scope / Registry)**
+   - `ResourceManager`(라우팅) → `ResourceScope`(수명 · 키 집합) → `ResourceRegistry`(핸들 · refCount) → `Addressables`
+   - **실제 로드 = 첫 요청 1번** · 재요청 = Registry 캐시
+   - **refCount = 키를 쥔 스코프 수** (같은 스코프 재요청 +0)
 
 ```mermaid
-sequenceDiagram
-    participant C as 호출부
-    participant M as ResourceManager
-    participant S as ResourceScope
-    participant R as ResourceRegistry
-    participant A as Addressables
-    Note over C,A: ① 첫 요청
-    C->>M: Load(key, Scene)
-    M->>S: Scene 스코프에 key 등록
-    M->>R: 조회 — 없음 (miss)
-    R->>A: 로드 요청 (실제 I/O 1회)
-    A-->>R: 핸들 생성 · refCount 1
-    R-->>C: 에셋 반환
-    Note over C,A: ② 다른 스코프의 재요청
-    C->>M: Load(같은 key, Party)
-    M->>S: Party 스코프에 key 등록
-    M->>R: 조회 — 있음 (hit)
-    R-->>C: 같은 핸들 반환 · refCount +1 (로드 0회)
+flowchart LR
+    C["호출부<br/>Load(key, Scope)"] --> M["ResourceManager<br/>라우팅"]
+    M --> S["ResourceScope<br/>Global · Scene · Party · Popup"]
+    M --> R["ResourceRegistry<br/>핸들 · refCount"]
+    R -->|miss 시에만| A["Addressables<br/>실제 I/O"]
+    S -.->|Dispose → 자기 키만 −1| R
 ```
 
-2. **수명 스코프를 2종 → 4종으로 확장 — 수명 경계가 곧 해제 시점**
-   - `Global`(종료까지) · `Scene`(씬 전환) · `Party`(씬 전환을 넘어 생존) · `Popup`(팝업 스택 0→1 생성, 1→0 Dispose).
-   - 로드할 때 스코프만 고르면 끝입니다. 스코프가 사라지는 순간 **자기가 쥔 키만 -1** 하고, 0이 된 키만 `Addressables.Release` 됩니다. 다른 스코프가 같은 키를 아직 쥐고 있으면 메모리는 유지됩니다.
-   - 팝업 프리팹 · 슬롯은 **Scene 스코프**에 두어 다시 열 때 로드 없이 즉시 뜨게 하고, 스탠딩 이미지 같은 **대형 콘텐츠만 Popup 스코프**에 담아 팝업을 모두 닫는 순간 회수합니다.
+2. **수명 스코프 2종 → 4종 — 수명 경계 = 해제 시점**
 
-<div align="center">
-<img width="900" alt="수명 스코프 타임라인과 정산" src="images/ba-resource-2-scope-timeline.png" />
-</div>
+   | 스코프 | 수명 | 담는 리소스 |
+   |:---:|:---|:---|
+   | `Global` | 앱 종료까지 | 공용 · 영구 에셋 |
+   | `Scene` | 씬 전환까지 | 씬 에셋 · 팝업 프리팹 / 슬롯 |
+   | `Party` | 씬 전환 넘어 생존 | 파티 에셋 |
+   | `Popup` | 팝업 스택 0 → 1 생성 · 1 → 0 Dispose | 스탠딩 이미지 등 대형 콘텐츠 |
 
-3. **"Addressables가 이미 세는데 왜 카운트를 하나 더 뒀는가"**
-   - 세는 것은 Addressables가 하지만, **언제 줄일지는 사람이 직접 작성해야 합니다.** 스코프 층은 "이제 필요 없다"는 도메인 신호(씬 전환 · 팝업 스택 0 · 파티 해체)를 refCount 감소로 번역하는 역할입니다.
-   - 결과적으로 해제 짝맞춤 지점이 **호출부 130곳 → 수명 경계의 개수**로 압축됐습니다.
+   - **자동 정산** : 스코프 소멸 → 자기 키만 −1 → 0이 된 키만 `Addressables.Release` (호출부 Release 0줄)
 
-<div align="center">
-<img width="900" alt="왜 스코프 층을 두었는가" src="images/ba-resource-3-why-scope.png" />
-</div>
+   | 키 | 팝업 열림 (소유 스코프 · ref) | 팝업 모두 닫음 | 상태 |
+   |:---:|:---:|:---:|:---:|
+   | A | Global · Scene (2) | Global · Scene (2) | 유지 |
+   | B | Scene · Popup (2) | Scene (1) | 유지 (아직 주인 있음) |
+   | C | Popup (1) | — (0) | **Release** |
 
-4. **오브젝트 풀 · 아틀라스 캐시까지 수명 통합**
-   - 풀이 원본 프리팹의 refCount 티켓을 직접 획득(`AcquirePoolRef`)하여, 씬 전환 시 원본이 언로드되어 풀 인스턴스가 깨지는 창을 구조적으로 차단.
-   - 아틀라스에서 뽑은 클론 Sprite 캐시를 레지스트리의 `OnReleased` 이벤트에 맞춰 함께 파기 — 캐시가 핸들을 붙잡아 회수가 무효화되는 것 방지.
+3. **Addressables가 이미 세는데 왜 카운트를 하나 더?**
+   - **Addressables** = 몇 번 로드했나 / **수명 스코프** = 언제 줄일지
+   - 도메인 신호(씬 전환 · 팝업 스택 0 · 파티 해체) → refCount 감소로 번역
+   - 해제 짝맞춤 지점 : **호출부 130곳 → 수명 경계 수**
 
-**✅ 결과 (같은 경로 · 같은 체크포인트 Before / After, 호출부에 추가한 Release 0줄)**
+4. **오브젝트 풀 · 아틀라스 캐시 통합**
+   - **풀** : 원본 프리팹 ref 티켓 직접 획득(`AcquirePoolRef`) → 씬 전환 시 풀 인스턴스 깨짐 차단
+   - **아틀라스** : 클론 Sprite를 Registry `OnReleased`에 맞춰 파기 → 캐시가 핸들을 붙잡는 문제 방지
+
+**✅ 결과 (같은 경로 · 같은 체크포인트 Before / After)**
 
 | 항목 | Before | After | 변화 |
 |---|:---:|:---:|:---:|
@@ -760,12 +655,12 @@ sequenceDiagram
 | 던전 왕복 후 남는 메모리 | +18.7MB | ≈0MB | **쌓이지 않음** |
 | 대가 : 팝업 첫 오픈 | — | +14 ~ 20ms | 다시 열 때는 그대로 |
 
-- 개발 빌드 텍스처 메모리 : 팝업 5종 첫 오픈 **+28.1MB**(프리팹 · 슬롯이 Scene 스코프에 등록) → 던전 왕복 후 **−26.7MB 반납**(Scene 스코프 소멸) → 다시 열고 다시 오가도 **증가 0MB**
-- 풀 티켓 정산 실측 : Global 프리로드 프리팹이 게임 중 **`ref 1 → 3 → 1`** 로 정확히 획득 · 반납(`Global 1` + `Scene 스코프 1` + `풀 티켓 1`)
+- **팝업 5종 첫 오픈** : +28.1MB → 던전 왕복 후 −26.7MB 반납 → 재오픈 · 재왕복 시 증가 0MB
+- **풀 티켓 정산** : Global 프리팹 `ref 1 → 3 → 1` (Global + Scene 스코프 + 풀 티켓)
 
-<div align="center">
-<img width="900" alt="수명 스코프 도입 결과" src="images/ba-resource-4-result.png" />
-</div>
+| **팝업 첫 오픈 (Popup 스코프)** | **메모리 Before / After** |
+| :---: | :---: |
+| <img width="300" alt="팝업" src="images/ba-resource-popup.jpg" /> | 📷 *스크린샷 자리 — Memory Profiler Before / After* |
 
 **관련 코드**
 - [[📄ResourceScope.cs (수명 티켓)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceScope.cs)
@@ -778,7 +673,6 @@ sequenceDiagram
 </div>
 
 <br>
-<hr>
 <br>
 
 ---
@@ -811,24 +705,18 @@ sequenceDiagram
 &nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](#deferred-rendering)<br>
 &nbsp;&nbsp; └ [GPU Instancing](#gpu-instancing)<br>
 &nbsp;&nbsp; └ [Quad Tree 공간 분할](#quad-tree)<br>
-&nbsp;&nbsp; └ [NavMesh 길찾기](#navmesh)<br>
-&nbsp;&nbsp; └ [몬스터 AI 시스템](#fsm-to-bt-feature)
+&nbsp;&nbsp; └ [NavMesh 길찾기 · 검색 최적화 (Spatial Grid)](#navmesh)<br>
+&nbsp;&nbsp; └ [몬스터 AI 시스템 (FSM → Behavior Tree)](#fsm-to-bt-feature)
 
 **4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-eternal-return)** <br>
-&nbsp;&nbsp; └ **[Hybrid 렌더링 (Forward → Deferred 전환)](#deferred-rendering-trouble)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  다중 광원 처리와 반투명 객체를 혼합한 **Hybrid 파이프라인 구축**
+&nbsp;&nbsp; └ **[Hybrid 렌더링 : Deferred와 Forward의 장점 결합](#deferred-rendering-trouble)**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Forward + Deferred **혼합 파이프라인 구축**
 
 &nbsp;&nbsp; └ **[NavMesh 경로 스무딩](#navmesh-smoothing)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Funnel + Bezier로 **코너 끼임 93쌍 → 0, 최대 회전 78.6° → 15.8°**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Funnel + Bezier로 **코너 끼임 93쌍 → 0**
 
 &nbsp;&nbsp; └ **[마우스 Picking + 충돌 처리 최적화 (Quad Tree)](#quadtree-optimization)**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  검사할 후보만 남겨 충돌 처리 **135.8배 단축 (53,922μs → 397μs)**
-
-&nbsp;&nbsp; └ **[NavMesh 검색 최적화](#navmesh-optimization)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Spatial Grid 도입으로 탐색 속도 **21.5배 가속 (301μs → 14μs)**
-
-&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](#fsm-to-bt)**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Behavior Tree 도입으로 **복잡한 AI 로직의 유지보수성 확보**
 
 <div align="right">
   <a href="#table-of-contents">⬆️ 전체 목차로 돌아가기</a>
@@ -840,18 +728,16 @@ sequenceDiagram
 
 ## 📖 게임 개요<a name="overview-eternal"></a>
 
-**장르**: 쿼터뷰 배틀로얄 / MOBA (Multiplayer Online Battle Arena)
-
-이터널 리턴은 전략적인 쿼터뷰 시점의 생존 게임입니다. 플레이어는 루미아 섬에서 재료 파밍하고 장비를 제작하여 캐릭터를 성장시키며, 최후의 1인이 될 때까지 생존해야 합니다.
+**장르** : 쿼터뷰 배틀로얄 / MOBA
 
 **🔄 핵심 루프 (Core Loop)**
-1. **파밍 및 제작**: 맵 곳곳의 재료 수집
-2. **장비 강화**: 상위 등급 장비 제작으로 전투력 상승
-3. **생존 경쟁**: 금지 구역 회피 및 다른 생존자와의 전투
-4. **승리**: 최후의 1인 생존
+1. **파밍 및 제작** : 맵 곳곳의 재료 수집 · 장비 제작
+2. **장비 강화** : 상위 등급 장비로 전투력 상승
+3. **금지 구역 회피** : 좁아지는 안전 구역 · 다른 생존자와 전투
+4. **최후의 1인** : 마지막까지 생존
 
 **🎯 개발 초점**
-- DirectX 11을 이용한 **3D 렌더링 파이프라인 구축**
+- DirectX 11 기반 **3D 렌더링 파이프라인 구축**
 - **엔진 레벨의 성능 최적화** 및 아키텍처 설계
 
 <div align="right">
@@ -864,26 +750,23 @@ sequenceDiagram
 
 ## 📌 학습 목표 및 달성<a name="goals-eternal"></a>
 
-> **"게임 엔진 레벨의 고급 렌더링 최적화 기법 습득"**
+> **"상용 엔진 없이 DirectX 11로 3D 엔진 직접 구현 · 대규모 처리 최적화 체화"**
 
-이 프로젝트의 핵심 목표는 상용 엔진 없이 DirectX 11 API로 3D 게임 엔진을 직접 구현하며, 대규모 리소스를 효율적으로 처리하는 최적화 기술을 체화하는 것이었습니다.
+### 1️⃣ 고급 렌더링 파이프라인
+- **Deferred Rendering** : 다중 광원 처리 → 조명 비용 = 픽셀 × 조명
+- **G-Buffer / MRT** : Albedo · Normal · Position · Material 동시 기록
 
-### 1️⃣ 고급 렌더링 파이프라인 구축
-- **Deferred Rendering 도입**: 다수의 동적 광원(Point Light 등) 처리를 위해 Forward 방식 대신 Deferred 방식을 적용하여 연산 효율성 확보
-- **G-Buffer 및 MRT 활용**: Albedo, Normal, Position 등 지오메트리 정보를 MRT(Multi Render Target)에 저장하여 라이팅 연산 최적화
+### 2️⃣ 대규모 오브젝트 처리
+- **GPU Instancing** : 동일 메시 대량 렌더링 시 DrawCall 병목 해소
+- **Quad Tree 공간 분할** : Picking · 충돌 검사 후보 축소 → **충돌 검사 135.8배 단축**
 
-### 2️⃣ 대규모 오브젝트 처리 최적화
-- **GPU Instancing**: 동일한 메시를 사용하는 수천 개의 오브젝트(풀, 나무 등) 렌더링 시 발생하는 DrawCall 병목 현상 해결
-- **Quad Tree 공간 분할**: 마우스 Picking과 충돌 검사의 후보를 줄여 **충돌 검사 135.8배 단축**
-
-### 3️⃣ 3D 게임 엔진 기술 심화
-- **NavMesh 길찾기**: 네비게이션 메쉬 위 A* 길찾기와 **Funnel + Bezier 경로 스무딩**으로 **코너 끼임 93쌍 → 0**
-- **Skeletal Animation**: GPU Skinning 기반 캐릭터 애니메이션
+### 3️⃣ 3D 게임 엔진 기술
+- **NavMesh A\* 길 찾기** : 삼각형 그래프 위 경로 탐색
+- **Funnel + Bezier 경로 스무딩** : **코너 끼임 93쌍 → 0**
 
 **🧩 그 외 구현**
-- **GRAPHICS & RENDERING** : Hybrid 렌더링(Forward / Deferred 혼합) · GPU Skinning
-- **GAME LOGIC & ARCHITECTURE** : 몬스터 AI(FSM → Behavior Tree 리팩토링) · NavMesh 검색(Spatial Grid) · FSM 기반 스킬 · 쿨타임 매니저
-<br>
+- **GRAPHICS & RENDERING** : Hybrid 렌더링(Forward / Deferred 혼합) · Skeletal Animation GPU Skinning
+- **GAME LOGIC & ARCHITECTURE** : 몬스터 AI FSM → Behavior Tree 리팩토링 · NavMesh 검색 Spatial Grid 최적화 · FSM 기반 스킬 · 쿨타임 매니저
 
 <div align="right">
   <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -905,29 +788,21 @@ sequenceDiagram
 <br>
 
 **렌더링 파이프라인 구조**
-- **Hybrid 구조 설계**: 불투명 객체(Deferred)와 투명 객체(Forward)를 분리하여 처리하는 혼합 파이프라인 구축
-- **MRT(Multiple Render Targets)**: 4개의 G-Buffer(Albedo, Normal, Position, Material)에 지오메트리 정보를 동시 출력하도록 셰이더 및 RTV 설정
-- **Lighting Pass**: G-Buffer 텍스처를 입력받아 화면 전체에 조명 연산 수행
-- | **Deferred Render** | **Hybrid ( Forward + Deferred )** |
-  | :---: | :---: |
-  | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/9baddec0-184e-4fd2-b54c-27656f34afc3" /> | <img width="681" height="381" alt="image" src="https://github.com/user-attachments/assets/6dfe8d4e-7d5f-412d-902d-9b43237c1937"/> |
+- **Geometry Pass (Deferred)** : 불투명 객체 → G-Buffer 기록 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
+- **Lighting Pass (Deferred)** : G-Buffer 샘플링 → 화면 전체 조명 계산 [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L169)
+- **Forward Pass (반투명 / UI)** : 알파 블렌딩 객체 덧그림 → 최종 합성 [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
 
 **G-Buffer 구성 (MRT)**
-- G-Buffer 4개 구성 (Albedo, Normal, Position, Material)
-- 멀티 렌더 타겟(MRT)을 활용한 지오메트리 정보 저장
-- 풀스크린 쿼드를 통한 라이팅 패스 구현
-- | **Albedo** | **Normal** |
-  | :---: | :---: |
-  | <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="681" height="381" alt="G-Buffer(Normal)"     src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" />|
-  | **Position (World Space)** | **Material** |
-  | <img width="681" height="381" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="381" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
+- 4개 Render Target(Albedo · Normal · Position · Material) 동시 출력
+- 풀스크린 쿼드 기반 라이팅 패스
 
-**렌더링 파이프라인 구조**
-- Geometry Pass (Deferred): 불투명 객체의 지오메트리 정보를 G-Buffer에 저장 [[📄G-Buffer 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/00.%20GBuffer.fx)
-- Lighting Pass (Deferred): G-Buffer 데이터를 기반으로 조명 계산  [[📄Lighting 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Shaders/00.%20DeferredLighting.fx#L121-L169)
-- Forward Pass (Transparent/UI): 투명/반투명 객체(알파 블렌딩, UI 등)를 Forward로 렌더링하여 최종 합성 [[📄UI 객체 셰이더]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Shaders/ImageShader.fx)
+| **Albedo** | **Normal** |
+| :---: | :---: |
+| <img width="681" height="381" alt="G-Buffer(Albedo)" src="https://github.com/user-attachments/assets/b55b1742-6d50-49e5-af1f-00e7d8823fde" /> | <img width="681" height="381" alt="G-Buffer(Normal)" src="https://github.com/user-attachments/assets/eef9bef2-0883-4869-951a-a93c071c2a4c" /> |
+| **Position (World Space)** | **Material** |
+| <img width="681" height="381" alt="G-Buffer(Position)" src="https://github.com/user-attachments/assets/7a3b3ab6-ab94-4b35-ac57-51d08b5a7f8a" /> | <img width="681" height="381" alt="G-Buffer(Material)" src="https://github.com/user-attachments/assets/1b91a1e8-e6ca-4836-aa60-b2fbcb2cfcd8" /> |
 
-> **🚀 기술 도입 배경**: 다중 광원 처리를 위한 포워드 렌더링의 한계와 해결 과정은 하단 **[🛠️ 문제 해결](#deferred-rendering-trouble)** 파트에서 다룹니다.
+> **🚀 기술 도입 배경**: 동적 광원 증가에 따른 Forward의 한계와 Hybrid 전환 과정은 하단 **[🛠️ 문제 해결](#deferred-rendering-trouble)** 에서 다룹니다.
 
 </details>
 
@@ -945,23 +820,21 @@ sequenceDiagram
 
 <br>
 
-**구현 배경 및 목표**
-- 넓은 필드에 배치된 수천 개의 나무, 풀, 환경 오브젝트로 인한 **DrawCall 병목 현상(CPU Overhead) 해결**
-- 개별 DrawCall 발생을 억제하고, 동일한 메쉬를 사용하는 객체들을 한 번의 API 호출로 처리
+**구현 목적**
+- 수천 개의 나무 · 풀 · 환경 오브젝트로 인한 **DrawCall 병목(CPU 오버헤드)** 해소
 
-**🛠️ 기술적 구현**
-- **인스턴스 버퍼(Instance Buffer)**: `World Matrix` 및 색상 정보를 담은 버퍼를 별도로 생성하여 VS(Vertex Shader)에 전달
-- **배칭(Batching) 시스템**: 매 프레임 렌더링 큐에 등록된 객체 중, 동일한 키(Mesh + Material)를 가진 객체를 자동으로 묶어서 처리
-- **다양한 렌더러 지원**: 정적 메쉬뿐만 아니라 애니메이션이 포함된 객체도 인스턴싱 지원
+**기술적 구현**
+- **인스턴스 버퍼** : `World Matrix` · 색상 정보를 별도 버퍼로 VS에 전달
+- **배칭** : 같은 키(Mesh + Material) 객체 자동 묶음 → 1회 호출
+- **렌더러 지원** : 정적 메시 · 애니메이션 객체 모두 인스턴싱
   - [[📄MeshRenderer (정적 객체)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L311-L348)
   - [[📄AnimRenderer (애니메이션 객체)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/RenderManager.cpp#L388-L435)
 
-**📊 최적화 로직 비교**
-| 구분 | 기존 방식 (Individual) | 개선 방식 (Instancing) | 효과 |
-| :---: | :---: | :---: | :---: |
-| **API 호출** | 객체 수(N)만큼 호출 | **1회 호출** (Batch 단위) | **CPU 오버헤드 최소화** |
-| **데이터 전달** | 매번 상수 버퍼(CB) 갱신 | **인스턴스 버퍼**로 일괄 전달 | **버스 대역폭 효율화** |
-| **확장성** | 오브젝트 증가 시 성능 급락 | 수천 개가 늘어도 **비용 일정** | **대규모 씬 처리 가능** |
+| 구분 | 기존 방식 (Individual) | 개선 방식 (Instancing) |
+| :---: | :---: | :---: |
+| **API 호출** | 객체 수(N)만큼 | **Batch당 1회** |
+| **데이터 전달** | 매번 상수 버퍼 갱신 | **인스턴스 버퍼 일괄 전달** |
+| **확장성** | 객체 증가 시 성능 급락 | **객체가 늘어도 호출 수 일정** |
 
 </details>
 
@@ -980,24 +853,23 @@ sequenceDiagram
 <br>
 
 **자료구조 설계**
-- **재귀적 노드 시스템**: `QuadTreeNode` 클래스가 4개의 자식 노드 포인터와 자신의 영역(BoundingBox) 정보를 가지는 트리 구조
-- **동적 객체 관리**: 오브젝트의 위치가 변경될 때마다 트리의 노드를 갱신(Update)하거나 재삽입(Re-insert)하는 로직 구현
+- **재귀적 노드** : `QuadTreeNode` = 자식 4개 + 영역(BoundingBox)
+- **동적 객체 관리** : 위치 변경 시 노드 갱신 · 재삽입
 
 **핵심 기능**
-- **공간 쿼리(Spatial Query)**: 특정 영역(절두체, 마우스 피킹 Ray)과 겹치는 노드만 빠르게 선별하는 인터페이스 제공
-- **충돌 그룹 관리**: 노드 단위로 객체 리스트를 관리하여 인접한 객체끼리만 상호작용하도록 설계
+- **공간 쿼리** : 절두체 · 마우스 Ray와 겹치는 노드만 선별
+- **충돌 그룹** : 노드 단위 객체 리스트 → 인접 객체끼리만 검사
 
-**관련 이미지**
 | **마우스 Picking 최적화** | **충돌 처리 최적화 (Collision)** |
 | :---: | :---: |
 | <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/7accc4dd-0591-4851-ad2a-5f9eeac8a0ad" /> | <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/63a9e9e8-4f4f-4292-bba7-6cd7235e22f3" /> |
-| Ray와 교차하는 노드(Leaf Node)만 선별하여 정밀 검사 | 빨간색 영역의 객체는 초록색 영역에서만 검사 |
+| Ray와 교차하는 Leaf 노드만 정밀 검사 | 빨간 영역 객체는 초록 영역만 검사 |
 
 **관련 코드**
 - [[📄QuadTree.h (헤더 설계)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/QuadTree.h)
 - [[📄Node Insert (객체 삽입 로직)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L218-L257)
 
-> **🚀 성능 최적화 사례**: 쿼드트리를 활용한 획기적인 충돌 처리 성능 개선(135배) 결과는 하단 **[🛠️ 문제 해결](#quadtree-optimization)** 파트에서 상세히 다룹니다.
+> **🚀 성능 최적화 사례**: Picking 4.6배 · 충돌 처리 135.8배 단축 과정은 하단 **[🛠️ 문제 해결](#quadtree-optimization)** 에서 다룹니다.
 
 </details>
 
@@ -1015,23 +887,28 @@ sequenceDiagram
 
 <br>
 
-**시스템 아키텍처**
-- **NavMesh 데이터**: 맵 데이터를 삼각형(Triangle) 그래프 형태로 변환하여 이동 가능 영역 정의
-- **경로 탐색(Pathfinding)**: 시작점과 도착점이 포함된 삼각형을 찾고, A* 알고리즘으로 연결된 삼각형들의 최단 경로 리스트 산출
+**시스템 구조**
+- **NavMesh 데이터** : 맵 → 삼각형 그래프 (이동 가능 영역)
+- **경로 탐색** : 시작 · 도착 삼각형 → A\* 최단 삼각형 경로
+- **경로 스무딩** : Funnel(코너 꼭짓점 탐색) + Bezier(코너를 둥글게) → 코너 끼임 93쌍 → 0
+- **Agent** : 이동 상태(Idle · Move) 관리 · NavMesh 위로 위치 투영
 
-**경로 스무딩 (Funnel + Bezier)**
-- **Funnel**: A* 통로의 벽 쪽 끝을 R(= 몸 반경 × 1.5)만큼 줄인 뒤, 경로가 꺾이는 **벽 꼭짓점(코너)** 을 직접 찾음
-- **Bezier**: 코너 꼭짓점을 기준으로 진입 · 진출 방향의 곡선을 만들어, **벽에서 몸 반경만큼 띄운 채 코너를 가깝고 둥글게 돎**
-- 초기 버전은 삼각형 중심을 잇는 경로를 `Line-of-Sight` 검사로 펴는 방식이었으나, 코너 끼임이 발생해 교체 [[📄초기 LOS 스무딩]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L307-L360)
-- **Agent FSM**: AI 캐릭터의 이동 상태(Idle, Move)를 관리하고 NavMesh 위로 위치를 투영(Projection)하는 에이전트 클래스 구현
-
-**관련 이미지 (초기 LOS 스무딩)**
-| **A* 원본 경로** | **LOS 스무딩 적용** |
+| **A\* 원본 경로** | **Funnel + Bezier 스무딩** |
 | :---: | :---: |
-| ![NavMesh-스무딩x](https://github.com/user-attachments/assets/b9f093b3-bff1-434e-b170-fdee9c4e83df) | ![NavMesh-스무딩o](https://github.com/user-attachments/assets/456e6486-6547-4893-80c6-bba4817ac855) |
+| ![NavMesh-스무딩x](https://github.com/user-attachments/assets/b9f093b3-bff1-434e-b170-fdee9c4e83df) | <!-- TODO: Funnel + Bezier 이동 GIF로 교체 --><img width="500" alt="Funnel + Bezier 경로" src="images/er-navmesh-funnel-bezier.jpg" /> |
 
-> **🚀 경로 스무딩 개선**: LOS 스무딩이 코너 끼임을 만든 원인과 Funnel + Bezier로 바꾼 과정은 하단 **[🛠️ 문제 해결](#navmesh-smoothing)**,
-> 경로 탐색 병목을 해결한 'Spatial Grid' 기법은 **[🛠️ 문제 해결](#navmesh-optimization)** 파트에서 다룹니다.
+<a name="navmesh-optimization"></a>
+
+**검색 최적화 (Spatial Grid)**
+- **문제** : 위치 보정(`GetNearestPointOnNavMesh`)마다 삼각형 20,000개+ 선형 탐색 $O(N)$ [[📄GetNearestPointOnNavMesh()]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L93-L129)
+- **해결** : 맵을 그리드로 분할 · 셀별 삼각형을 `unordered_map`에 저장 → 좌표로 셀 즉시 접근 · 셀 안 k개만 검사 $O(k)$ [[📄SpatialGrid]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.h#L31-L81) [[📄FindTriangleContaining]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L463-L500)
+- **결과** : 탐색 **301μs → 14μs (약 21.5배)** · 맵이 커져도 탐색 비용 일정
+
+| **Spatial Grid 분할** | **Linear Search (Before)** | **Spatial Grid (After)** |
+| :---: | :---: | :---: |
+| <img width="300" alt="Grid" src="https://github.com/user-attachments/assets/23899d6e-6b8f-45d7-a73e-57481c95c8bc" /> | <img width="300" alt="Linear Search" src="https://github.com/user-attachments/assets/b59f744c-0db7-424f-aa5f-de1a4227bd46" /> | <img width="300" alt="Spatial Grid" src="https://github.com/user-attachments/assets/1b0dd8aa-b523-4060-91d2-6048b1c60e53" /> |
+
+> **🚀 경로 스무딩 개선**: LOS 스무딩이 만든 코너 끼임과 Funnel + Bezier로 바꾼 과정은 하단 **[🛠️ 문제 해결](#navmesh-smoothing)** 에서 다룹니다.
 
 </details>
 
@@ -1045,34 +922,35 @@ sequenceDiagram
 
 <a name="fsm-to-bt-feature"></a>
 <details open>
-<summary><h3>🤖 몬스터 AI 시스템 (Behavior Tree)</h3></summary>
+<summary><h3>🤖 몬스터 AI 시스템 (FSM → Behavior Tree)</h3></summary>
 
 <br>
 
-**시스템 개요**
-- **Behavior Tree (BT) 아키텍처**: 몬스터의 행동을 계층적 트리 구조로 설계하여 복잡한 의사결정 로직을 체계화
-- **노드 구성**:
-    - **Composite**: `Selector`(우선순위 선택), `Sequence`(순차 실행)
-    - **Decorator**: 조건 검사 (`CheckHP`, `CheckRange` 등)
-    - **Leaf**: 실제 행동 수행 (`Move`, `Attack`, `Die` 등)
+<a name="fsm-to-bt"></a>
 
-**AI 행동 패턴 (우선순위)**
-- **Selector 노드**를 통해 왼쪽부터 실행 가능성을 판단하여 가장 높은 우선순위 행동을 수행하도록 설계
-1.  **생존 본능 (최우선)**: HP가 0 이하일 경우 즉시 `Die` 상태로 전이
-2.  **전투 (Combat)**: 공격 사거리 내에 타겟이 있으면 `Attack` 수행
-3.  **추적 (Trace)**: 타겟이 감지 범위 내에 있으면 NavMesh 경로를 따라 이동
-4.  **대기 (Idle)**: 위 조건이 모두 해당하지 않을 경우 대기 상태 유지
+**FSM의 한계**
+- **파일 폭증** : Wolf 1종 상태 8개 → 파일 16개 (.cpp + .h)
+- **전이 로직 분산** : 다음 상태 조건이 각 상태 클래스에 흩어짐 → 흐름 파악 어려움
+- **확장 비용** : 새 행동 추가 시 기존 상태 여러 개 수정
 
-**관련 이미지**
-| **AI 행동 트리 구조 (시각화)** | **인게임 AI 동작 (추적 → 공격 → 사망)** |
-| :---: | :---: |
-| <img width="500" height="300" alt="bt-structure" src="https://github.com/user-attachments/assets/b9cb3150-afb2-494a-b3ef-224d4cb2fd75" /> | ![늑대 모션들](https://github.com/user-attachments/assets/ffdf45cc-240b-4467-abb6-840257999799) |
+**Behavior Tree 구조** [[📄BehaviorTree.h]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/BehaviorTree.h)
+- **Selector 우선순위** : 생존(사망) > 전투(공격) > 추적(이동) > 대기
+- **Sequence** : "조건 체크 → 행동" 묶음 (예 : `[HP <= 0] → [Die()]`)
+- **결합도 제거** : 노드는 조건만 체크 · 전환은 부모(Selector)가 처리
+
+| 비교 항목 | FSM | Behavior Tree |
+| :---: | :---: | :---: |
+| **흐름 제어** | 각 상태가 다음 상태 결정 | 부모 노드가 자식 실행 결정 |
+| **결합도** | 상태끼리 참조 | 노드끼리 서로 모름 |
+| **확장성** | 기존 상태 수정 필요 | 노드 추가만 |
+| **우선순위** | 코드 속 `if`에 숨음 | 트리 구조(왼쪽 → 오른쪽)로 명시 |
+
+| **FSM 구조** | **Behavior Tree 구조** | **인게임 AI (추적 → 공격 → 사망)** |
+| :---: | :---: | :---: |
+| <img width="300" alt="FSM 구조" src="https://github.com/user-attachments/assets/a45edf80-a4be-4046-994f-9d9fc2b5d645" /> | <img width="400" alt="BT 구조" src="https://github.com/user-attachments/assets/b9cb3150-afb2-494a-b3ef-224d4cb2fd75" /> | ![늑대 모션들](https://github.com/user-attachments/assets/ffdf45cc-240b-4467-abb6-840257999799) |
 
 **관련 코드**
-- [[📄BehaviorTree.h (트리 노드 설계)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/BehaviorTree.h)
 - [[📄WolfAI.cpp (몬스터 트리 구성)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/5d9aa0d9b421b32bf8004703d286ba5dbfd8bac5/Client/Wolf.cpp#L281-L319)
-
-> **🚀 아키텍처 개선 사례**: 기존 FSM 구조의 한계(유지보수성 저하)를 극복하기 위해 Behavior Tree로 전환한 과정과 기술적 의사결정 내용은 하단 **[🛠️ 문제 해결](#fsm-to-bt)** 파트에서 상세히 다룹니다.
 
 </details>
 
@@ -1080,43 +958,44 @@ sequenceDiagram
   <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
 
+<br>
+<br>
+
 ---
 
 <br>
 
 ## 🛠️ 문제 해결<a name="troubleshooting-eternal-return"></a>
 
-### 1️⃣ Forward에서 Deferred Rendering으로 전환 (Hybrid)<a name="deferred-rendering-trouble"></a>
+### 1️⃣ Hybrid Rendering : Deferred와 Forward의 장점 결합<a name="deferred-rendering-trouble"></a>
 
-> **🚨 문제 상황: Forward Rendering의 구조적 한계**
-> 
-> **성능 병목** : 다수의 동적 광원(Skill Effects, Lights)이 배치되자 $O(\text{객체 수} \times \text{광원 수})$의 연산량으로 인해 프레임이 급격히 저하됨
-> 
-> **픽셀 오버드로우** : 화면에 보이지 않는 픽셀까지 불필요하게 셰이딩 연산을 수행하여 GPU 자원을 낭비함
+> **🚨 문제 상황: 동적 광원이 늘수록 프레임 저하**
+>
+> - **Forward Rendering** : 객체마다 모든 조명 계산 → 비용 = 객체 수 × 조명 수
+> - **픽셀 오버드로우** : 가려져 안 보일 픽셀까지 조명 계산
+> - **곱으로 늘어나는 비용** : $O(M \times N)$ — 조명 하나 추가 → 모든 객체 재계산
+> - → **조명 비용을 객체 수에서 분리해야 함**
 
 **💡 해결 과정**
 
-1.  **Deferred Rendering (지연 렌더링) 구현**
-    *   **G-Buffer (MRT) 구축** : 4개의 Render Target에 물체의 정보를 동시에 기록하도록 셰이더 및 RTV 설정
-        *   `Albedo`(색상), `Normal`(법선), `Position`(좌표), `Material`(재질)
-        *   | **G-Buffer 실시간 구성 (MRT Debug View)** | 
-            | :---: |
-            | ![디퍼드렌더링](https://github.com/user-attachments/assets/f576aec2-0b4f-43db-8a5a-bc6250ff3a01) |
-    *   **Lighting Pass** : G-Buffer 데이터를 샘플링하여 화면 전체(Screen Space)에 조명 연산 수행. 연산량을 **$O(\text{화면 해상도} \times \text{광원 수})$** 로 고정하여 객체 수 증가에 따른 성능 저하 방지
+**"조명은 화면 픽셀에만 계산 (Deferred) · 반투명 UI만 Forward"** → 비용 $O(\text{객체} \times \text{조명}) \rightarrow O(\text{픽셀} \times \text{조명})$
 
-2.  **Hybrid Rendering으로 파이프라인 완성**
-    *   **문제** : Deferred 방식의 구조적 한계로 인해 투명/반투명 객체(Alpha Blending) 처리가 불가능
-    *   **해결 (Hybrid)** : 렌더링 파이프라인을 이원화하여 각 패스의 장점 결합
-        *   **불투명 객체 (Opaque)** : Deferred Pass로 처리하여 다중 광원 연산 최적화
-        *   **반투명/UI 객체 (Transparent)** : Lighting Pass 이후 Forward Pass로 렌더링하여 알파 블렌딩 정상 처리
-    * | **Deferred Only (반투명/UI 미적용)** | **Hybrid (Deferred + Forward)** |
-      | :---: | :---: |
-      | <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/532b1300-8d61-492d-895f-298bf2efb7bd" /> | <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/4d721451-2f37-4160-bb71-78030de7103c" /> |
+1. **Geometry Pass → G-Buffer** : MRT로 4장(Albedo · Normal · Position · Material) 한 번에 기록 · 객체는 여기서 한 번만 그림
+2. **Lighting Pass** : G-Buffer를 읽어 픽셀마다 한 번 조명 계산 → 객체가 늘어도 조명 비용 일정
+3. **반투명 UI → Forward** : Deferred는 픽셀당 표면 하나만 저장 → 반투명은 Lighting 이후 Forward로 덧그림
+
+| **G-Buffer 실시간 구성 (MRT Debug View)** |
+| :---: |
+| ![디퍼드렌더링](https://github.com/user-attachments/assets/f576aec2-0b4f-43db-8a5a-bc6250ff3a01) |
 
 **✅ 결과**
-*   **표현력 향상**: Deferred의 이점(많은 광원)과 Forward의 이점(반투명 처리)을 모두 확보하여 화려한 게임 씬 구성 가능
-*   **G-Buffer 시각화**: 각 Render Target이 정상적으로 출력됨을 디버깅 모드로 확인
-  
+- **다중 광원** : 조명 비용 = 픽셀 수 × 조명 수 (객체 수와 무관)
+- **반투명 처리** : Hybrid로 Deferred(다중 광원) + Forward(알파 블렌딩) 동시 확보
+
+| **Deferred Only (반투명 / UI 미적용)** | **Hybrid (Deferred + Forward)** |
+| :---: | :---: |
+| <img width="800" height="400" alt="Deferred Only" src="https://github.com/user-attachments/assets/532b1300-8d61-492d-895f-298bf2efb7bd" /> | <img width="800" height="400" alt="Hybrid" src="https://github.com/user-attachments/assets/4d721451-2f37-4160-bb71-78030de7103c" /> |
+
 <div align="right">
   <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
 </div>
@@ -1127,40 +1006,37 @@ sequenceDiagram
 
 ### 2️⃣ NavMesh 경로 스무딩 : 지그재그 A* 경로를 어떻게 펼 것인가<a name="navmesh-smoothing"></a>
 
-> **🚨 문제 상황: 코너에서 캐릭터가 멈춘다 (1,000쌍 중 93쌍)**
+> **🚨 문제 상황: 코너에서 캐릭터가 멈춤 (1,000쌍 중 93쌍)**
 >
-> - **구조** : A* 경로는 삼각형 중심점을 잇는 지그재그라, `Line-of-Sight`(시야 판정)로 "직선으로 볼 수 있는 가장 먼 경로점"까지 건너뛰어 경로를 폈다.
-> - **원인** : 판정은 직선 위에 일정 간격으로 점을 찍어 모두 NavMesh 위인지 보는 방식인데, 코너를 끼고 돌게 하려고 **허용 오차(띠)** 를 줬더니 띠 안이라는 이유로 통과 판정이 나 **경로가 벽 안을 지나갔다** → NavMesh 밖으로 밀린 캐릭터가 코너에서 멈춤
-> - 무작위 시작 · 도착 **1,000쌍 중 93쌍**에서 발생. 점을 찍어 검사하는 방식이라 **스무딩 1회 16.4ms**로 비용도 컸다.
+> - **구조** : A\* 경로 = 삼각형 중심점 지그재그 → LOS(시야 판정)로 통과하는 가장 먼 점까지 건너뜀
+> - **원인** : 코너를 끼고 돌도록 **판정을 후하게(허용 오차 띠)** → 띠 안이라 통과 → **경로가 벽 안을 지나감**
+> - **결과** : NavMesh 밖으로 밀린 캐릭터가 코너에서 멈춤 · 스무딩 1회 16.4ms
 
-<div align="center">
-<img width="900" alt="LOS 스무딩의 코너 끼임" src="images/er-navmesh-1-los-problem.png" />
-</div>
+| **인게임 : 코너에서 멈춘 캐릭터** |
+| :---: |
+| <img width="700" alt="LOS 스무딩 코너 끼임" src="images/er-navmesh-los-stuck.jpg" /> |
 
 **💡 해결 과정**
 
-1. **시도 : 같은 규칙 그대로, 판정만 엄격하게 하면?**
-   - 직선이 **A* 통로 삼각형 안에만** 있어야 통과하도록 판정을 바꿨습니다. 끼임은 0이 되고 비용도 11μs로 줄었지만, 최대 회전이 **86°** 로 오히려 커졌습니다.
-   - 판정을 바꿔도 건너뛸 **후보는 여전히 삼각형 중심점**이었기 때문입니다. 중심점은 코너가 어디 있는지 모르므로, 코너에서 먼 중심점에서 급하게 꺾입니다.
+1. **시도 : 같은 규칙, 판정만 엄격하게**
+   - 직선이 **A\* 통로 삼각형 안에만** 있어야 통과 → 끼임 0
+   - 하지만 후보가 여전히 **삼각형 중심점** → 코너에서 먼 중심점에서 급히 꺾임 (최대 회전 86°)
 
-<div align="center">
-<img width="900" alt="엄격한 LOS 판정" src="images/er-navmesh-2-strict-los.png" />
-</div>
+| **엄격한 판정의 LOS 경로** |
+| :---: |
+| <img width="600" alt="엄격한 LOS 판정" src="images/er-navmesh-strict-los.jpg" /> |
 
-2. **왜 Funnel + Bezier로 갔는가**
-   - 목표는 최단 경로가 아니라 **자연스러운 이동**이었습니다. 그러려면 코너를 가깝게 돌아야 하는데, 중심점에는 코너 정보가 없으니 **코너를 직접 찾아야** 합니다.
-   - **Funnel(String Pulling)** 이 A* 통로에서 경로가 꺾이는 **벽 꼭짓점**을 찾고, **Bezier**가 그 꼭짓점을 기준으로 **어떻게 돌지**를 정합니다.
+2. **왜 Funnel + Bezier인가**
+   - **목표** : 최단 경로가 아니라 **자연스러운 이동** → 코너를 가깝게 돌아야 함
+   - **한계** : 중심점에는 코너 정보 없음 → 코너를 직접 찾아야 함
+   - **Funnel** : A\* 통로에서 꺾이는 벽 꼭짓점 V 탐색 / **Bezier** : V 기준으로 가깝고 둥글게
 
-3. **코너 꼭짓점 V를 기준으로 Bezier 곡선을 만든다**
-   - **① 통로를 R만큼 줄여 Funnel** : 벽 쪽 통로 끝을 R(= 몸 반경 r × 1.5)만큼 줄여, 경로가 V에서 R 떨어진 곳에서 꺾이게 합니다.
-   - **② 꺾인 점 대신 새 점 A** : Funnel이 낸 꺾인 점은 버리고, 진입 · 진출 방향으로 새 점 A를 정합니다.
-   - **③ A 앞뒤로 곡선** : A 앞뒤 직선 위 d 지점을 곡선의 시작 · 끝으로 잡는 2차 Bezier(A는 제어점이라 곡선을 당기기만 하고 지나지 않습니다). 곡선의 한가운데는 `A + d/4 · (진출 방향 − 진입 방향)`이므로, **이 점이 V에서 정확히 r이 되도록 d를 정하면** 벽에서 몸 반경만큼 띄운 채 코너를 가깝고 둥글게 돕니다.
+3. **코너 꼭짓점 V 기준 Bezier 곡선**
+   - **① 통로를 R만큼 줄여 Funnel** : 벽 쪽 끝을 R = 1.5r (r = 몸 반경) 축소 → V에서 R 떨어져 꺾임
+   - **② 새 점 A** : Funnel 꺾인 점은 버리고 진입 · 진출 방향으로 A 결정
+   - **③ A 앞뒤로 곡선** : A 앞뒤 직선 위 d 지점 = 곡선 시작 · 끝 · 곡선 한가운데가 V에서 r이 되도록 d 결정 (A는 당기기만, 지나지 않음)
 
-<div align="center">
-<img width="900" alt="Funnel + Bezier 구성" src="images/er-navmesh-3-funnel-bezier.png" />
-</div>
-
-**✅ 결과 — 끼임 0, 꺾임은 가장 작고 벽 여유는 가장 크다 (몬스터 이동에도 그대로 적용)**
+**✅ 결과 — 끼임 0 · 꺾임 최소 · 벽 여유 최대 (몬스터 이동에도 그대로 적용)**
 
 | 방식 | 끼임 | 최대 회전 | 벽 여유 ↑ | 스무딩 1회 |
 |:---|:---:|:---:|:---:|:---:|
@@ -1169,12 +1045,10 @@ sequenceDiagram
 | Funnel | 0 | 37.7° | 0.136 | 13μs |
 | **Funnel + Bezier** | **0** | **15.8°** | **0.296** | **45μs** |
 
-- Funnel만 쓰면 꺾임은 줄지만 코너 꼭짓점에 바짝 붙어(벽 여유 0.136) 몸이 벽을 스칩니다. Bezier를 더하면 **벽 여유가 가장 크면서(0.296) 꺾임은 가장 작습니다(15.8°).**
-- 곡선 계산이 더해져 45μs로 Funnel보다 느리지만, 처음 LOS 방식(16.4ms)보다 여전히 **약 360배 빠릅니다.**
-
-<div align="center">
-<img width="900" alt="네 가지 경로 비교" src="images/er-navmesh-4-compare.png" />
-</div>
+| **인게임 : 최종 경로 (Funnel + Bezier)** |
+| :---: |
+| <img width="700" alt="Funnel + Bezier 최종 경로" src="images/er-navmesh-funnel-bezier.jpg" /> |
+| 코너를 가깝게 · 둥글게 · 벽에서 몸 반경만큼 띄워서 |
 
 <div align="right">
   <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -1187,148 +1061,39 @@ sequenceDiagram
 ### 3️⃣ Quad Tree 기반 공간 분할 : 마우스 Picking + 충돌 처리 최적화<a name="quadtree-optimization"></a>
 
 > **🚨 문제 상황: 객체 1,000개 이상을 매 프레임 전부 검사**
-> 
-> *   **비용 구조** : 마우스 Picking은 클릭마다 $O(N)$, 충돌 검사는 매 프레임 $O(N^2)$ — 객체가 10배 늘면 충돌 검사는 100배로 늘어난다
-> *   **비효율적 연산** : N = 1,000 이상이면 충돌 검사만으로 프레임마다 약 50만 쌍을 검사하는데, 대부분은 화면 밖 · 멀리 떨어진 객체
-> *   **목표** : Picking과 충돌 처리를 **한 구조로** 함께 빠르게 — 검사할 후보를 줄이는 공간 분할
+>
+> - **비용 구조** : 마우스 Picking $O(N)$ (클릭마다) · 충돌 검사 $O(N^2)$ (매 프레임)
+> - **N = 1,000** : 충돌 검사만 프레임마다 약 50만 쌍 — 대부분 화면 밖 · 멀리 떨어진 객체
+> - **N이 10배** : Picking ×10 · 충돌 ×100
+> - → **한 구조로 둘 다** : 검사할 후보를 줄이는 공간 분할
 
 **💡 해결 과정**
 
-1.  **쿼드 트리(Quad Tree) 도입 이유 (Why?)**
-    *   **2D 기반 최적화** : 게임 시점이 **쿼터뷰(Quarter View)** 고정형이므로, 높이 축에 대한 복잡한 분할(Octree) 대신 평면 분할만으로 충분
-    *   **게임 기획 특성** : 근접 전투 중심이며 원거리 투사체 · 맵 전체 스킬이 없어, 화면 내 로직 처리에 집중하는 것이 효율적
-    *   **개발 자원** : 난이도 · 일정 대비 충분한 효과
+1. **Quad Tree 선택 이유**
+   - **화면 좌표(2D)면 충분** : 쿼터뷰 고정 카메라 → 높이 축 불필요 (Octree 대신 Quad Tree)
+   - **근접 전투 위주** : 원거리 투사체 · 맵 전체 스킬 없음
+   - **개발 자원** : 난이도 · 일정 대비 충분한 효과
 
-2.  **기능 구현 및 최적화 전략**
-    *   **공간 분할**: 맵 전체를 4분면으로 재귀적으로 분할하여 객체를 노드(Node) 단위로 관리
-    *   **계층적 충돌 검사 (Hierarchical Collision Check)**:
-        *   **내부 검사 (Internal)**: 동일한 Leaf Node에 속한 객체끼리만 검사.
-        *   **경계 검사 (Boundary)**: 노드의 경계선에 걸쳐있는 객체(Parent Node 소속)는 하위 노드(Child Node)의 객체들과 교차 검사 수행.
-        *   [[📄QuadTree 충돌 로직]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
-        *   [[📄QuadTree 쿼리]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L259-L278)
-    
-    *   | **충돌 검사 시각화 (빨간색 객체는 초록색 영역만 검사)** |
-        | :---: |
-        | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> |
+2. **후보만 남기는 검사**
+   - **Picking** : 마우스 Ray가 지나는 Leaf 노드만 검사 [[📄QuadTree 쿼리]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L259-L278)
+   - **충돌** : 같은 노드끼리 + 경계에 걸친 객체(부모 노드 소속)만 하위 노드와 교차 검사 [[📄QuadTree 충돌 로직]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/QuadTree.cpp#L945-L1113)
 
 **✅ 결과**
-*   **마우스 Picking** : 전체 검사 대비 **4.6배** 속도 향상 (656μs → **142μs**)
-*   **충돌 처리** : $O(N^2)$ 비용을 줄여 **135.8배** 속도 향상 (53,922μs → **397μs**, 객체 1,118개)
-*   | **Picking 최적화 (Ray-Node 검사)** | **결과** |
-    | :---: | :---: |
-    | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/78c17ec1-386d-40a0-a706-64658aa07e40" /> | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/de4cc346-71c3-42ee-a2b9-b4eb4560233f" />|
-*   | **충돌 처리 최적화 (Node 내부 검사)** | **결과** |
-    | :---: | :---: |
-    | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> | <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/ad1519df-17e7-412a-a11f-657f5d8e04f8" /> |
+
+| 항목 | 전체 검사 | Quad Tree | 변화 |
+|---|:---:|:---:|:---:|
+| 마우스 Picking | 656μs | 142μs | **4.6배 단축** |
+| 충돌 처리 (객체 1,118개) | 53,922μs | 397μs | **135.8배 단축** |
+
+| **Picking 최적화 (Ray-Node 검사)** | **결과** |
+| :---: | :---: |
+| <img width="500" height="350" alt="Picking" src="https://github.com/user-attachments/assets/78c17ec1-386d-40a0-a706-64658aa07e40" /> | <img width="500" height="350" alt="Picking 결과" src="https://github.com/user-attachments/assets/de4cc346-71c3-42ee-a2b9-b4eb4560233f" /> |
+| **충돌 처리 최적화 (Node 내부 검사)** | **결과** |
+| <img width="500" height="350" alt="충돌" src="https://github.com/user-attachments/assets/07e61fdf-1211-4b0c-89de-ed349e610ae9" /> | <img width="500" height="350" alt="충돌 결과" src="https://github.com/user-attachments/assets/ad1519df-17e7-412a-a11f-657f5d8e04f8" /> |
 
 **🤔 남은 한계 → 개선 방향**
-- **빌드 비용 역전** : 객체가 많을수록 트리 빌드 비용이 탐색 비용을 넘어서고, 잦은 할당 / 해제가 발생 → **정적 / 동적 트리 분리**, **메모리 풀링으로 재할당 제거**
-- **화면 밖 충돌 누락** : 화면 밖 로직을 정지하면 그쪽 충돌도 무시됨 → **Frustum 영역만 렌더링 검색**, **활성 청크 기반 시뮬레이션**
-
-<div align="right">
-  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-### 4️⃣ NavMesh 검색 속도 최적화 (Spatial Grid)<a name="navmesh-optimization"></a>
-
-> **🚨 문제 상황: 선형 탐색(Linear Search)으로 인한 병목**
-> 
-> *   **구조적 문제** : 캐릭터가 이동할 때마다 현재 위치를 NavMesh 위의 유효한 지점으로 보정하기 위해 `GetNearestPointOnNavMesh`를 호출.
-> *   **성능 저하** : 별도의 공간 분할 없이 구현된 초기 로직은 맵 전체의 삼각형(20,000개+)을 순차적으로 검사하는 $O(N)$ 비용 발생
-> *   **코드 병목** : `GetNearestPointOnNavMesh` 내부에서 모든 삼각형과의 거리를 계산하는 반복문이 매 프레임 실행됨. [[📄GetNearestPointOnNavMesh()]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L93-L129)
-
-**💡 해결 과정**
-
-1.  **공간 분할(Spatial Partitioning) 도입**
-    *   맵 전체를 일정 크기의 **그리드(Grid)** 형태로 분할하고, 각 셀에 포함된 삼각형을 `unordered_map`에 저장
-    *   [[📄NavMesh.h :: SpatialGrid]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.h#L31-L81)
-
-2.  **검색 알고리즘 최적화 ( $O(N) \rightarrow O(k)$, $k \ll N$ )**
-    *   **해시맵(`unordered_map`) 활용** : 입력된 월드 좌표를 키(Key)로 변환하여 셀에 즉시 접근하고, 해당 셀에 등록된 소수의 삼각형(k개, $k \ll N$)만 검사하도록 로직 변경
-    *   **탐색 범위 축소** : 전체 삼각형을 순회하는 대신, 해당 셀에 등록된 **소수의 삼각형만 검사** 하도록 로직 변경
-      *   | **Grid** |
-          | :---: |
-          | <img width="800" height="300" alt="image" src="https://github.com/user-attachments/assets/23899d6e-6b8f-45d7-a73e-57481c95c8bc" /> |
-    *   [[📄NavMesh.cpp :: FindTriangleContaining]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/d0b9114a5d95640c568cfa5f0bffa8fb9e8c036b/Engine/NavMesh.cpp#L463-L500)
-
-**✅ 결과**
-*   **성능 검증** : 탐색 소요 시간 **301μs → 14μs** (약 **21.5배** 성능 향상)
-*   **확장성 확보** : 맵 크기가 커지거나 삼각형이 늘어나도 탐색 비용이 일정하게 유지됨
-*   | **Linear Search (최적화 전)** | **Spatial Grid (최적화 후)** |
-    | :---: | :---: |
-    | <img width="600" height="300" alt="image" src="https://github.com/user-attachments/assets/b59f744c-0db7-424f-aa5f-de1a4227bd46" /> | <img width="600" height="300" alt="image" src="https://github.com/user-attachments/assets/1b0dd8aa-b523-4060-91d2-6048b1c60e53" /> |
-*   | **Case 1** | **Case 2** |
-    | :---: | :---: |
-    | <img width="600" height="300" alt="530234536-43d4a9ba-5cbd-43da-bc92-ab82ded95206" src="https://github.com/user-attachments/assets/30f19404-e250-4b92-a0b6-bbe8559085e1" /> | <img width="600" height="300" alt="530234561-efd1d8ff-4feb-42f0-aa3f-bbb6bb7b4d56" src="https://github.com/user-attachments/assets/ad405d09-a50a-4730-8f42-4312e70d70ca" /> |
-
-<div align="right">
-  <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
-</div>
-
-<br>
-<hr>
-<br>
-
-### 5️⃣ 몬스터 AI 아키텍처 개선: FSM → Behavior Tree<a name="fsm-to-bt"></a>
-
-> **🚨 문제 상황**
->
-> **"FSM에서 상태/전이 조건이 증가하면서 유지보수성 급격히 악화"**
->
-> - **파일 폭증** : Wolf 몬스터 1종에 상태 8개(Appear/Attack/Attack1/Death/Dying/Run/Trace/Wait)만 구현해도 **파일 16개** (.cpp + .h)가 생성됨
-> - **전이 로직 분산** : 각 상태 클래스 내부에 "다음 상태로 언제 전환할 것인가"를 결정하는 조건이 흩어져 있어, 전체 흐름을 파악하기 어려움
-> - **확장 비용 증가** : 새로운 행동(예: Skill) 추가 시, 기존의 여러 상태 클래스를 수정해야 하므로 사이드 이펙트 발생 위험 증가
-
-**💡 해결 과정** [[📄BehaviorTree]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/master/Engine/BehaviorTree.h)
-
-**"계층적 우선순위 구조의 Behavior Tree 도입"**
-
-- **Selector 기반 우선순위 판단** :
-  - 루트 노드를 `Selector`로 설정하여 왼쪽(상위)에서 오른쪽(하위)으로 조건을 검사하며, 가장 먼저 성공하는 행동만 수행하도록 설계
-  - 우선순위: **생존(사망 체크) > 전투(공격) > 추적(이동) > 대기(Idle)**
-
-- **Sequence 노드로 조건-행동 묶음 구성** :
-  - 각 행동을 `Sequence`로 구성하여 "조건 체크 → 행동 실행"을 하나의 논리 단위로 캡슐화
-  - 예: `[HP <= 0 체크] → [Die()]` / `[사거리 내 체크] → [Attack()]`
-
-- **상태 간 결합도 제거** :
-  - 기존 FSM에서는 `TraceState` 내부에 "거리가 가까우면 AttackState로 전환" 코드가 있었으나, BT에서는 각 노드가 독립적으로 조건만 체크
-  - 전환 로직은 부모 노드(Selector)가 자동으로 처리하므로, 노드 간 의존성 사라짐
-
-**🤔 기술적 의사결정: 왜 Behavior Tree인가?**
-
-**1. 우선순위의 구조화**
-  - FSM에서는 "어떤 상태가 우선인가?"를 코드 곳곳에 숨겨진 `if`문으로 결정했으나, BT는 **트리 구조 자체**가 우선순위를 명시함
-  - 면접관이나 후임 개발자가 코드를 보지 않고도 다이어그램만으로 AI 로직의 우선순위를 직관적으로 파악 가능
-
-**2. 모듈화와 재사용성**
-  - `CheckHP`, `CheckAttackRange` 같은 조건 노드는 다른 몬스터에도 재사용 가능
-  - 새로운 행동(예: Skill) 추가 시, 기존 노드를 수정할 필요 없이 새로운 Sequence 노드를 트리의 적절한 위치에 삽입만 하면 됨
-
-**3. 디버깅 용이성**
-  - 각 노드가 `SUCCESS`, `FAILURE`, `RUNNING` 상태를 명확히 반환하므로, 런타임에 어느 노드에서 실패했는지 추적 가능
-  - FSM의 "상태 A에서 상태 B로 전환이 안 됨" 같은 모호한 디버깅 상황 감소
-
-**✅ 결과**
-
-| 비교 항목 | 기존 (FSM) | 개선 (Behavior Tree) |
-| :---: | :---: | :---: |
-| **핵심 구조** | 상태 (State) + 전이 (Transition) | 행동 (Action) + 우선순위 (Selector) |
-| **흐름 제어** | 각 상태가 다음 상태를 직접 결정 | 부모 노드가 자식의 실행 여부 결정 |
-| **결합도** | 상태끼리 서로 참조 (강한 결합) | 노드끼리 서로 모름 (독립적) |
-| **확장성** | 상태 추가 시 기존 코드 수정 필수 | 노드만 추가하면 됨 (수정 불필요) |
-| **우선순위** | 코드 로직에 숨겨져 파악 힘듦 | 트리 구조(왼쪽→오른쪽)로 직관적 |
-
-**📊 구조 비교**
-
-| **FSM 구조 (상태 전이 다이어그램)** | **Behavior Tree 구조** |
-| :---: | :---: |
-| <img width="795" height="808" alt="image" src="https://github.com/user-attachments/assets/a45edf80-a4be-4046-994f-9d9fc2b5d645" /> | <img width="1471" height="709" alt="image" src="https://github.com/user-attachments/assets/b9cb3150-afb2-494a-b3ef-224d4cb2fd75" /> |
-| *복잡하게 얽힌 상태 간 화살표* | *계층적으로 정리된 우선순위 구조* |
+- **빌드 비용 역전** : 객체가 많을수록 빌드 > 탐색 · 잦은 할당 / 해제 → 정적 / 동적 트리 분리 · 메모리 풀링
+- **화면 밖 충돌 누락** : 화면 밖 로직 정지 → 충돌 무시 → Frustum 영역만 렌더링 검색 · 활성 청크 기반 시뮬레이션
 
 <div align="right">
   <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>

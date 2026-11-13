@@ -46,8 +46,6 @@
 
 # 💻 프로젝트
 
-> 📎 DETAIL.md 문제 해결 파트의 도식은 깃헙용으로 새로 그린 것입니다. 실측 데이터와 코드 구조를 PDF 포트폴리오보다 자세히 담았고, [도식 모음 PDF](diagrams/GitHub_Diagrams.pdf)로도 볼 수 있습니다.
-
 ## 🎮 블루아카이브 팬메이드 프로젝트 - OperationKivotos ([상세내용](DETAIL.md#bluearchive-main))
 
 > ( 2026.01 ~ 진행 중 ) ( 1인 )
@@ -145,26 +143,20 @@
 &nbsp;&nbsp; └ [Deferred Rendering (Hybrid)](DETAIL.md#deferred-rendering) <br>
 &nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#gpu-instancing) <br>
 &nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#quad-tree) <br>
-&nbsp;&nbsp; └ [NavMesh 길찾기](DETAIL.md#navmesh) <br>
-&nbsp;&nbsp; └ [몬스터 AI 시스템](DETAIL.md#fsm-to-bt-feature) 
+&nbsp;&nbsp; └ [NavMesh 길찾기 · 검색 최적화 (Spatial Grid)](DETAIL.md#navmesh) <br>
+&nbsp;&nbsp; └ [몬스터 AI 시스템 (FSM → Behavior Tree)](DETAIL.md#fsm-to-bt-feature) 
 
 <br>
 
 **2. 🛠️ 문제 해결 (Troubleshooting)** <br> 
-&nbsp;&nbsp; └ **[Hybrid 렌더링 (Forward → Deferred 전환)](DETAIL.md#deferred-rendering-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 다중 광원과 반투명 객체를 동시 처리하는 **Hybrid 파이프라인 구축**
+&nbsp;&nbsp; └ **[Hybrid 렌더링 : Deferred와 Forward의 장점 결합](DETAIL.md#deferred-rendering-trouble)** <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Forward + Deferred **혼합 파이프라인 구축**
 
 &nbsp;&nbsp; └ **[NavMesh 경로 스무딩](DETAIL.md#navmesh-smoothing)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Funnel + Bezier`로 **코너 끼임 93쌍 → 0, 최대 회전 78.6° → 15.8°**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Funnel + Bezier`로 **코너 끼임 93쌍 → 0**
 
 &nbsp;&nbsp; └ **[마우스 Picking + 충돌 처리 최적화 (Quad Tree)](DETAIL.md#quadtree-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 검사할 후보만 남겨 **충돌 처리 135.8배 단축 (53,922μs → 397μs)**
-
-&nbsp;&nbsp; └ **[NavMesh 검색 최적화](DETAIL.md#navmesh-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Spatial Grid` 도입으로 **탐색 속도 21.5배 가속 (301μs → 14μs)**
-
-&nbsp;&nbsp; └ **[AI 구조 개선 (FSM → BT)](DETAIL.md#fsm-to-bt)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - `Behavior Tree` 도입으로 복잡한 AI 로직의 **유지보수성 확보**
 
 <br>
 
