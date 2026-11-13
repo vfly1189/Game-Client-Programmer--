@@ -169,16 +169,74 @@
 
 ## 📌 중점 목표 및 달성<a name="goals-bluearchive"></a>
 
-| **1. 필드 몬스터 관리** | **2. 몬스터 · 보스 행동 설계** | **3. 리소스 수명 관리** |
-| :---: | :---: | :---: |
-| 거리 기반 활성화<br>화면 밖 갱신 LOD | 흐름(타임라인) / 행동(Event) 분리<br>일반몹 · 보스 같은 SkillSystem | Addressables Release 일원화<br>수명 스코프 → 자동 해제 |
-| 느린 프레임 $`\color{#E8352E}\textbf{▼47\%}`$ | 일반몹 · 보스 = $`\color{#E8352E}\textbf{같은 구조}`$ | Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$ |
+<table>
+  <tr>
+    <th width="33%">1. 필드 몬스터 관리</th>
+    <th width="33%">2. 몬스터 · 보스 행동 설계</th>
+    <th width="33%">3. 리소스 수명 관리</th>
+  </tr>
+  <tr>
+    <td valign="top">
+
+- 거리 기반 활성화
+- 화면 밖 갱신 LOD
+
+</td>
+    <td valign="top">
+
+- 흐름(타임라인) / 행동(Event) 분리
+- 일반몹 · 보스 같은 SkillSystem
+
+</td>
+    <td valign="top">
+
+- Addressables Release 일원화
+- 수명 스코프 → 자동 해제
+
+</td>
+  </tr>
+  <tr>
+    <td align="center">
+
+느린 프레임 $`\color{#E8352E}\textbf{▼47\%}`$
+
+</td>
+    <td align="center">
+
+일반몹 · 보스 = $`\color{#E8352E}\textbf{같은 구조}`$
+
+</td>
+    <td align="center">
+
+Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
+
+</td>
+  </tr>
+</table>
 
 **🧩 그 외 구현**
 
-| **SYSTEM & DATA** | **GAMEPLAY & AI** |
-| :--- | :--- |
-| **비동기 파이프라인** : Addressables 캐싱 · UniTask<br>**데이터 주도 설계** : NPOI 엑셀 → ScriptableObject<br>**UI 이벤트** : Action / Delegate 구독으로 데이터 · UI 분리 | **행동 트리 AI** : 다형성 계층형 BT · Timeline 보스 스킬<br>**전투 시스템** : 파티 4인 태그 · 무작위 옵션 장비 |
+<table>
+  <tr>
+    <th width="50%">SYSTEM & DATA</th>
+    <th width="50%">GAMEPLAY & AI</th>
+  </tr>
+  <tr>
+    <td valign="top">
+
+- **비동기 파이프라인** — Addressables 캐싱 · UniTask
+- **데이터 주도 설계** — NPOI 엑셀 → ScriptableObject
+- **UI 이벤트** — Action / Delegate 구독으로 데이터 · UI 분리
+
+</td>
+    <td valign="top">
+
+- **행동 트리 AI** — 다형성 계층형 BT · Timeline 보스 스킬
+- **전투 시스템** — 파티 4인 태그 · 무작위 옵션 장비
+
+</td>
+  </tr>
+</table>
 
 <div align="right">
   <a href="#toc-bluearchive">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -690,16 +748,74 @@
 
 ## 📌 학습 목표 및 달성<a name="goals-eternal"></a>
 
-| **1. 고급 렌더링 파이프라인** | **2. 대규모 오브젝트 처리** | **3. 3D 게임 엔진 기술** |
-| :---: | :---: | :---: |
-| Deferred Rendering · 다중 광원<br>G-Buffer / MRT | GPU Instancing · DrawCall<br>Quad Tree 공간 분할 | NavMesh A\* 길 찾기<br>Funnel + Bezier 경로 스무딩 |
-| 조명 비용 = $`\color{#E8352E}\textbf{픽셀 × 조명}`$ | 충돌 검사 $`\color{#E8352E}\textbf{135.8배}`$ 단축 | 코너 끼임 $`\color{#E8352E}\textbf{93쌍 → 0}`$ |
+<table>
+  <tr>
+    <th width="33%">1. 고급 렌더링 파이프라인</th>
+    <th width="33%">2. 대규모 오브젝트 처리</th>
+    <th width="33%">3. 3D 게임 엔진 기술</th>
+  </tr>
+  <tr>
+    <td valign="top">
+
+- Deferred Rendering · 다중 광원
+- G-Buffer / MRT
+
+</td>
+    <td valign="top">
+
+- GPU Instancing · DrawCall
+- Quad Tree 공간 분할
+
+</td>
+    <td valign="top">
+
+- NavMesh A\* 길 찾기
+- Funnel + Bezier 경로 스무딩
+
+</td>
+  </tr>
+  <tr>
+    <td align="center">
+
+조명 비용 = $`\color{#E8352E}\textbf{픽셀 × 조명}`$
+
+</td>
+    <td align="center">
+
+충돌 검사 $`\color{#E8352E}\textbf{135.8배}`$ 단축
+
+</td>
+    <td align="center">
+
+코너 끼임 $`\color{#E8352E}\textbf{93쌍 → 0}`$
+
+</td>
+  </tr>
+</table>
 
 **🧩 그 외 구현**
 
-| **GRAPHICS & RENDERING** | **GAME LOGIC & ARCHITECTURE** |
-| :--- | :--- |
-| **Hybrid 렌더링** : Forward / Deferred 혼합 파이프라인<br>**Skeletal Animation** : GPU Skinning | **몬스터 AI** : FSM → Behavior Tree 리팩토링<br>**NavMesh 검색** : Spatial Grid 기반 최적화<br>**스킬 시스템** : FSM 기반 스킬 · 쿨타임 매니저 |
+<table>
+  <tr>
+    <th width="50%">GRAPHICS & RENDERING</th>
+    <th width="50%">GAME LOGIC & ARCHITECTURE</th>
+  </tr>
+  <tr>
+    <td valign="top">
+
+- **Hybrid 렌더링** — Forward / Deferred 혼합 파이프라인
+- **Skeletal Animation** — GPU Skinning
+
+</td>
+    <td valign="top">
+
+- **몬스터 AI** — FSM → Behavior Tree 리팩토링
+- **NavMesh 검색** — Spatial Grid 기반 최적화
+- **스킬 시스템** — FSM 기반 스킬 · 쿨타임 매니저
+
+</td>
+  </tr>
+</table>
 
 <div align="right">
   <a href="#toc-eternal">⬆️ 프로젝트 목차로 돌아가기</a>
@@ -1122,16 +1238,73 @@ Brotato는 감자가 되어 외계 행성에서 밀려오는 수많은 외계인
 
 ## 📌 학습 목표 및 달성<a name="goals-brotato"></a>
 
-| **1. 계층적 엔진 아키텍처** | **2. 렌더링 시스템 이해** | **3. 성능 중심 개발** |
-| :---: | :---: | :---: |
-| Manager – Scene – Object 3계층<br>싱글톤 매니저 · 이벤트 버스 | GDI+ → Direct2D 하드웨어 가속<br>게임 루프 · 렌더링 동기화 | 병목 지점 식별<br>타일맵 오프스크린 베이킹 |
-| Double Free 크래시 $`\color{#E8352E}\textbf{→ 0}`$ | 대규모 웨이브 $`\color{#E8352E}\textbf{150} \sim \textbf{250 FPS}`$ | DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$ |
+<table>
+  <tr>
+    <th width="33%">1. 계층적 엔진 아키텍처</th>
+    <th width="33%">2. 렌더링 시스템 이해</th>
+    <th width="33%">3. 성능 중심 개발</th>
+  </tr>
+  <tr>
+    <td valign="top">
+
+- Manager – Scene – Object 3계층
+- 싱글톤 매니저 · 이벤트 버스
+
+</td>
+    <td valign="top">
+
+- GDI+ → Direct2D 하드웨어 가속
+- 게임 루프 · 렌더링 동기화
+
+</td>
+    <td valign="top">
+
+- 병목 지점 식별
+- 타일맵 오프스크린 베이킹
+
+</td>
+  </tr>
+  <tr>
+    <td align="center">
+
+Double Free 크래시 $`\color{#E8352E}\textbf{→ 0}`$
+
+</td>
+    <td align="center">
+
+대규모 웨이브 $`\color{#E8352E}\textbf{150} \sim \textbf{250 FPS}`$
+
+</td>
+    <td align="center">
+
+DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
+
+</td>
+  </tr>
+</table>
 
 **🧩 그 외 구현**
 
-| **SYSTEM ARCHITECTURE** | **GAMEPLAY & GRAPHICS** |
-| :--- | :--- |
-| **컴포넌트 기반 객체** : 레이어 기반 충돌 처리 (AABB)<br>**UI** : 컴포넌트 & 콜백 이벤트 시스템 | **애니메이션** : Scale-Based Procedural<br>**게임 시스템** : 상점 & 캐릭터 선택 |
+<table>
+  <tr>
+    <th width="50%">SYSTEM ARCHITECTURE</th>
+    <th width="50%">GAMEPLAY & GRAPHICS</th>
+  </tr>
+  <tr>
+    <td valign="top">
+
+- **컴포넌트 기반 객체** — 레이어 기반 충돌 처리 (AABB)
+- **UI** — 컴포넌트 & 콜백 이벤트 시스템
+
+</td>
+    <td valign="top">
+
+- **애니메이션** — Scale-Based Procedural
+- **게임 시스템** — 상점 & 캐릭터 선택
+
+</td>
+  </tr>
+</table>
 
 <div align="right">
   <a href="#toc-brotato">⬆️ 프로젝트 목차로 돌아가기</a>
