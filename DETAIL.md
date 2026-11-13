@@ -75,9 +75,9 @@
         <b><a href="#goals-brotato">📌 학습 목표 및 달성</a></b><br>
         <b><a href="#features-brotato">🔨 주요 개발</a></b><br>
         <b><a href="#troubleshooting-brotato">🛠️ 문제 해결</a></b><br>
-        &nbsp;&nbsp; └ <a href="#direct2d-optimization">Direct2D 전환</a><br>
+        &nbsp;&nbsp; └ <a href="#direct2d-optimization">Direct2D 하드웨어 가속 전환</a><br>
         &nbsp;&nbsp; └ <a href="#tilemap-optimization">타일맵 렌더링 최적화</a><br>
-        &nbsp;&nbsp; └ <a href="#event-queue-system">이벤트 큐 시스템</a>
+        &nbsp;&nbsp; └ <a href="#event-queue-system">이벤트 처리 안정성</a>
       </td>
     </tr>
   </tbody>
@@ -88,7 +88,7 @@
 
 ---
 
-# 🎮 블루아카이브 팬 메이드 OperationKivotos<a name="bluearchive-main"></a>
+# 🎮 블루아카이브 팬메이드 OperationKivotos<a name="bluearchive-main"></a>
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/75321802-c496-4e3b-9ab9-5a32846b287f" />
 
@@ -96,7 +96,7 @@
 
 | 항목 | 내용 |
 |:---:|:---:|
-| 🎯 **장르** | 수집형 액션 RPG, 서브컬처 |
+| 🎯 **장르** | 쿼터뷰 액션 RPG (4인 태그) |
 | ⏱️ **개발 기간** | 2026.01 ~ 진행 중 |
 | 👥 **개발 인원** | 1인 (개인 프로젝트) |
 | 🛠️ **개발 환경** | Unity, C#, `Addressables`, `UniTask`, `NPOI`, Claude |
@@ -1179,7 +1179,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 | 🎯 **장르** | 탑다운 슈팅, 로그라이크 서바이벌 |
 | ⏱️ **개발 기간** | 2025.02 ~ 2025.03 (3주) |
 | 👥 **개발 인원** | 2인 (프로그래머로 참여) |
-| 🛠️ **개발 환경** | C++, Direct2D, Win32 API |
+| 🛠️ **개발 환경** | C++, Direct2D, GDI+, Win32 API |
 | 🎬 **시연 영상** | [YouTube 바로가기](https://youtu.be/d-VZS1AdvtA?si=zvILKb3qGncavOqS) |
 | 💾 **GitHub** | [소스코드](https://github.com/HyangRim/BrotatoClone) |
 
@@ -1197,13 +1197,13 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 &nbsp;&nbsp; └ [컴포넌트 기반 객체 설계](#component-brotato)<br>
 
 **4. 🛠️ [문제 해결 (Troubleshooting)](#troubleshooting-brotato)** <br>
-&nbsp;&nbsp; └ **[GDI+ → Direct2D 전환](#direct2d-optimization)** <br>
+&nbsp;&nbsp; └ **[Direct2D 하드웨어 가속 전환](#direct2d-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  GPU 하드웨어 가속으로 **대규모 웨이브에서도 평균 150 ~ 250 FPS** (GDI+는 소수 객체에서도 20 ~ 40 FPS)
 
 &nbsp;&nbsp; └ **[타일맵 렌더링 최적화](#tilemap-optimization)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  비트맵 베이킹(Baking) 기법으로 **Draw Call 99.9% 감소 (1,296회 → 1회)**
 
-&nbsp;&nbsp; └ **[이벤트 시스템 자료구조 개선](#event-queue-system)** <br>
+&nbsp;&nbsp; └ **[이벤트 처리 안정성](#event-queue-system)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `unordered_set` 도입으로 **삭제 중복 요청(Double Free)으로 인한 크래시 해결**
 
 <div align="right">
@@ -1410,7 +1410,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 
 ## 🛠️ 문제 해결<a name="troubleshooting-brotato"></a>
 
-### 1️⃣ GDI+에서 Direct2D 전환을 통한 렌더링 최적화<a name="direct2d-optimization"></a>
+### 1️⃣ Direct2D 하드웨어 가속 전환 : GDI+ → Direct2D<a name="direct2d-optimization"></a>
 
 > **🚨 문제 상황: CPU 기반 렌더링의 한계**
 > 
@@ -1438,7 +1438,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 <hr>
 <br>
 
-### 2️⃣ 타일맵 렌더링 최적화: Draw Call 병목 해결<a name="tilemap-optimization"></a>
+### 2️⃣ 타일맵 렌더링 최적화 : Draw Call 병목 해결<a name="tilemap-optimization"></a>
 
 > **🚨 문제 상황**
 >
@@ -1459,7 +1459,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 - **런타임 최적화** : 매 프레임 1,296번의 루프를 도는 대신, 합성된 **단일 비트맵만 1회 렌더링** 하도록 변경.
 
 **✅ 결과**
-- 이 최적화를 통해 CPU의 명령 제출 비용을 획기적으로 줄여, 후반부 대규모 교전 로직(충돌 처리 등)을 위한 연산 자원을 확보했습니다.
+- **CPU 명령 제출 비용 절감** → 후반부 대규모 교전 로직(충돌 처리 등)을 위한 연산 여유 확보
 
 - | 성능 지표 | 최적화 전 (Before) | 최적화 후 (After) | 개선율 |
   | :--- | :---: | :---: | :---: |
@@ -1479,7 +1479,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 <hr>
 <br>
 
-### 3️⃣ 이벤트 처리 시 중복 삭제로 인한 메모리 오염 방지<a name="event-queue-system"></a>
+### 3️⃣ 이벤트 처리 안정성 : 중복 삭제로 인한 댕글링 포인터 방지<a name="event-queue-system"></a>
 
 > **🚨 문제 상황**
 >
@@ -1494,16 +1494,16 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 **"이벤트 큐와 실제 삭제 컨테이너의 분리 및 `unordered_set` 도입"**
 
 - **이벤트 처리 파이프라인 분리:**
-  - 기존의 이벤트 큐(`vector`)는 순차적 이벤트 처리를 위해 그대로 유지하되, **실제 삭제할 객체를 모아두는 전용 저장소**를 별도로 분리했습니다.
+  - 이벤트 큐(`vector`)는 순차 처리용으로 유지 · **삭제할 객체만 모으는 전용 저장소** 분리
 
 - **중복 제거 로직 적용 (`unordered_set`):**
-  - `Execute` 함수에서 삭제 이벤트를 처리할 때, 객체를 즉시 `delete`하지 않고 **삭제 스케줄러(`unordered_set`)**에 주소를 삽입합니다.
+  - `Execute`에서 삭제 이벤트를 즉시 `delete`하지 않고 **삭제 스케줄러(`unordered_set`)** 에 주소만 삽입
   - **자료구조 선택 이유:**
       - **유일성 보장** : `set`의 특성을 활용해 동일 주소가 여러 번 들어와도 자동으로 1개만 유지.
       - **성능 ( $O(1)$ )** : `std::set` 대신 해시 기반의 `std::unordered_set`을 사용하여 삽입/검색 성능을 $O(1)$ 로 최적화, 정렬 오버헤드 제거.
         
 - **지연 삭제 (Lazy Deletion) 수행:** [[📄최종 삭제 로직]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CEventMgr.cpp#L24-L30)
-  - 모든 프레임 로직이 끝난 후, `unordered_set`에 모인 '유니크한' 객체 주소들만 순회하며 최종적으로 `delete`를 수행합니다.
+  - 프레임 로직이 모두 끝난 뒤 `unordered_set`의 고유 주소만 순회하며 1회씩 `delete`
 
  
 **✅ 결과**

@@ -52,8 +52,6 @@
 | [🎮 이터널 리턴 모작](#project-eternal) | DirectX11 · C++ | 2025.07 ~ 2025.09 · 2인 | 코너 끼임 **93쌍 → 0** · 충돌 처리 **135.8배** 단축 |
 | [🎮 Brotato 모작](#project-brotato) | Direct2D · C++ | 2025.02 ~ 2025.03 · 2인 | DrawCall **1,296 → 1** · 대규모 웨이브 **150 ~ 250 FPS** |
 
-> 📎 팀 프로젝트 포함, **이 포트폴리오(README · DETAIL.md)에 정리한 기능은 모두 직접 구현**한 내용입니다.
-
 <br>
 
 <a name="project-bluearchive"></a>
