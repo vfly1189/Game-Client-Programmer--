@@ -16,30 +16,30 @@
 
 <div align="center">
 
-### 🎮 게임 플레이
+### 🎮 게임플레이
 
-*" 머릿속 아이디어가 코드를 통해 실제로 작동 될 때 가장 재밌습니다 "*
+*"머릿속 아이디어가 코드를 통해 실제로 플레이가 될 때 가장 재밌습니다"*
 
 <br>
 
 ### 🏗️ 아키텍처
 
-*" 하나를 고칠 때 다른 곳을 건드리지 않아도 되는 구조 "*
+*"하나를 고칠 때 다른 곳을 건드리지 않아도 되는 구조"*
 
 <br>
 
-### 🔥 도 전
+### 🔥 도전
 
-*" 재밌을 것 같으면 일단 뛰어드는 사람 "*
+*"재밌을 것 같으면 일단 뛰어드는 사람"*
 
 </div>
 
 ---
 
-> `Unity`, `DX11`, `C++`, `C#`, `Win32API` 기반 게임 클라이언트 프로그래머. <br>
+> `Unity`, `DX11`, `C++`, `C#`, `Win32API` 기반 게임 클라이언트 프로그래머.
 >
 > "동작하는 코드"를 넘어 **"성능과 구조가 아름다운 코드"** 를 지향합니다.
-> 
+>
 > DirectX11 기반 자체 엔진부터 Unity 기반 서비스 수준의 아키텍처까지, 엔진 레벨의 이해를 바탕으로 구조와 성능을 함께 설계합니다.
 
 ---
@@ -57,14 +57,14 @@
 <a name="project-bluearchive"></a>
 ## 🎮 블루아카이브 팬메이드 OperationKivotos ([상세내용](DETAIL.md#bluearchive-main))
 
-> ( 2026.01 ~ 진행 중 ) ( 1인 개인 프로젝트 )
+> ( 2026.01 ~ 진행 중 ) ( 1인 · 개인 프로젝트 )
 
 <img width="700" height="400" alt="블루아카이브 프로젝트 스크린샷" src="https://github.com/user-attachments/assets/127ef1e4-c683-425a-a1f7-4bcc25107fc0" />
 
 ### 🔧 사용 기술 및 언어
 - **Environment** : Unity
 - **Language** : C#
-- **Library / Package** : `Addressables`, `UniTask`, `Newtonsoft.Json`, `NPOI`
+- **Library** : `Addressables`, `UniTask`, `Newtonsoft.Json`, `NPOI`
 - **Tool** : Claude
 
 ### 📌 담당 범위
@@ -75,11 +75,11 @@
     *   Excel / JSON 이원화 데이터 주도 설계 · `DataManager` 통합 조회
     *   `Action` / `Delegate` 이벤트 구독으로 데이터 · UI 분리
 *   **Optimization & Memory**
-    *   7가지 활성화 방식 실측 비교 → **거리 기반 활성화 + 화면 밖 갱신 LOD** (가장 느린 1% 프레임 ▼47%)
+    *   7가지 활성화 방식 실측 비교 → **거리 기반 스포너 ON / OFF + 화면 밖 갱신 LOD** (가장 느린 1% 프레임 ▼47%)
     *   `Addressables` 위 수명 스코프 4종(Global / Scene / Party / Popup) → 해제 책임을 호출부에서 구조로 이전 (Global 상주 메모리 ▼60%)
     *   `UniTask` 비동기 로딩 · 오브젝트 풀 · 아틀라스 캐시 수명 통합
 *   **Gameplay & Combat**
-    *   흐름(Timeline) / 행동(Event) 분리 **SkillSystem** — 일반몹 · 보스가 같은 구조, 차이는 조립과 값
+    *   흐름(타임라인 · 조건 = 데이터) / 행동(Event) 분리 **SkillSystem** — 새 코드는 새 행동일 때만 (추가 4번 · 흐름 코드 0줄)
     *   다형성 계층형 `Behavior Tree` 몬스터 AI · Timeline 보스 패턴
     *   파티 4인 태그 전투 · 메인 / 서브 무작위 옵션 장비
 
@@ -91,7 +91,7 @@
 &nbsp;&nbsp; └ [전투 행동 설계 : SkillSystem + 다형성 계층형 몬스터 AI](DETAIL.md#ability-bluearchive) <br>
 &nbsp;&nbsp; └ [리소스 수명 관리 : 수명 스코프와 레지스트리](DETAIL.md#resource-lifetime-bluearchive) <br>
 &nbsp;&nbsp; └ [데이터 주도 설계(Data-Driven) 및 에셋 베이킹 자동화](DETAIL.md#data-driven-bluearchive) <br>
-&nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](DETAIL.md#ui-optimization-bluearchive) <br>
+&nbsp;&nbsp; └ [UI 렌더링 최적화 및 이벤트 분리](DETAIL.md#ui-optimization-bluearchive)
 
 <br>
 
@@ -150,11 +150,11 @@
 &nbsp;&nbsp; └ [GPU Instancing](DETAIL.md#gpu-instancing) <br>
 &nbsp;&nbsp; └ [Quad Tree 공간 분할](DETAIL.md#quad-tree) <br>
 &nbsp;&nbsp; └ [NavMesh 길찾기 · 검색 최적화 (Spatial Grid)](DETAIL.md#navmesh) <br>
-&nbsp;&nbsp; └ [몬스터 AI 시스템 (FSM → Behavior Tree)](DETAIL.md#fsm-to-bt-feature) 
+&nbsp;&nbsp; └ [몬스터 AI 시스템 (FSM → Behavior Tree)](DETAIL.md#fsm-to-bt-feature)
 
 <br>
 
-**2. 🛠️ 문제 해결 (Troubleshooting)** <br> 
+**2. 🛠️ 문제 해결 (Troubleshooting)** <br>
 &nbsp;&nbsp; └ **[Hybrid 렌더링 : Deferred와 Forward의 장점 결합](DETAIL.md#deferred-rendering-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 조명은 화면 픽셀에만, 반투명 UI만 Forward → **Forward + Deferred 혼합 파이프라인**
 
@@ -203,8 +203,8 @@
 > **각 항목 클릭 시 상세 구현 내용(DETAIL.md)으로 이동합니다.**
 
 **1. 🔨 주요 개발 기능** <br>
-&nbsp;&nbsp; └ [Direct2D 렌더링 시스템](DETAIL.md#rendering-system-brotato)  <br>
-&nbsp;&nbsp; └ [엔진 아키텍처 (Manager-Scene-Object)](DETAIL.md#engine-brotato)  <br>
+&nbsp;&nbsp; └ [Direct2D 렌더링 시스템](DETAIL.md#rendering-system-brotato) <br>
+&nbsp;&nbsp; └ [엔진 아키텍처 (Manager-Scene-Object)](DETAIL.md#engine-brotato) <br>
 &nbsp;&nbsp; └ [컴포넌트 기반 객체 설계](DETAIL.md#component-brotato)
 
 <br>
@@ -222,6 +222,3 @@
 <br>
 
 ### 🎥 [시연 영상 보러가기](https://youtu.be/d-VZS1AdvtA?si=LsgWayJvOPfWndK6) · 💾 [소스코드](https://github.com/HyangRim/BrotatoClone)
-
-<br>
-<hr>
