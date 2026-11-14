@@ -740,7 +740,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 | 항목 | 내용 |
 |:---:|:---:|
-| 🎯 **장르** | 쿼터뷰, 배틀로얄, MOBA |
+| 🎯 **장르** | 쿼터뷰 배틀로얄 / MOBA |
 | ⏱️ **개발 기간** | 2025.07 ~ 2025.09 (2개월) |
 | 👥 **개발 인원** | 2인 (프로그래머로 참여) |
 | 🛠️ **개발 환경** | C++, DirectX11, HLSL |
@@ -999,7 +999,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 | **A\* 원본 경로** | **Funnel + Bezier 스무딩** |
 | :---: | :---: |
-| ![NavMesh-스무딩x](https://github.com/user-attachments/assets/b9f093b3-bff1-434e-b170-fdee9c4e83df) | <!-- TODO: Funnel + Bezier 이동 GIF로 교체 --><img width="500" alt="Funnel + Bezier 경로" src="images/er-navmesh-funnel-bezier.jpg" /> |
+| ![NavMesh-스무딩x](https://github.com/user-attachments/assets/b9f093b3-bff1-434e-b170-fdee9c4e83df) | <img width="500" alt="Funnel + Bezier 경로" src="images/er-navmesh-funnel-bezier.jpg" /> |
 
 <a name="navmesh-optimization"></a>
 
@@ -1058,7 +1058,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 | <img width="300" alt="FSM 구조" src="https://github.com/user-attachments/assets/a45edf80-a4be-4046-994f-9d9fc2b5d645" /> | <img width="400" alt="BT 구조" src="https://github.com/user-attachments/assets/b9cb3150-afb2-494a-b3ef-224d4cb2fd75" /> | ![늑대 모션들](https://github.com/user-attachments/assets/ffdf45cc-240b-4467-abb6-840257999799) |
 
 **관련 코드**
-- [[📄WolfAI.cpp (몬스터 트리 구성)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/5d9aa0d9b421b32bf8004703d286ba5dbfd8bac5/Client/Wolf.cpp#L281-L319)
+- [[📄Wolf.cpp (몬스터 트리 구성)]](https://github.com/HyangRim/DirectX11-Engine-Client/blob/5d9aa0d9b421b32bf8004703d286ba5dbfd8bac5/Client/Wolf.cpp#L281-L319)
 
 </details>
 
@@ -1233,10 +1233,10 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 | 항목 | 내용 |
 |:---:|:---:|
-| 🎯 **장르** | 탑다운 슈팅, 로그라이크 서바이벌 |
+| 🎯 **장르** | 탑다운 슈팅 / 로그라이크 서바이벌 |
 | ⏱️ **개발 기간** | 2025.02 ~ 2025.03 (3주) |
 | 👥 **개발 인원** | 2인 (프로그래머로 참여) |
-| 🛠️ **개발 환경** | C++, Direct2D, GDI+, Win32 API |
+| 🛠️ **개발 환경** | C++, Direct2D, GDI+, Win32API |
 | 🎬 **시연 영상** | [YouTube 바로가기](https://youtu.be/d-VZS1AdvtA?si=zvILKb3qGncavOqS) |
 | 💾 **GitHub** | [소스코드](https://github.com/HyangRim/BrotatoClone) |
 
@@ -1258,7 +1258,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  GPU 하드웨어 가속으로 **대규모 웨이브에서도 평균 150 ~ 250 FPS** (GDI+는 소수 객체에서도 20 ~ 40 FPS)
 
 &nbsp;&nbsp; └ **[타일맵 렌더링 최적화](#tilemap-optimization)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  비트맵 베이킹(Baking) 기법으로 **DrawCall 99.9% 감소 (1,296회 → 1회)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  오프스크린 베이킹으로 **DrawCall 99.9% 절감 (1,296회 → 1회)**
 
 &nbsp;&nbsp; └ **[이벤트 처리 안정성](#event-queue-system)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `unordered_set` 도입으로 **삭제 중복 요청(Double Free)으로 인한 크래시 해결**
@@ -1396,7 +1396,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 
 > **🚀 성능 개선 사례**:
 > 1. 대규모 웨이브에서도 평균 150 ~ 250 FPS를 확보한 **[Direct2D 전환기]** 는 하단 **[🛠️ 문제 해결](#direct2d-optimization)**에서 다룹니다.
-> 2. 타일맵 드로우 콜을 99.9% 줄인 **[타일맵 베이킹 기법]** 은 하단 **[🛠️ 문제 해결](#tilemap-optimization)**에서 상세히 설명합니다.
+> 2. 타일맵 DrawCall을 99.9% 줄인 **[타일맵 베이킹 기법]** 은 하단 **[🛠️ 문제 해결](#tilemap-optimization)**에서 상세히 설명합니다.
 
 </details>
 
@@ -1471,14 +1471,14 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 
 > **🚨 문제 상황: CPU 기반 렌더링의 한계**
 > 
-> *   **GDI+의 구조적 문제** : 픽셀 연산을 CPU가 전담하는 소프트웨어 렌더링이라 하드웨어 가속을 쓰지 못해, **소수 객체에서도 FPS 20~40**
+> *   **GDI+의 구조적 문제** : 픽셀 연산을 CPU가 전담하는 소프트웨어 렌더링이라 하드웨어 가속을 쓰지 못해, **소수 객체에서도 FPS 20 ~ 40**
 
 **💡 해결 과정** [[📄Direct2D 초기화]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/Direct2DMgr.cpp#L15-L59)
 - **하드웨어 가속 파이프라인** : CPU 의존적인 GDI+를 버리고, GPU 가속을 활용하는 Direct2D(`ID2D1HwndRenderTarget`)로 엔진 코어 교체
 - **프레임 단위 그리기** : 한 프레임을 `BeginDraw` ~ `EndDraw`로 묶어 백 버퍼에 그린 뒤 `EndDraw`에서 한 번에 표시 (`ID2D1HwndRenderTarget` 내장 더블 버퍼링)
 
 **✅ 결과**
-- **성능 향상** : 소수 객체에서도 20~40 FPS였던 GDI+와 달리, 수백 개 객체가 등장하는 **대규모 웨이브에서도 평균 150~250 FPS** 유지
+- **성능 향상** : 소수 객체에서도 20 ~ 40 FPS였던 GDI+와 달리, 수백 개 객체가 등장하는 **대규모 웨이브에서도 평균 150 ~ 250 FPS** 유지
 - **안정적인 플레이** : 수백 개의 투사체와 몬스터가 난무하는 상황에서도 끊김 없는 부드러운 조작감 확보.
 
 | **대규모 웨이브** | **FPS 변화** |
@@ -1503,7 +1503,7 @@ DrawCall $`\color{#E8352E}\textbf{1,296 → 1}`$
 > - **상황** : 36x36 크기의 타일맵을 구현하기 위해 매 프레임 **1,296번의 `DrawBitmap`** 함수 호출.
 > - **위험** : 초기에는 650 FPS로 문제가 없어 보였으나, 몬스터(100마리 이상)와 투사체가 급증하는 후반부 웨이브에서 프레임 드랍이 발생할 잠재적 위험 확인.
 > - **기술적 원인 분석** :
->   - **드로우콜 제출 오버헤드 누적** : 1,296번의 렌더링 명령을 개별적으로 처리하면서 CPU가 GPU에 명령을 제출(Submit)하는 과정에 병목 발생.
+>   - **DrawCall 제출 오버헤드 누적** : 1,296번의 렌더링 명령을 개별적으로 처리하면서 CPU가 GPU에 명령을 제출(Submit)하는 과정에 병목 발생.
 >   - **GPU 유휴 상태(Idle)** : CPU가 명령을 보내느라 바빠서, 정작 GPU는 명령을 기다리는 대기 시간이 길어짐 (CPU 바운드 현상).
 
 **💡 해결 과정** [[📄타일맵 생성 함수]](https://github.com/HyangRim/BrotatoClone/blob/7c887b61fc9d09e10d9a9f0866541d067a76d7e2/Client/CScene.cpp#L431-L547)
