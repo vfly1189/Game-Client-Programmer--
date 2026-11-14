@@ -128,7 +128,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  가까운 몬스터만 켜고, 화면 밖은 덜 갱신 → **가장 느린 1% 프레임 ▼47% (4.68 → 2.50ms)**
 
 &nbsp;&nbsp; └ **[전투 행동 설계 : 흐름과 행동 분리를 통한 확장](#ability-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  흐름은 Timeline, 행동은 조합 → **일반몹 · 보스가 같은 SkillSystem 구조**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  흐름은 데이터로, 새 코드는 행동만 → **4번 추가 · 흐름 코드 0줄**
 
 &nbsp;&nbsp; └ **[리소스 수명 관리 : 2버킷 구조의 한계와 수명 스코프 도입](#resource-lifetime-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Addressables 리소스를 수명 스코프 단위로 관리 → **Global 상주 메모리 ▼60% (513 → 205MB)**
@@ -184,8 +184,8 @@
 </td>
     <td valign="top">
 
-- 흐름(타임라인) / 행동(Event) 분리
-- 일반몹 · 보스 같은 SkillSystem
+- 흐름 = 데이터 (타임라인 · 조건)
+- 새 코드는 새 행동일 때만
 
 </td>
     <td valign="top">
@@ -203,7 +203,7 @@
 </td>
     <td align="center">
 
-일반몹 · 보스 = $`\color{#E8352E}\textbf{같은 구조}`$
+추가 4번 · 흐름 코드 $`\color{#E8352E}\textbf{0줄}`$
 
 </td>
     <td align="center">
@@ -257,24 +257,41 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 <br>
 
-**누구를 켤 것인가 — 거리 기반 활성화**
+**① 누구를 켤 것인가 — 거리 기반 스포너 ON / OFF**
 - **판정 기준** : 스포너 중심 ↔ 플레이어 바닥(x · z) 거리
-- **히스테리시스** : 켜기 20m / 끄기 25m → 경계 깜빡임 제거
-- **방식 추상화** : `ActivationPolicy` → 7가지 방식을 같은 조건에서 교체 · 실측 후 채택
-- **공통 규칙** : 교전 중이면 범위 밖에서도 유지 · 너무 멀면 스폰 지점 귀환(리쉬)
+- **켜기 20m / 끄기 25m** : 20m 안에 들어오면 스포너 ON · 25m 밖으로 나가야 OFF → 사이 구간은 이전 상태 유지 (경계 깜빡임 제거)
+- **교전 유지 · 리쉬** : 싸우는 중이면 범위 밖에서도 유지 · 너무 멀어지면 스폰 지점으로 귀환
 
-**얼마나 돌릴 것인가 — 갱신 LOD**
-- **대상** : 화면 밖 · 교전 아님 (살아 있는 몬스터의 87%가 화면 밖)
-- **줄이는 것** : HP바 끔 · Behavior Tree 8프레임에 1번 · Animator 끔
+**② 얼마나 돌릴 것인가 — 화면 기준 갱신 LOD**
 
-| **결과 — Sector → 거리 (최종 빌드 · 같은 경로 3회)** |
-| :---: |
-| <img width="900" alt="필드 몬스터 관리 결과" src="images/ba-field-result.jpg" /> |
+| 구분 | 조건 | 처리 |
+|:---:|:---|:---|
+| **풀 연산** | 화면 + 바깥 **15% 여유** 안 · 또는 교전 중 | 매 프레임 그대로 (HP바 · Animator · 행동 트리) |
+| **줄임** | 15% 여유 밖 **그리고** 교전 아님 | HP바 끔 · Animator 끔 · 행동 트리 **8프레임에 1번** |
+
+- **15% 여유** : 화면에 들어오기 직전에 원래대로 되돌려 굳은 자세 · 늦게 뜨는 HP바가 보이지 않게 (늦은 복원 0회)
+- **8프레임 기준** : 행동 트리 `Tick`을 `(Time.frameCount + phase) % 8 == 0`인 프레임에만 실행
+  - 화면 밖 판단 지연 목표 0.2초 이내 → 60fps에서도 8프레임 ≈ 0.13초 (144fps ≈ 0.06초)
+  - `phase`를 몬스터마다 0 ~ 7로 엇갈려 배정 → 줄임 대상이 한 프레임에 몰리지 않고 8프레임에 고르게 분산
+  - 교전 중인 몬스터는 대상이 아님 → 공격 타이밍 오차 0
+
+| **거리 기반 스포너 ON / OFF** | **갱신 LOD 그룹 분류** |
+| :---: | :---: |
+| <img width="440" alt="거리 기반 스포너 범위" src="images/ba-field-distance.jpg" /> | <img width="440" alt="갱신 LOD 그룹 분류" src="images/ba-field-update-lod.jpg" /> |
+
+**✅ 결과 (최종 빌드 · 같은 경로 3회 · 갱신 LOD는 몬스터 밀도 ×8)**
+
+| 항목 | Before | After | 변화 |
+|---|:---:|:---:|:---:|
+| 살아 있는 몬스터 (평균) | 62마리 | $`\color{#E8352E}\textbf{25마리}`$ | **▼60%** |
+| 가장 느린 1% 프레임 (p99) | 4.68ms | $`\color{#E8352E}\textbf{2.50ms}`$ | **▼47%** |
+| 한 번에 생기는 몬스터 (최대) | 119마리 | $`\color{#E8352E}\textbf{17마리}`$ | **몰림 해소** |
+| 보통 프레임 (갱신 LOD 끔 → 켬) | 4.12ms | $`\color{#E8352E}\textbf{3.43ms}`$ | **▼17%** |
+| 144fps 예산 안 몬스터 수 | 430마리 | $`\color{#E8352E}\textbf{514마리}`$ | **약 1.2배** |
 
 **관련 코드**
-- [[📄DistanceActivation.cs (거리 판정)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/DistanceActivation.cs)
-- [[📄ActivationPolicy.cs (판정 방식 추상화)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/ActivationPolicy.cs)
-- [[📄SpawnerManager.cs (활성화 · 갱신 LOD 적용)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Field/SpawnerManager.cs)
+- [[📄DistanceActivation.cs (거리 판정 · 켜기 20m / 끄기 25m)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Activation/DistanceActivation.cs)
+- [[📄SpawnerManager.cs (스포너 ON / OFF · 갱신 LOD 판정 — 15% 여유 · 8프레임)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Field/SpawnerManager.cs)
 
 > **🚀 성능 개선 사례**: 7가지 방식 비교 후 거리 기반으로 바꿔 **가장 느린 1% 프레임 ▼47%** 를 달성한 과정은 하단 **[🛠️ 문제 해결](#optimization-trouble)** 에서 다룹니다.
 
@@ -294,25 +311,25 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 <br>
 
-**흐름과 행동의 분리**
-- **흐름** : 애니메이션 · Timeline + 태그 신호 (`TimelineAction`, `AnimationAction`)
-- **행동** : `PatternEvent` 하나 — 신호를 받은 순간에만 실행
-- **`PatternMemo`** : 패턴 동안만 쓰는 값(고른 색 · 경고 위치) 보관 · 패턴마다 비움 (할당 0)
-- **행동의 조합** : Event(무엇을) + `PointEmitter`(횟수 · 간격) + `Placement`(어디에)
+**흐름과 행동의 분리 — 선택기 → SkillSystem → Runner → Action · Task · Event**
+- **Action (흐름)** : 애니메이션 · Timeline 재생 + 신호 `Cast` · `Strike` · `End` (`TimelineAction`, `AnimationAction`)
+- **Task (흐름)** : 신호를 받아 조건을 보고, 맞으면 Event 실행 — 분기도 부품이 아닌 **조건 값**
+- **Event (행동)** : 발사 · 타격 · 소환 — 신호를 받은 순간에만 실행되는 범용 부품
+- **`PatternMemo`** : 고른 값 · 위치를 패턴 안에서만 보관 · 패턴마다 비움 (할당 0)
 
-| **보스 패턴 한 개의 흐름 — Runner · Action · Task · Event** |
+| **SkillSystem 흐름 — 신호가 오면 → 조건을 보고 → 행동 실행** |
 | :---: |
-| <img width="900" alt="SkillSystem 흐름" src="images/ba-skill-flow-layers.png" /> |
+| <img width="900" alt="SkillSystem 흐름" src="images/ba-skill-flow.png" /> |
 
 **다형성 계층형 몬스터 AI — 언제 / 무엇을 / 실행 분리**
-- **언제 (컨트롤러 BT)** : `Base`(공통 생명주기) → `Normal`(감지 · 추적 · 리쉬) → `Skill`(전투 노드만 구현) · `Boss`
-- **무엇을 (선택기)** : 일반몹 = 탄 수 / 보스 = HP선 기믹 · 가중치 추첨
+- **언제 (컨트롤러 BT)** : `Base`(공통 생명주기 · 갱신 LOD) → `Normal`(감지 · 추적 · 리쉬) → `Skill`(전투 노드만 구현) · `Boss`
+- **무엇을 (선택기)** : 일반몹 `AmmoPatternSelector` = 탄 수 / 보스 `BossMonsterPatternSelector` = HP선 기믹 · 가중치 추첨
 - **실행 (`SkillSystem`)** : 써도 되나(쿨다운 · 태그) · 실행 — 호출자를 모름 → 일반몹 · 보스 같은 코드
 - **BT 우선순위** : 리쉬 귀환 → 행동 중 → 전투 → 추적 → 대기 (리쉬가 진행 중 패턴을 끊을 수 있음)
 
-| **몬스터 컨트롤러 계층 구조** |
+| **몬스터 AI 클래스 다이어그램** |
 | :---: |
-| <img width="700" alt="몬스터 컨트롤러 계층 구조" src="images/ba-ai-hierarchy.png" /> |
+| <img width="900" alt="몬스터 AI 클래스 다이어그램" src="images/ba-ai-class-diagram.png" /> |
 
 **관련 코드**
 - [[📄SkillSystem.cs (사용 가능 판정 · 실행 창구)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/SkillSystem.cs)
@@ -339,9 +356,14 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 <br>
 
-**책임 3층 분리**
-- `ResourceManager`(라우팅) → `ResourceScope`(수명 · 키 집합) → `ResourceRegistry`(핸들 · refCount) → `Addressables`(실제 I/O)
-- **캐시** : 실제 로드는 첫 요청 1번 · 재요청은 Registry에서 반환
+**요청 흐름 — 호출부 → Manager → Scope → Registry → Addressables**
+- `ResourceManager`(라우팅) → `ResourceScope`(수명 · 키 목록) → `ResourceRegistry`(핸들 · refCount) → `Addressables`(실제 로드)
+- **첫 요청** : Registry에 없음(miss) → Addressables 실제 로드 1회 → 핸들 등록 (refCount 1)
+- **재요청** : Registry에 있음(hit) → 로드 0회 · 이미 있는 핸들 그대로 반환 (새 스코프면 refCount +1, 같은 스코프면 +0)
+
+| **리소스 요청 · 재요청 흐름 — 실제 로드는 첫 요청 1번뿐** |
+| :---: |
+| <img width="900" alt="리소스 요청 · 재요청 흐름" src="images/ba-resource-request-flow.png" /> |
 
 **수명 스코프 4종**
 - `Global`(앱 종료) · `Scene`(씬 전환) · `Party`(씬 전환 넘어 생존) · `Popup`(팝업 스택 0 → 1 생성, 1 → 0 Dispose)
@@ -350,12 +372,6 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 **풀 · 아틀라스 캐시 수명 통합**
 - **풀** : 원본 프리팹 ref 티켓 직접 획득 → 씬 전환 시 풀 인스턴스 깨짐 차단
 - **아틀라스** : 클론 Sprite를 Registry `OnReleased`에 맞춰 함께 파기
-
-| **리소스 로드 흐름 — 첫 요청만 실제 로드, 재요청은 캐시** |
-| :---: |
-| <img width="900" alt="리소스 로드 흐름" src="https://github.com/user-attachments/assets/485f7a3a-5e0c-42f5-a806-5ce52029880c" /> |
-| **refCount 정산 — 스코프 소멸 시 주인 없는 키만 Release** |
-| <img width="900" alt="refCount 정산" src="https://github.com/user-attachments/assets/95f6b83b-6792-4f0c-bd3b-a5e524308bc2" /> |
 
 **관련 코드**
 - [[📄ResourceScope.cs (수명 티켓)]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/Managers/Core/Resource/ResourceScope.cs)
@@ -464,15 +480,15 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
    - `ActivationPolicy` 추상화 → 같은 빌드 · 같은 자동 주행 경로 **5분 × 3회**
    - **탈락 조건** : 화면 안 등장 · 화면 안 소멸 · 끌고 온 몹 소실 · 경계 깜빡임 · 풀 확장
 
-   | 방식 | 살아 있는 몬스터 | 가장 느린 1% 프레임 (p99) | 문제 | 판정 |
-   |:---|:---:|:---:|:---|:---:|
-   | ① Sector | 62마리 | 4.36ms | 깜빡임 136 · 화면 안 등장 9 | 탈락 |
-   | ② Sector + 인접 | 187마리 | 4.86ms | 깜빡임 114 · 풀 부족 | 탈락 |
-   | ③ 격자 3×3 | 46마리 | 2.72ms | 깜빡임 77 | 탈락 |
-   | ④ 격자 5×5 | 34마리 | 2.60ms | 깜빡임 19 | 탈락 |
-   | **⑤ 거리** | $`\color{#E8352E}\textbf{25마리}`$ | $`\color{#E8352E}\textbf{2.54ms}`$ | **문제 없음** | **채택** |
-   | ⑥ 격자 + 거리 | 25마리 | 2.54ms | 문제 없음 | 통과 |
-   | ⑦ CullingGroup | 25마리 | 2.55ms | 문제 없음 | 통과 |
+   | 방식 | 켜는 범위 | 살아 있는 몬스터 | 가장 느린 1% 프레임 (p99) | 문제 | 판정 |
+   |:---|:---|:---:|:---:|:---|:---:|
+   | ① Sector | 들어간 구역만 | 62마리 | 4.36ms | 깜빡임 136 · 화면 안 등장 9 | 탈락 |
+   | ② Sector + 인접 | 이웃 구역까지 | 187마리 | 4.86ms | 깜빡임 114 · 풀 부족 | 탈락 |
+   | ③ 격자 3×3 | 칸 20m · 9칸 | 46마리 | 2.72ms | 깜빡임 77 | 탈락 |
+   | ④ 격자 5×5 | 칸 10m · 25칸 | 34마리 | 2.60ms | 깜빡임 19 | 탈락 |
+   | **⑤ 거리** | **반경 20m 안** | $`\color{#E8352E}\textbf{25마리}`$ | $`\color{#E8352E}\textbf{2.54ms}`$ | **문제 없음** | **채택** |
+   | ⑥ 격자 + 거리 | 격자 후보 → 거리 | 25마리 | 2.54ms | 문제 없음 | 통과 |
+   | ⑦ CullingGroup | 엔진 컬링 · 거리 | 25마리 | 2.55ms | 문제 없음 | 통과 |
 
 2. **⑤ 거리 채택 — 결과가 같으면 가장 단순한 것**
    - ⑤ ⑥ ⑦ 켜는 스포너 **100% 동일** (결과 · 비용 같음)
@@ -483,8 +499,10 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 3. **갱신 LOD : 화면 밖에서 가만히 있는 몬스터는 덜 돌린다**
    - **대상** : 화면 밖 · 교전 아님 (살아 있는 몬스터의 $`\color{#E8352E}\textbf{87\%}`$ 가 화면 밖)
    - **HP바 끔 · Behavior Tree 8프레임에 1번 · Animator 끔**
+   - **화면 15% 여유** : 화면 + 바깥 15%까지는 풀 연산 → 화면에 들어오기 전에 원래대로 (늦은 복원 0회)
    - **실행 프레임 분산** : `(frameCount + phase) % 8 == 0` → 한 프레임 몰림 방지
    - **교전 중 제외** : 화면 밖 공격 타이밍 유지
+   - → **몬스터가 많을수록 효과가 커진다**
 
    | 몬스터 밀도 | ×1 (27마리) | ×2 (54마리) | ×4 (107마리) | ×8 (216마리) |
    |:---:|:---:|:---:|:---:|:---:|
@@ -493,8 +511,7 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 | **거리 기반 활성화** | **갱신 LOD** |
 | :---: | :---: |
-| <img width="450" alt="거리 기반 활성화" src="images/ba-field-distance.jpg" /> | <img width="450" alt="갱신 LOD" src="images/ba-field-update-lod.jpg" /> |
-| 초록 = 켜기 20m · 주황 = 끄기 25m | 주황 = 화면 밖 · 가만히 (LOD 대상) · 초록 = 활성 몬스터 |
+| <img width="440" alt="거리 기반 활성화" src="images/ba-field-distance.jpg" /> | <img width="440" alt="갱신 LOD" src="images/ba-field-update-lod.jpg" /> |
 
 **✅ 결과 (최종 빌드 · 같은 경로 3회씩 재측정)**
 
@@ -525,61 +542,81 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 ### 2️⃣ 전투 행동 설계 : 흐름과 행동 분리를 통한 확장<a name="ability-trouble"></a>
 
-> **🚨 문제 상황: 흐름까지 부품으로 만들어 분기마다 새 클래스 필요**
+> **🚨 문제 상황: 흐름까지 부품으로 만들어서, 패턴마다 새 클래스가 생기고 상태는 밖으로 샜다**
 >
-> - **기존 AbilitySystem** : 공격을 부품(SO)으로 조립 — 흐름(`Delay` · `Repeat`)도 행동도 같은 부품
+> - **기존 AbilitySystem** : 공격을 부품(SO)으로 조립 — 흐름(고르기 · 분기 · 흩뿌리기)도 행동(VFX · 타격)도 같은 부품
 > - **플레이어 스킬엔 적합** : 몹 5연사 · 히나 8연사 = `RepeatEffect` 값만 다름 (코드 차이 0줄)
-> - **보스 패턴에서 한계**
->   1. **블록 코딩** : 분기 종류마다 새 흐름 부품 클래스 (`SelectRandomChoice` · `BranchByChoice` …)
->   2. **분기 결과 저장 위치 없음** : 고른 색을 부품 밖 `BossRelicController`가 보관
+> - **예 : 보스 유물 포격** — 경고 → 색 고르기 → **빨강**이면 안쪽 8발 / **초록**이면 바깥 70발 낙뢰
 
-| **기존 AbilitySystem — 흐름과 행동이 같은 부품** |
+| **AbilitySystem으로 조립한 유물 포격** |
 | :---: |
-| <img width="900" alt="AbilitySystem의 흐름과 문제점" src="images/ba-skill-ability-problem.png" /> |
+| <img width="900" alt="AbilitySystem으로 조립한 유물 포격" src="images/ba-skill-ability-problem.png" /> |
+
+| | 문제 | 내용 |
+|:---:|:---|:---|
+| **❶** | **이 패턴 전용 새 클래스** | 고르기 · 분기 · 흩뿌리기 (`SelectRandomChoice` · `BranchByChoice` · `ScatterPattern`) |
+| **❷** | **고른 색이 부품 밖으로** | 분기 결과를 둘 곳이 없어 보스 컴포넌트(`BossRelicController`)에 보관 |
+| **❸** | **한 패턴이 세 곳에 흩어짐** | 대기 때문에 Ability를 둘로 쪼갬 → Ability 2개 + 보스 컴포넌트 |
 
 **💡 해결 과정**
 
-1. **흐름은 Timeline 위에, 행동은 그 순간에만**
-   - **흐름** : 순서 · 대기 · 분기 · 끝 → 시간 축이 있는 애니메이션 · Timeline + 태그 신호
-   - **행동** : 발사 · 장판 · 소환 → 신호를 받은 순간 실행되는 `PatternEvent` 하나
-   - **분기 = 부품 → 조건** : 같은 Strike 신호에 Task 2개 · `PatternMemo`의 색 조건이 맞는 쪽만 실행
-   - **`PatternMemo`** : 고른 색 · 경고 위치를 패턴 동안 보관 · 패턴마다 비움 (할당 0)
+1. **선택기 → SkillSystem → Runner → Action · Task · Event**
+   - **Action이 신호를 보내면 → Task가 조건을 보고 → Event가 그 순간 실행** (신호마다 반복)
+   - **흐름** (순서 · 대기 · 분기 · 끝) = Action · Task → 타임라인 신호와 조건 값, 즉 **데이터**
+   - **행동** (발사 · 타격 · 소환) = Event → 신호를 받은 순간에만 실행되는 **범용 부품**
+   - **고르는 곳과 실행하는 곳의 분리** : 선택기 = 무엇을 쓸까 / SkillSystem = 써도 되나 · 실행 / PatternEnded = 끝났다
+     - 보스 선택기 : HP선 넘으면 기믹(1회) · 평소 가중치 추첨 / 일반몹 선택기 : 탄 있으면 공격(탄 −1) · 없으면 재장전
+     - **SkillSystem은 호출자를 모름** → 보스 · 일반몹 $`\color{#E8352E}\textbf{같은 코드}`$
 
-| **빨강이면 → 낙뢰 · 안쪽** | **초록이면 → 낙뢰 · 바깥** |
-| :---: | :---: |
-| <img width="450" alt="빨강 분기" src="images/ba-skill-branch-red.jpg" /> | <img width="450" alt="초록 분기" src="images/ba-skill-branch-green.jpg" /> |
-
-2. **고르는 곳과 실행하는 곳의 분리**
-   - **선택기** = 무엇을 쓸까 / **SkillSystem** = 써도 되나 · 실행 / **PatternEnded** = 끝났다
-   - **보스 선택기** : HP선 넘으면 기믹(1회) · 평소 가중치 추첨
-   - **일반몹 선택기** : 탄 있으면 공격(탄 −1) · 없으면 재장전
-   - **SkillSystem은 호출자를 모름** → 보스 · 일반몹 $`\color{#E8352E}\textbf{같은 코드}`$
-
-| **SkillSystem 흐름 — 한 패턴의 한 바퀴** |
+| **SkillSystem 흐름** |
 | :---: |
-| <img width="900" alt="SkillSystem 흐름" src="images/ba-skill-selector-flow.png" /> |
+| <img width="900" alt="SkillSystem 흐름" src="images/ba-skill-flow.png" /> |
+
+2. **같은 유물 포격 — 흐름은 타임라인 하나, 고른 값은 패턴 안에**
+   - **① Action = 신호** (애니메이션 이벤트 · 타임라인 시그널) / **② Task = 조건** / **③ Event = 행동**
+   - **분기 = 부품 → 조건** : 같은 `Strike` 신호에 Task 2개 · `PatternMemo`의 색 조건이 맞는 쪽만 실행
+   - **`PatternMemo`** : 고른 색을 패턴 안에서만 보관 · 패턴마다 비움 (할당 0) → 보스 컴포넌트로 새지 않음
+   - **Ability 2개 + 보스 컴포넌트 → 타임라인 하나**로 한 패턴이 한 곳에 모임
+
+| **SkillSystem으로 만든 유물 포격** |
+| :---: |
+| <img width="900" alt="SkillSystem으로 만든 유물 포격" src="images/ba-skill-relic-timeline.png" /> |
+
+| **빨강이면 → 타격 · 안쪽** | **초록이면 → 타격 · 바깥** |
+| :---: | :---: |
+| <img width="440" alt="빨강 분기" src="images/ba-skill-branch-red.jpg" /> | <img width="440" alt="초록 분기" src="images/ba-skill-branch-green.jpg" /> |
 
 3. **행동 하나 = 무엇을 + 횟수 · 간격 + 어디에**
-   - Event(무엇을) + `PointEmitter`(횟수 · 간격) + `Placement`(어디에) → 하나를 바꿔도 나머지는 그대로
+   - 세 가지를 **따로 정해서 조합** — 하나를 바꿔도 나머지는 그대로
+
+   | 무엇을 (`Event`) | 횟수 · 간격 (`PointEmitter`) | 어디에 (`Placement`) |
+   |:---:|:---:|:---:|
+   | 타격 · 장판 · 발사 · 소환 · 켜기 / 끄기 · 고르기 | 몇 개씩 · 몇 초마다 · 몇 번 | 한 점 · 원 · 무작위 · 지정 위치 |
+
+   - **흩뿌리기 = 공용 배치(`Placement`)** : 패턴 전용 클래스(`ScatterPattern`) 대신 `RandomInRingPlacement` 등 배치 부품 → 탱크 · 보스가 같이 사용
    - Tank '경고 → 지연 → 타격' = 새 Event가 아닌 `StrikeEvent` 옵션 1개 → 보스도 같은 기능 획득
 
    | 예 | 무엇을 | 횟수 · 간격 | 어디에 |
    |:---:|:---:|:---:|:---:|
-   | 조여오는 번개 | 내려치기 | 12개씩 · 0.15초 | 원 · 반경 8 → 0 |
+   | 조여오는 번개 | 타격 | 12개씩 · 0.15초 | 원 · 반경 8 → 0 |
    | 몬스터 소환 | 소환 | 1마리씩 · 0.3초 | 지정 위치 4곳 |
 
 | **예 1 · 조여오는 번개** | **예 2 · 몬스터 소환** |
 | :---: | :---: |
-| <img width="450" alt="조여오는 번개" src="images/ba-skill-event-lightning.jpg" /> | <img width="450" alt="몬스터 소환" src="images/ba-skill-event-summon.jpg" /> |
+| <img width="440" alt="조여오는 번개" src="images/ba-skill-event-lightning.jpg" /> | <img width="440" alt="몬스터 소환" src="images/ba-skill-event-summon.jpg" /> |
 
-**✅ 결과 — 일반몹 · 보스가 같은 구조 위에서 동작**
-- **같은 구조** : 일반몹(Tank) · 보스(Hieronymus) 모두 `SkillSystem → Pattern → Action → Task → Event` · 차이는 조립과 값
-- **확장성** : 몬스터 이관 시 수정 `.cs` 수 — AR(공용화) 여러 개 → $`\color{#E8352E}\textbf{RL 0개}`$ → $`\color{#E8352E}\textbf{Tank 1개}`$
+**✅ 결과 — 흐름은 공용, 새 코드는 새 행동이 필요할 때만**
+
+> 새 패턴을 만들 때 **흐름은 데이터로 끝나고**, 코드는 **패턴의 핵심 동작(행동)이 없을 때만** 추가한다.
+
+| 새 패턴 하나 추가 | 흐름 (순서 · 대기 · 분기 · 고른 값) | 행동 (타격 · 장판 · 소환 …) |
+|:---:|:---|:---|
+| **기존 AbilitySystem** | 🔴 패턴마다 **새 흐름 클래스** (분기 · 고르기 · 흩뿌리기)<br>🔴 + **상태 인터페이스** (고른 값 · 스폰 위치) | 🔴 + 행동 클래스 (장판 · 소환) |
+| **지금 SkillSystem** | 🟢 **공용** — 타임라인 신호 · 조건 값만 작성 (데이터) | 🟢 **필요할 때만** — 있으면 재사용 · 없을 때만 구현 |
+
+- ✔️ **공용화 이후 4번 추가** (RL · Tank · 보스 기믹 · Hard 보스)
+  - 전부 **기존 행동에 옵션만** · 새 런타임 클래스 $`\color{#E8352E}\textbf{0개}`$ · 흐름 코드 $`\color{#E8352E}\textbf{0줄}`$
 - **플레이어** : 기존 AbilitySystem 유지 · 데미지 이음새 공유 → 이관 가능
-
-| **일반몹 (Tank) vs 보스 (Hieronymus) — 프리팹 계층이 같은 구조** |
-| :---: |
-| <img width="900" alt="일반몹과 보스의 같은 구조" src="images/ba-skill-same-structure.png" /> |
 
 **관련 코드**
 - [[📄SkillSystem.cs]](https://github.com/vfly1189/OperationKivotos-Code/blob/main/Assets/Scripts/SkillSystem/SkillSystem.cs)
@@ -598,53 +635,69 @@ Global 상주 메모리 $`\color{#E8352E}\textbf{▼60\%}`$
 
 ### 3️⃣ 리소스 수명 관리 : 2버킷 구조의 한계와 수명 스코프 도입<a name="resource-lifetime-trouble"></a>
 
-> **🚨 문제 상황: 버킷이 2개뿐이라 수명이 애매한 리소스는 전부 Global에 누적**
+> **🚨 문제 상황: 버킷이 2개뿐이라, 수명이 애매한 리소스는 전부 Global에 쌓인다**
 >
-> - **구조** : 매니저 한 곳이 로드 · 핸들 · 수명 전부 소유 · 재로딩 방지용 핸들 캐싱
-> - **버킷 부족** : `Global` · `Scene` 2개뿐 → 파티 · 팝업 · 던전 리소스가 `Global`로 도피
+> - **① 매니저 한 곳이 로드 · 핸들 · 수명을 전부 소유** → **② 재로딩을 없애려고 핸들을 캐싱해 보관** → **③ 담는 통은 `Global` · `Scene` 2개뿐**
+> - **갈 곳 없는 리소스** : 파티(씬 전환 생존) · 팝업(스택 유지) · 던전(입장 ~ 퇴장) 리소스가 전부 `Global`로
 > - **해제 경로 없음** : `Global`은 세션 내내 상주 (진입 직후 **513MB**)
 > - **수명 결정 분산** : 호출부 **46개 파일 · 130곳**이 각자 `isGlobal`로 수명 결정 → 애매하면 `Global`
 
-| **2버킷 구조 — Global 버킷은 해제 경로 없이 계속 쌓인다** |
+| **Global / Scene 2버킷 — Global은 해제 경로 없이 계속 쌓인다** |
 | :---: |
 | <img width="900" alt="2버킷 구조의 한계" src="images/ba-resource-buckets.png" /> |
 
 **💡 해결 과정**
 
-1. **책임 3층 분리 (Manager / Scope / Registry)**
-   - `ResourceManager`(라우팅) → `ResourceScope`(수명 · 키 집합) → `ResourceRegistry`(핸들 · refCount) → `Addressables`
-   - **실제 로드 = 첫 요청 1번** · 재요청 = Registry 캐시
-   - **refCount = 키를 쥔 스코프 수** (같은 스코프 재요청 +0)
-
-| **로드 흐름 — 재요청은 Registry 캐시에서 반환** |
-| :---: |
-| <img width="900" alt="Registry 로드 흐름" src="images/ba-resource-registry-flow.png" /> |
-
-2. **수명 스코프 2종 → 4종 — 수명 경계 = 해제 시점**
+1. **"누가 Release 하는가" 문제를 수명 스코프로 없앴다**
+   - 수명 스코프 2종 → 4종 — **수명 경계 = 해제 시점**
 
    | 스코프 | 수명 | 담는 리소스 |
    |:---:|:---|:---|
    | `Global` | 앱 종료까지 | 공용 · 영구 에셋 |
    | `Scene` | 씬 전환까지 | 씬 에셋 · 팝업 프리팹 / 슬롯 |
    | `Party` | 씬 전환 넘어 생존 | 파티 에셋 |
-   | `Popup` | 팝업 스택 0 → 1 생성 · 1 → 0 Dispose | 스탠딩 이미지 등 대형 콘텐츠 |
+   | `Popup` | 팝업 스택이 빌 때까지 (0 → 1 생성 · 1 → 0 Dispose) | 스탠딩 이미지 등 대형 콘텐츠 |
 
-   - **자동 정산** : 스코프 소멸 → 자기 키만 −1 → 0이 된 키만 `Addressables.Release` (호출부 Release $`\color{#E8352E}\textbf{0줄}`$)
+   - **예** : `Global`(A) · `Scene`(A, B) · `Popup`(B, C)이 키를 쥔 상태에서 **팝업을 모두 닫으면** → Popup 스코프 소멸 · **자신이 가진 키(B, C)만 −1**
 
-| **refCount 정산 — 팝업을 모두 닫으면 Popup 소유만 빠진다** |
+   <table>
+     <tr><th colspan="4">팝업이 열려 있는 동안 — ResourceRegistry</th><th width="2%"></th><th colspan="4">팝업을 닫은 뒤 — Popup 소유가 빠진다</th></tr>
+     <tr><th>키</th><th>소유한 스코프</th><th>ref</th><th>상태</th><td></td><th>키</th><th>소유한 스코프</th><th>ref</th><th>상태</th></tr>
+     <tr><td align="center"><b>A</b></td><td><code>Global</code> <code>Scene</code></td><td align="center">2</td><td>메모리 유지</td><td align="center">▶</td><td align="center"><b>A</b></td><td><code>Global</code> <code>Scene</code></td><td align="center">2</td><td>변화 없음</td></tr>
+     <tr><td align="center"><b>B</b></td><td><code>Scene</code> <code>Popup</code></td><td align="center">2</td><td>메모리 유지</td><td align="center">▶</td><td align="center"><b>B</b></td><td><code>Scene</code></td><td align="center">1</td><td>아직 주인 있음</td></tr>
+     <tr><td align="center"><b>C</b></td><td><code>Popup</code></td><td align="center">1</td><td>메모리 유지</td><td align="center">▶</td><td align="center"><b>C</b></td><td><b>소유자 없음</b></td><td align="center"><b>0</b></td><td><b>⇒ Release</b></td></tr>
+   </table>
+
+   - **자동 정산** : 스코프가 사라지면 refCount 자동 정산 → 0이 된 키만 `Addressables.Release` (호출부 Release $`\color{#E8352E}\textbf{0줄}`$)
+
+2. **재요청은 캐시(Registry)에서 반환 — 실제 로드는 첫 요청 1번뿐**
+   - `ResourceManager`(라우팅) → `ResourceScope`(수명 · 키 목록) → `ResourceRegistry`(핸들 · refCount) → `Addressables`
+   - **① 첫 요청** `Load(key, Scene)` : 조회 miss → 실제 로드 1회 → 핸들 생성 · Registry 등록 (refCount 1) 후 반환
+   - **② 재요청** `Load(같은 key, Party)` : 조회 hit → Addressables까지 가지 않음 · 로드 0회 → 이미 있는 핸들 반환 · refCount +1
+   - **refCount = 요청 수가 아니라 이 키를 쥔 스코프 수** (같은 스코프 재요청은 +0)
+
+| **리소스 요청 · 재요청 흐름** |
 | :---: |
-| <img width="900" alt="refCount 정산" src="images/ba-resource-refcount.png" /> |
+| <img width="900" alt="리소스 요청 · 재요청 흐름" src="images/ba-resource-request-flow.png" /> |
 
-3. **Addressables가 이미 세는데 왜 카운트를 하나 더?**
+3. **Addressables가 이미 참조를 세는데, 왜 카운트를 하나 더 두었는가?**
+   - 카운트는 Addressables가 하지만, **줄이는 시점(Release)은 사람이 직접 작성**해야 한다
+
+   | | [ Addressables 만으로 ] | [ 수명 스코프를 한 층 두면 ] |
+   |:---:|:---|:---|
+   | **1** | 팝업을 모두 닫았다 | 팝업을 모두 닫았다 |
+   | **2** | ✕ **신호를 내려보낼 층이 없다** → 호출부 **130곳**이 각자 Release 호출 | ▼ `ResourceScope.Dispose()` — 이 스코프가 가진 키 전부 refCount −1 |
+   | **3** | ▼ Addressables refCount = 2 | ▼ Registry refCount 1 → 0 (남은 스코프 없음) |
+   | **4** | ▼ 🔴 **메모리에 남는다** | ▼ 🟢 **`Addressables.Release` — 회수** |
+
    - **Addressables** = 몇 번 로드했나 / **수명 스코프** = 언제 줄일지
-   - 도메인 신호(씬 전환 · 팝업 스택 0 · 파티 해체) → refCount 감소로 번역
-   - 수명 결정 지점 : 호출부 $`\color{#E8352E}\textbf{130곳 → 수명 경계 수}`$
+   - 도메인 신호(씬 전환 · 팝업 스택 0 · 파티 해체) → refCount 감소로 번역 → 수명 결정 지점 : 호출부 $`\color{#E8352E}\textbf{130곳 → 수명 경계 수}`$
 
 4. **오브젝트 풀 · 아틀라스 캐시 통합**
    - **풀** : 원본 프리팹 ref 티켓 직접 획득(`AcquirePoolRef`) → 씬 전환 시 풀 인스턴스 깨짐 차단
    - **아틀라스** : 클론 Sprite를 Registry `OnReleased`에 맞춰 파기 → 캐시가 핸들을 붙잡는 문제 방지
 
-**✅ 결과 (같은 경로 · 같은 체크포인트 Before / After)**
+**✅ 결과 — 상주 메모리는 줄고, 씬을 오가도 다시 쌓이지 않는다 (같은 경로 · 같은 체크포인트 Before / After · 호출부에 추가한 Release 0줄)**
 
 | 항목 | Before | After | 변화 |
 |---|:---:|:---:|:---:|

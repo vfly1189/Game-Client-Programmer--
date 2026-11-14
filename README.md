@@ -100,7 +100,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 가까운 몬스터만 켜고, 화면 밖은 덜 갱신 → **가장 느린 1% 프레임 ▼47% (4.68 → 2.50ms)**
 
 &nbsp;&nbsp; └ **[전투 행동 설계 : 흐름과 행동 분리를 통한 확장](DETAIL.md#ability-trouble)** <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 흐름은 Timeline, 행동은 조합 → **일반몹 · 보스가 같은 SkillSystem 구조**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 흐름은 데이터로, 새 코드는 행동만 → **4번 추가 · 흐름 코드 0줄**
 
 &nbsp;&nbsp; └ **[리소스 수명 관리 : 2버킷 구조의 한계와 수명 스코프 도입](DETAIL.md#resource-lifetime-trouble)** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Addressables 리소스를 수명 스코프 단위로 관리 → **Global 상주 메모리 ▼60% (513 → 205MB)**
