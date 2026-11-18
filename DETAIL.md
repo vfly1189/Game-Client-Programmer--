@@ -103,12 +103,12 @@
 | 📝 **개발 블로그** | [Velog 바로가기](https://velog.io/@vfly1189/series/Unity-%EB%B8%94%EB%A3%A8%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B8%8C-%EC%B0%BD%EC%9E%91-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8) |
 | 💾 **GitHub** | [소스코드](https://github.com/vfly1189/OperationKivotos-Code) |
 
-### 🎬 개발 과정 영상 (총 4편)
+### 🎬 개발 과정 영상 (총 5편)
 
-| 초기 빌드 | 던전 & 스킬 | 아이템 & 필드 | 최신 버전 |
-|:---:|:---:|:---:|:---:|
-| [![](https://img.youtube.com/vi/ZPzTefOje7Y/mqdefault.jpg)](https://youtu.be/ZPzTefOje7Y?si=nfJI9SmWANtrbu3n) | [![](https://img.youtube.com/vi/StobiSiFDl4/mqdefault.jpg)](https://youtu.be/StobiSiFDl4?si=F91KjveRbM7ykqkk) | [![](https://img.youtube.com/vi/T_7pYuZHefc/mqdefault.jpg)](https://youtu.be/T_7pYuZHefc?si=nVhiV1aIA-CvPJpC) | [![](https://img.youtube.com/vi/yPBj7T_f7ds/mqdefault.jpg)](https://youtu.be/yPBj7T_f7ds?si=8MYIhSHqMjUc-nJw) |
-| [▶ YouTube](https://youtu.be/ZPzTefOje7Y) | [▶ YouTube](https://youtu.be/StobiSiFDl4) | [▶ YouTube](https://youtu.be/T_7pYuZHefc) | [▶ YouTube](https://youtu.be/yPBj7T_f7ds) |
+| 초기 빌드 | 던전 & 스킬 | 아이템 & 필드 | 전체 데모 | 최신 버전 |
+|:---:|:---:|:---:|:---:|:---:|
+| [![](https://img.youtube.com/vi/ZPzTefOje7Y/mqdefault.jpg)](https://youtu.be/ZPzTefOje7Y?si=nfJI9SmWANtrbu3n) | [![](https://img.youtube.com/vi/StobiSiFDl4/mqdefault.jpg)](https://youtu.be/StobiSiFDl4?si=F91KjveRbM7ykqkk) | [![](https://img.youtube.com/vi/T_7pYuZHefc/mqdefault.jpg)](https://youtu.be/T_7pYuZHefc?si=nVhiV1aIA-CvPJpC) | [![](https://img.youtube.com/vi/yPBj7T_f7ds/mqdefault.jpg)](https://youtu.be/yPBj7T_f7ds?si=8MYIhSHqMjUc-nJw) | [![](https://img.youtube.com/vi/0MZD8OYk_so/mqdefault.jpg)](https://www.youtube.com/watch?v=0MZD8OYk_so) |
+| [▶ YouTube](https://youtu.be/ZPzTefOje7Y) | [▶ YouTube](https://youtu.be/StobiSiFDl4) | [▶ YouTube](https://youtu.be/T_7pYuZHefc) | [▶ YouTube](https://youtu.be/yPBj7T_f7ds) | [▶ YouTube](https://www.youtube.com/watch?v=0MZD8OYk_so) |
 
 ## 📑 프로젝트 목차<a name="toc-bluearchive"></a>
 

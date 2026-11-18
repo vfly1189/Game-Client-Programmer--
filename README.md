@@ -107,7 +107,7 @@
 
 <br>
 
-### 🎥 [시연 영상 보러가기](https://youtu.be/yPBj7T_f7ds?si=zlXlAo7Us3Utixns) · 💾 [소스코드](https://github.com/vfly1189/OperationKivotos-Code)
+### 🎥 [시연 영상 보러가기](https://www.youtube.com/watch?v=0MZD8OYk_so) · 💾 [소스코드](https://github.com/vfly1189/OperationKivotos-Code)
 
 <br>
 <hr>
